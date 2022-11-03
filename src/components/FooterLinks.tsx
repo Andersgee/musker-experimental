@@ -8,7 +8,7 @@ import { IconNotifications } from "src/icons/Notifications";
 export function FooterLinks() {
   return (
     <footer className="flex w-full content-center items-center bg-white">
-      <NavLink href="/home">
+      <NavLink href="/">
         <IconHome className="h-7 w-7 text-black group-hover:text-blue-500" />
       </NavLink>
       <NavLink href="/explore">
