@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { FooterLinks } from "./FooterLinks";
+import { NavLinks } from "./NavLinks";
 
 type Props = {
   className?: string;
@@ -8,24 +8,40 @@ type Props = {
 };
 
 export function Layout({ children, className }: Props) {
+  return (
+    <div className="grid h-screen grid-rows-phone">
+      <Header className="flex h-12 items-center justify-between bg-red-500" />
+      <main className="overflow-y-scroll bg-green-500">{children}</main>
+      <Nav className="h-12 bg-orange-500" />
+    </div>
+  );
+}
+
+function Header({ className }: { className?: string }) {
   const { data: sessionData } = useSession();
   return (
-    <div className="flex h-screen flex-col">
-      <header className="flex h-12 w-full content-center items-center">
-        <Link href="/userhandle" className="flex h-full w-12 items-center justify-center">
+    <header className={className}>
+      <div className="flex">
+        <Link href="/userhandle" className="flex w-12 items-center justify-center">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={sessionData?.user?.image || undefined}
             alt={sessionData?.user?.handle || sessionData?.user?.name || undefined}
           />
         </Link>
-        <div className="ml-4 flex-1 font-medium">Home</div>
-        <Link href="/preferences" className="flex h-full w-12 items-center justify-center">
-          <div className="h-8 w-8">pref</div>
-        </Link>
-      </header>
-      <main className="flex-1 overflow-y-scroll">{children}</main>
-      <FooterLinks />
-    </div>
+        <div className="ml-4 font-medium">Home</div>
+      </div>
+      <Link href="/preferences" className="flex w-12 items-center justify-center">
+        <div className="h-8 w-8">pref</div>
+      </Link>
+    </header>
+  );
+}
+
+function Nav({ className }: { className?: string }) {
+  return (
+    <nav className={className}>
+      <NavLinks className="flex w-full content-center items-center " />
+    </nav>
   );
 }
