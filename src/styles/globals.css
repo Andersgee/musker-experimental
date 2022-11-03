@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* same as container but 4 rem smaller max-width, 
+   except for lg which is 18 rem smaller, see gridTemplateColumns in tailwind.config.cjs  */
+
+/*
+phone: "1fr",
+        sm: "4rem 1fr",
+        md: "4rem 1fr 20rem",
+        lg: "18rem 1fr 25rem",
+*/
+@layer components {
+  .headercontainer {
+    width: 100%;
+    /*
+    margin-right: auto;
+    margin-left: auto;
+    */
+  }
+  @media (min-width: 640px) {
+    .headercontainer {
+      max-width: 576px; /*sm*/
+    }
+  }
+  @media (min-width: 988px) {
+    .headercontainer {
+      max-width: 604; /*md */
+    }
+  }
+  @media (min-width: 1266px) {
+    .headercontainer {
+      max-width: 578px; /*lg*/
+    }
+  }
+  @media (min-width: 1380px) {
+    .headercontainer {
+      max-width: 692px;
+    }
+  }
+  @media (min-width: 1536px) {
+    .headercontainer {
+      max-width: 848px;
+    }
+  }
+}

@@ -20,7 +20,6 @@ module.exports = {
       },
       center: true,
     },
-
     extend: {
       keyframes: {
         strokedraw: {
@@ -38,8 +37,8 @@ module.exports = {
 
       gridTemplateColumns: {
         phone: "1fr",
-        sm: "4.5rem 1fr",
-        md: "4.5rem 1fr 20rem",
+        sm: "4rem 1fr",
+        md: "4rem 1fr 20rem",
         lg: "18rem 1fr 25rem",
       },
       gridTemplateRows: {

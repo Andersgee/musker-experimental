@@ -3,5 +3,5 @@ type Props = {
 };
 
 export default function Notifications({ className }: Props) {
-  return <div className={className}>notifications</div>;
+  return <div className={className}>notifications goes here</div>;
 }
