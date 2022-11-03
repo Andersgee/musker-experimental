@@ -5,12 +5,15 @@ import { ThemeProvider } from "next-themes";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import { Layout } from "src/components/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <ThemeProvider attribute="class">
       <SessionProvider session={session}>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </SessionProvider>
     </ThemeProvider>
   );
