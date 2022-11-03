@@ -3,6 +3,24 @@ module.exports = {
   darkMode: "class",
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      "sm": "640px",
+      "md": "988px",
+      "lg": "1266px",
+      "xl": "1380px",
+      "2xl": "1536px",
+    },
+    container: {
+      screens: {
+        "sm": "640px",
+        "md": "988px",
+        "lg": "1266px",
+        "xl": "1380px",
+        "2xl": "1536px",
+      },
+      center: true,
+    },
+
     extend: {
       keyframes: {
         strokedraw: {
@@ -19,13 +37,16 @@ module.exports = {
       },
 
       gridTemplateColumns: {
-        // Complex site-specific column configuration
-        footer: "200px minmax(900px, 1fr) 100px",
-        md: "96px 1fr",
+        phone: "1fr",
+        sm: "4.5rem 1fr",
+        md: "4.5rem 1fr 20rem",
+        lg: "18rem 1fr 25rem",
       },
       gridTemplateRows: {
-        phone: "48px 1fr 48px",
-        md: "48px 1fr",
+        phone: "3rem 1fr 3rem",
+        sm: "3rem 1fr",
+        md: "3rem 1fr",
+        lg: "3rem 1fr",
       },
     },
   },

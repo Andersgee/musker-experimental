@@ -12,23 +12,23 @@ type Props = {
 export function NavLinks({ className }: Props) {
   return (
     <ul className={className}>
-      <li className="flex-1">
-        <NavLink href="/">
+      <li className="w-full flex-1">
+        <NavLink href="/" label="Home">
           <IconHome className="h-7 w-7 text-black group-hover:text-blue-500" />
         </NavLink>
       </li>
-      <li className="flex-1">
-        <NavLink href="/explore">
+      <li className="w-full flex-1">
+        <NavLink href="/explore" label="Explore">
           <IconExplore className="h-7 w-7 text-black group-hover:text-blue-500" />
         </NavLink>
       </li>
-      <li className="flex-1">
-        <NavLink href="/notifications">
+      <li className="w-full flex-1">
+        <NavLink href="/notifications" label="Notifications">
           <IconNotifications className="h-7 w-7 text-black group-hover:text-blue-500" />
         </NavLink>
       </li>
-      <li className="flex-1">
-        <NavLink href="/messages">
+      <li className="w-full flex-1">
+        <NavLink href="/messages" label="Messages">
           <IconMessages className="h-7 w-7 text-black group-hover:text-blue-500" />
         </NavLink>
       </li>
@@ -36,10 +36,11 @@ export function NavLinks({ className }: Props) {
   );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="group flex h-12 items-center justify-center">
+    <Link href={href} className="group flex h-12 items-center justify-center bg-purple-500 lg:justify-start lg:pl-8">
       {children}
+      <span className="hidden lg:block">{label}</span>
     </Link>
   );
 }
