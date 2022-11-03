@@ -9,10 +9,10 @@ type Props = {
 
 export function Layout({ children, className }: Props) {
   return (
-    <div className="grid h-screen grid-rows-phone">
-      <Header className="flex h-12 items-center justify-between bg-red-500" />
-      <main className="overflow-y-scroll bg-green-500">{children}</main>
-      <Nav className="h-12 bg-orange-500" />
+    <div className="grid h-screen grid-rows-phone sm:grid-cols-md sm:grid-rows-md">
+      <Header className="flex h-12 items-center justify-between bg-red-500 sm:col-span-1 sm:col-start-2" />
+      <main className="overflow-y-scroll bg-green-500 sm:col-span-1 sm:col-start-2 sm:bg-cyan-500">{children}</main>
+      <Nav className="h-12 bg-orange-500 sm:col-span-1 sm:col-start-1 sm:row-span-2 sm:row-start-1 sm:h-full" />
     </div>
   );
 }
@@ -41,7 +41,7 @@ function Header({ className }: { className?: string }) {
 function Nav({ className }: { className?: string }) {
   return (
     <nav className={className}>
-      <NavLinks className="flex w-full content-center items-center " />
+      <NavLinks className="flex flex-row content-center items-center sm:flex-col " />
     </nav>
   );
 }

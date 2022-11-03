@@ -21,9 +21,11 @@ module.exports = {
       gridTemplateColumns: {
         // Complex site-specific column configuration
         footer: "200px minmax(900px, 1fr) 100px",
+        md: "96px 1fr",
       },
       gridTemplateRows: {
         phone: "48px 1fr 48px",
+        md: "48px 1fr",
       },
     },
   },
