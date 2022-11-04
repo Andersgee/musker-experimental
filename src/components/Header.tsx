@@ -7,19 +7,8 @@ type Props = {
   className?: string;
 };
 
-type MockSessionData = {
-  user?: {
-    name: string;
-    image: string;
-    handle: string;
-  };
-} | null;
-
-//const sessionData: MockSessionData = null;
-
 export function Header({ className }: Props) {
   const { data: sessionData } = useSession();
-  console.log({ sessionData });
   return (
     <div className={className}>
       <header className="flex items-center justify-between">
