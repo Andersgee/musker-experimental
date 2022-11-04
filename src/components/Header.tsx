@@ -1,6 +1,6 @@
 "use client";
 
-//import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 type Props = {
@@ -15,10 +15,11 @@ type MockSessionData = {
   };
 } | null;
 
-const sessionData: MockSessionData = null;
+//const sessionData: MockSessionData = null;
 
 export function Header({ className }: Props) {
-  //const { data: sessionData } = useSession();
+  const { data: sessionData } = useSession();
+  console.log({ sessionData });
   return (
     <div className={className}>
       <header className="flex items-center justify-between">
