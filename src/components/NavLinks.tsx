@@ -38,9 +38,9 @@ export function NavLinks({ className }: Props) {
 
 function NavLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="group flex h-12 items-center justify-center bg-purple-500 lg:justify-start lg:pl-8">
+    <Link href={href} className="group flex h-12 items-center justify-center lg:justify-start lg:pl-8">
       {children}
-      <span className="hidden lg:block">{label}</span>
+      <span className="ml-4 hidden lg:block">{label}</span>
     </Link>
   );
 }

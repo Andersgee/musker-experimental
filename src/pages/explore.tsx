@@ -1,6 +1,6 @@
 export default function Explore() {
   return (
-    <div className="sm:bg-slate-300">
+    <div className="">
       <div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quas, quis perspiciatis, odit ipsum maxime sunt
         voluptas repellat quo autem doloremque. Rerum consequatur facilis deserunt repudiandae, minus facere! Unde
