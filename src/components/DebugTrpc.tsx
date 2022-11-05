@@ -7,10 +7,10 @@ export function DebugTrpc() {
   const { data: posts } = trpc.post.getAll.useQuery();
 
   return (
-    <div className="">
+    <div className="whitespace-pre-wrap">
       <div>hello?.greeting: {postHello.data?.greeting}</div>
       <div>postHello.error: {JSON.stringify(postHello.error)}</div>
-      <div>posts: {JSON.stringify(posts)}</div>
+      <p>posts: {JSON.stringify(posts)}</p>
     </div>
   );
 }

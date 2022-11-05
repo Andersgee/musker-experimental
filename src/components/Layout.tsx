@@ -15,9 +15,9 @@ export function Layout({ children }: Props) {
      lg:grid-cols-lg lg:grid-rows-lg
     "
     >
+      <Nav className="fixed bottom-0 h-12 w-full border-t sm:h-full sm:w-16 sm:border-t-0 lg:w-72" />
       <Header className="headercontainer fixed h-12 sm:ml-16 lg:ml-72" />
       <main className="headercontainer row-start-2 sm:col-start-2">{children}</main>
-      <Nav className="fixed bottom-0 h-12 w-full border-t sm:h-full sm:w-16 sm:border-t-0 lg:w-72" />
       <aside className="hidden  md:col-start-3 md:row-span-2 md:row-start-1 md:block">aside</aside>
     </div>
   );

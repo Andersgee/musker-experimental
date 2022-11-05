@@ -9,7 +9,7 @@ export const postRouter = router({
     };
   }),
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany();
+    return ctx.prisma.post.findMany({ include: { author: { select: { name: true, handle: true, image: true } } } });
   }),
   getById: publicProcedure
     .input(
