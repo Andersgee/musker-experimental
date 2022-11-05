@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { useState } from "react";
 import { trpc, getBaseUrl } from "src/utils/trpc";
+import superjson from "superjson";
 
 type Props = {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export function TrpcProvider({ children }: Props) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
+      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) =>
