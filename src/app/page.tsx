@@ -1,4 +1,5 @@
 import { CreatePost } from "src/components/CreatePost";
+import { DebugTrpc } from "src/components/DebugTrpc";
 import { SigninButtons } from "src/components/SigninButtons";
 
 export default function Page() {
@@ -7,6 +8,7 @@ export default function Page() {
       <div>Home</div>
       <SigninButtons />
       <CreatePost />
+      <DebugTrpc />
     </div>
   );
 }

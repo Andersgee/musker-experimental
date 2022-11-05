@@ -3,9 +3,9 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 export const postRouter = router({
-  hello: publicProcedure.input(z.object({ text: z.string().nullish() }).nullish()).query(({ input }) => {
+  hello: publicProcedure.input(z.object({ text: z.string().nullish() })).query(({ input }) => {
     return {
-      greeting: `Hello ${input?.text ?? "world"}`,
+      greeting: `Hello ${input?.text || "world"}`,
     };
   }),
   getAll: publicProcedure.query(({ ctx }) => {
@@ -30,9 +30,9 @@ export const postRouter = router({
       const andersId = "cla0djpis0000uiloasxp7th7";
       //console.log("post create... ctx?.session?.user", JSON.stringify(ctx?.session?.user));
       //console.log("post create... ctx?.session", JSON.stringify(ctx?.session));
-      console.log("hello from mutation");
-      return true;
-      /*
+
+      //return { text: "this is some text" };
+
       return ctx.prisma.post.create({
         data: {
           //authorId: ctx.session.user.id,
@@ -40,6 +40,5 @@ export const postRouter = router({
           text: input.text,
         },
       });
-      */
     }),
 });
