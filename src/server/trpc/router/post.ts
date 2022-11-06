@@ -1,15 +1,21 @@
 import { z } from "zod";
 
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const postRouter = router({
-  hello: publicProcedure.input(z.object({ text: z.string().nullish() })).query(({ input }) => {
-    return {
-      greeting: `Hello ${input?.text || "world"}`,
-    };
-  }),
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany({ include: { author: { select: { name: true, handle: true, image: true } } } });
+    return ctx.prisma.post.findMany({
+      include: {
+        author: {
+          select: {
+            name: true,
+            handle: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
   }),
   getById: publicProcedure
     .input(
@@ -20,23 +26,16 @@ export const postRouter = router({
     .query(({ input, ctx }) => {
       return ctx.prisma.post.findUnique({ where: { id: input.id } });
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         text: z.string(),
       }),
     )
     .mutation(({ input, ctx }) => {
-      const andersId = "cla0djpis0000uiloasxp7th7";
-      //console.log("post create... ctx?.session?.user", JSON.stringify(ctx?.session?.user));
-      //console.log("post create... ctx?.session", JSON.stringify(ctx?.session));
-
-      //return { text: "this is some text" };
-
       return ctx.prisma.post.create({
         data: {
-          //authorId: ctx.session.user.id,
-          authorId: andersId,
+          authorId: ctx.session.user.id,
           text: input.text,
         },
       });

@@ -2,7 +2,7 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { ImgUser } from "./ImgUser";
+import { ImgUser } from "src/ui/ImgUser";
 
 type Props = {
   className?: string;
@@ -15,11 +15,11 @@ export function PersonalizedPostsFeed({ className }: Props) {
     <div className={className}>
       {posts?.map((post) => {
         return (
-          <>
-            <article className="flex" key={post.authorId}>
+          <div key={post.id}>
+            <article className="flex">
               <div>
                 <ImgUser
-                  href="lala"
+                  href={post.author.handle || "handle"}
                   image={post.author.image || ""}
                   alt={post.author.handle || post.author.name || ""}
                 />
@@ -27,7 +27,7 @@ export function PersonalizedPostsFeed({ className }: Props) {
               <p>{post.text}</p>
             </article>
             <DividerFull />
-          </>
+          </div>
         );
       })}
     </div>

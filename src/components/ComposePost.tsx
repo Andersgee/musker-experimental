@@ -9,13 +9,19 @@ import { trpc } from "src/utils/trpc";
 
 type Props = {
   className?: string;
+  onCreated?: () => void;
 };
 
-export function ComposePost({ className }: Props) {
+export function ComposePost({ onCreated, className }: Props) {
+  const utils = trpc.useContext(); //https://trpc.io/docs/v10/useContext#helpers
   //const router = useRouter();
   const [text, setText] = useState("");
   const session = useSession();
-  const postCreate = trpc.post.create.useMutation();
+  const postCreate = trpc.post.create.useMutation({
+    onSuccess: () => {
+      utils.post.getAll.invalidate();
+    },
+  });
 
   if (!session.data?.user) {
     return <div>sign in before you can post anything</div>;
@@ -52,7 +58,7 @@ export function ComposePost({ className }: Props) {
             onClick={async () => {
               try {
                 await postCreate.mutateAsync({ text });
-                //router.refresh();
+                onCreated?.();
               } catch (error) {}
             }}
           >
