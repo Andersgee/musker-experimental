@@ -51,17 +51,15 @@ export const postRouter = router({
 
       const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.session.user.id },
-        select: {
-          sentFollows: {
-            select: {
-              userId: true,
-            },
-          },
+        include: {
+          sentFollows: true,
         },
       });
 
+      console.log({ user });
       //the ids this user is following
       const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
+      console.log({ followedIds });
 
       const items = await ctx.prisma.post.findMany({
         cursor: input.cursor ? { id: input.cursor } : undefined,

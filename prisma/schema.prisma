@@ -77,9 +77,9 @@ model User {
 
 model Follow {
   createdAt  DateTime @default(now())
-  user       User     @relation("sentFollows", fields: [userId], references: [id])
+  user       User     @relation("recievedFollows", fields: [userId], references: [id])
   userId     String
-  follower   User     @relation("recievedFollows", fields: [followerId], references: [id])
+  follower   User     @relation("sentFollows", fields: [followerId], references: [id])
   followerId String
 
   @@id([userId, followerId])
