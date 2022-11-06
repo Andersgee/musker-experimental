@@ -64,8 +64,8 @@ model User {
   postReactions    PostReaction[]
   replyReactions   ReplyReaction[]
   messageReactions MessageReaction[]
-  followings       Follow[]          @relation("following")
-  followers        Follow[]          @relation("follower")
+  sentFollows      Follow[]          @relation("sentFollows")
+  recievedFollows  Follow[]          @relation("recievedFollows")
 }
 
 // app
@@ -76,13 +76,13 @@ model User {
 //see relation tables https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#relation-tables
 
 model Follow {
-  createdAt   DateTime @default(now())
-  follower    User     @relation("follower", fields: [followerId], references: [id])
-  followerId  String
-  following   User     @relation("following", fields: [followingId], references: [id])
-  followingId String
+  createdAt  DateTime @default(now())
+  user       User     @relation("sentFollows", fields: [userId], references: [id])
+  userId     String
+  follower   User     @relation("recievedFollows", fields: [followerId], references: [id])
+  followerId String
 
-  @@id([followerId, followingId])
+  @@id([userId, followerId])
 }
 
 model Post {
