@@ -2,9 +2,9 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { ImgUser } from "src/ui/ImgUser";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
+import { ImgUser } from "src/ui/ImgUser";
 
 type Props = {
   className?: string;
@@ -19,7 +19,7 @@ export function HomeFeed({ className }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
+  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false, rootMargin: "100%" });
   const loadMoreIsInView = !!entry?.isIntersecting;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function HomeFeed({ className }: Props) {
               <article className="flex">
                 <div>
                   <ImgUser
-                    href={post.author.handle || "handle"}
+                    href={`/u/${post.author.handle}`}
                     image={post.author.image || ""}
                     alt={post.author.handle || post.author.name || ""}
                   />

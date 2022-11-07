@@ -18,7 +18,7 @@ export function ComposePost({ className }: Props) {
   const session = useSession();
   const postCreate = trpc.post.create.useMutation({
     onSuccess: () => {
-      utils.post.getAll.invalidate();
+      utils.post.homeFeed.invalidate();
     },
   });
 
@@ -28,7 +28,7 @@ export function ComposePost({ className }: Props) {
   return (
     <div className="flex w-full justify-between">
       <div className="">
-        <Link href="/userhandle" className="flex w-12 items-center justify-center">
+        <Link href={`/u/${session.data.user.handle}`} className="flex w-12 items-center justify-center">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}

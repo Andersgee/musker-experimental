@@ -10,6 +10,7 @@ for (let i = 0; i < 10; i++) {
     name: `seeduser${i}`,
     handle: `seeduser${i}`,
     email: `seeduser${i}@some.org`,
+    image: "https://randomsvgface.andyfx.net",
   });
 }
 

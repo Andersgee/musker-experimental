@@ -1,6 +1,6 @@
 import "src/styles/globals.css";
 
-import { Layout } from "src/components/Layout";
+import { Layout } from "src/components-server/Layout";
 import { TrpcProvider } from "src/contexts/TrpcContext";
 import { SessionProvider } from "src/contexts/SessionContext";
 

@@ -15,8 +15,8 @@ export function Header({ className }: Props) {
         <div className="flex items-center">
           <div className="ml-4 font-medium">Home</div>
         </div>
-        <Link href="/preferences" className="flex w-12 items-center justify-center">
-          <div className="h-8 w-8">pref</div>
+        <Link href="/settings" className="flex w-12 items-center justify-center">
+          <div className="h-8 w-8">settings</div>
         </Link>
       </header>
     </div>

@@ -1,5 +1,5 @@
-import { Header } from "./Header";
-import { Nav } from "./Nav";
+import { Header } from "../components/Header";
+import { Nav } from "../components/Nav";
 
 type Props = {
   className?: string;

@@ -48,24 +48,23 @@ export const postRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const limit = 10;
+      const sessionUserId = ctx.session.user.id;
 
       const user = await ctx.prisma.user.findUnique({
-        where: { id: ctx.session.user.id },
+        where: { id: sessionUserId },
         include: {
           sentFollows: true,
         },
       });
 
-      console.log({ user });
       //the ids this user is following
       const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
-      console.log({ followedIds });
 
       const items = await ctx.prisma.post.findMany({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
-        where: { authorId: { in: followedIds } },
+        where: { authorId: { in: [...followedIds, sessionUserId] } },
         include: { author: true },
       });
 
