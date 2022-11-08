@@ -12,6 +12,8 @@ type Props = {
 // But they _CAN_ be passed as child or prop to a client component
 // @see https://beta.nextjs.org/docs/rendering/server-and-client-components#
 
+//also good to read: https://beta.nextjs.org/docs/data-fetching/caching#
+
 export function Post({ postId }: Props) {
   console.log("hello?");
   //console.log({ env });
