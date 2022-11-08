@@ -75,4 +75,27 @@ export const postRouter = router({
       }
       return { items, nextCursor };
     }),
+  exploreFeed: publicProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 10;
+
+      const items = await ctx.prisma.post.findMany({
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        take: limit + 1, //get one extra (use it for cursor to next query)
+        orderBy: { createdAt: "desc" },
+        include: { author: true },
+      });
+
+      let nextCursor: string | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
 });

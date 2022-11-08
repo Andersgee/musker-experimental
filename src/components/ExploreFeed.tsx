@@ -10,8 +10,8 @@ type Props = {
   className?: string;
 };
 
-export function HomeFeed({ className }: Props) {
-  const query = trpc.post.homeFeed.useInfiniteQuery(
+export function ExploreFeed({ className }: Props) {
+  const query = trpc.post.exploreFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
