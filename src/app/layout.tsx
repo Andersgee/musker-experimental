@@ -3,6 +3,7 @@ import "src/styles/globals.css";
 import { Layout } from "src/components-server/Layout";
 import { TrpcProvider } from "src/contexts/TrpcContext";
 import { SessionProvider } from "src/contexts/SessionContext";
+import { ThemeProvider } from "src/contexts/ThemeContext";
 
 import { Montserrat } from "@next/font/google";
 
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <SessionProvider>
         <TrpcProvider>
-          <body>
-            <Layout>{children}</Layout>
-          </body>
+          <ThemeProvider>
+            <body>
+              <Layout>{children}</Layout>
+            </body>
+          </ThemeProvider>
         </TrpcProvider>
       </SessionProvider>
     </html>
