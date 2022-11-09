@@ -45,7 +45,7 @@ export function ExploreFeed({ className }: Props) {
                     alt={post.author.handle || post.author.name || ""}
                   />
                 </div>
-                <p>{post.text}</p>
+                <p className="font-paragraph">{post.text}</p>
               </article>
               <DividerFull />
             </div>

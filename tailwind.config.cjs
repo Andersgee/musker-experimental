@@ -1,3 +1,5 @@
+//import defaultTheme from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -21,6 +23,9 @@ module.exports = {
       center: true,
     },
     extend: {
+      fontFamily: {
+        paragraph: ["var(--font-paragraph)"],
+      },
       keyframes: {
         strokedraw: {
           to: { strokeDashoffset: "0" },
