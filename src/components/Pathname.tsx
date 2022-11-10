@@ -9,5 +9,6 @@ type Props = {
 
 export function Pathname({ className }: Props) {
   const pathname = usePathname();
-  return <div className={className}>{pathname?.slice(1)}</div>;
+  const name = pathname?.split("/").at(-1);
+  return <div className={className}>{name}</div>;
 }

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../src/server/db/client";
 import { type Prisma } from "@prisma/client";
-import { randomPostText } from "./lorem";
+import { randomText } from "./lorem";
 
 const seedUsers: Prisma.UserCreateManyArgs["data"] = [];
 for (let i = 0; i < 10; i++) {
@@ -11,6 +11,7 @@ for (let i = 0; i < 10; i++) {
     handle: `seeduser${i}`,
     email: `seeduser${i}@some.org`,
     image: "https://randomsvgface.andyfx.net",
+    bio: randomText(),
   });
 }
 
@@ -19,7 +20,7 @@ for (const user of seedUsers) {
   for (let i = 0; i < 100; i++) {
     seedPosts.push({
       authorId: user.id!,
-      text: randomPostText(),
+      text: randomText(),
     });
   }
 }

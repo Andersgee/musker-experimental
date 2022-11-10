@@ -12,6 +12,7 @@ export function SigninButtons({ className }: Props) {
   return (
     <div className={className}>
       <div>sessionData?.user?.name: {JSON.stringify(sessionData?.user?.name)}</div>
+      <div>sessionData?.user?.handle: {JSON.stringify(sessionData?.user?.handle)}</div>
       <button className="bg-green-300 px-3 py-2" onClick={() => signIn()}>
         sign in{" "}
       </button>

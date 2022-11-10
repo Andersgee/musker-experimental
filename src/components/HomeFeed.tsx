@@ -5,6 +5,7 @@ import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 import { ImgUser } from "src/ui/ImgUser";
+import Link from "next/link";
 
 type Props = {
   className?: string;
@@ -29,28 +30,35 @@ export function HomeFeed({ className }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadMoreIsInView]);
 
+  const posts = query.data?.pages.map((page) => page.items).flat();
+
+  if (!posts || posts?.length < 1) {
+    return (
+      <div>
+        go follow some people, such as <Link href="/u/seeduser1">seeduser1</Link>
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
-      {query.data?.pages
-        .map((page) => page.items)
-        .flat()
-        .map((post) => {
-          return (
-            <div key={post.id}>
-              <article className="flex">
-                <div>
-                  <ImgUser
-                    href={`/u/${post.author.handle}`}
-                    image={post.author.image || ""}
-                    alt={post.author.handle || post.author.name || ""}
-                  />
-                </div>
-                <p>{post.text}</p>
-              </article>
-              <DividerFull />
-            </div>
-          );
-        })}
+      {posts?.map((post) => {
+        return (
+          <div key={post.id}>
+            <article className="flex">
+              <div>
+                <ImgUser
+                  href={`/u/${post.author.handle}`}
+                  image={post.author.image || ""}
+                  alt={post.author.handle || post.author.name || ""}
+                />
+              </div>
+              <p>{post.text}</p>
+            </article>
+            <DividerFull />
+          </div>
+        );
+      })}
       <div className="flex justify-center">
         <div>
           <button
@@ -58,11 +66,17 @@ export function HomeFeed({ className }: Props) {
             onClick={() => query.fetchNextPage()}
             disabled={!query.hasNextPage || query.isFetchingNextPage}
           >
-            {query.isFetchingNextPage ? "loading..." : query.hasNextPage ? "Load More" : "-"}
+            {query.isFetchingNextPage ? "loading..." : query.hasNextPage ? "Load More" : ""}
           </button>
         </div>
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
+      {!query.hasNextPage && (
+        <p>
+          You have seen all posts from the people you follow. TODO: Put some explore posts and/or recommend some people
+          to follow here.
+        </p>
+      )}
     </div>
   );
 }

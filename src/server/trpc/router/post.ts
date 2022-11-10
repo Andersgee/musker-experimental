@@ -47,7 +47,7 @@ export const postRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const limit = 10;
+      const limit = 30;
       const sessionUserId = ctx.session.user.id;
 
       const user = await ctx.prisma.user.findUnique({

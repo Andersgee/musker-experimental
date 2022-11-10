@@ -9,8 +9,8 @@ type Props = {
 
 export function ImgUser({ className, href, image, alt }: Props) {
   return (
-    <Link href={href} className="flex w-12 items-center justify-center">
-      <img className="h-8 w-8 rounded-full shadow-imageborder" src={image} alt={alt} />
+    <Link href={href} className={`flex h-8 w-8 items-center justify-center ${className}`}>
+      <img className="h-full w-full rounded-full border-4 border-neutral-50" src={image} alt={alt} />
     </Link>
   );
 }

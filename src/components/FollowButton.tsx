@@ -30,5 +30,13 @@ export function FollowButton({ userId, className }: Props) {
     }
   };
 
-  return <button onClick={handleClick}> {isFollowing ? "unfollow" : "follow"}</button>;
+  return (
+    <button
+      className="rounded-full bg-black px-3 py-2 
+    text-sm font-bold text-white"
+      onClick={handleClick}
+    >
+      {isFollowing ? "Unfollow" : "Follow"}
+    </button>
+  );
 }

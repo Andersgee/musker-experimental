@@ -7,7 +7,7 @@ const lorem = new LoremIpsum({
 
 const randInt = (max: number) => Math.floor(Math.random() * max) + 1;
 
-export function randomPostText() {
+export function randomText() {
   const r = Math.random();
   if (r < 0.33) {
     return lorem.generateWords(randInt(10));

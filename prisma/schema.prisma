@@ -54,9 +54,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  //user created content
-  handle           String?
-  bio              String?           @db.VarChar(10000)
+  //app
+  createdAt        DateTime          @default(now())
+  handle           UserHandle?
+  bio              UserBio?
   posts            Post[]
   replies          Reply[]
   sentMessages     Message[]         @relation("sentMessages")
@@ -66,6 +67,20 @@ model User {
   messageReactions MessageReaction[]
   sentFollows      Follow[]          @relation("sentFollows")
   recievedFollows  Follow[]          @relation("recievedFollows")
+}
+
+model UserHandle {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  text   String
+}
+
+model UserBio {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  text   String
 }
 
 // app
