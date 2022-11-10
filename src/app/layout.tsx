@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <SessionProvider>
         <TrpcProvider>
-          <ThemeProvider attribute="class">
+          <ThemeProvider>
             <body>
               <Layout>{children}</Layout>
             </body>

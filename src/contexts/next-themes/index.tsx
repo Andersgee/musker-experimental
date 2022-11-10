@@ -1,11 +1,7 @@
 "use client";
 
 /*
-This file is a slightly edited version of next-themes: https://github.com/pacocoursey/next-themes/blob/main/src/index.tsx
-for the purpose of using it with experimental app dir
 
-1. use <Script> from next/script instead of <script>
-2. added a few types
 */
 
 import Script from "next/script";
@@ -20,6 +16,16 @@ const defaultContext: UseThemeProps = { setTheme: (_) => null, themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
+/**
+ * Slightly edited version of next-themes: https://github.com/pacocoursey/next-themes/blob/main/src/index.tsx
+ * for the purpose of using it with experimental app dir
+ *
+ * ```raw
+ * 1. use <Script> from next/script instead of <script>
+ * 2. added a few types
+ * 3. default to attribute="class"
+ * ```
+ */
 export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
   const context = useContext(ThemeContext);
 
@@ -38,7 +44,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   storageKey = "theme",
   themes = defaultThemes,
   defaultTheme = enableSystem ? "system" : "light",
-  attribute = "data-theme",
+  attribute = "class",
   value,
   children,
   nonce,
