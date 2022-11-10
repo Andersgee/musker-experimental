@@ -1,15 +1,13 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useTheme } from "src/contexts/next-themes";
 import { useEffect, useState } from "react";
 import { IconMoon } from "src/icons/Moon";
 import { IconSun } from "src/icons/Sun";
 
 export function ThemeToggleButton() {
-  const { resolvedTheme, setTheme, theme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [darkIcon, setDarkIcon] = useState(false);
-
-  console.log({ resolvedTheme, theme });
 
   useEffect(() => {
     console.log({ resolvedTheme });
