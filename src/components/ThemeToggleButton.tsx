@@ -10,7 +10,6 @@ export function ThemeToggleButton() {
   const [darkIcon, setDarkIcon] = useState(false);
 
   useEffect(() => {
-    console.log({ resolvedTheme });
     if (resolvedTheme === "light") {
       setDarkIcon(false);
     } else {
