@@ -8,7 +8,7 @@ const colorSchemes = ["light", "dark"];
 const MEDIA = "(prefers-color-scheme: dark)";
 const isServer = typeof window === "undefined";
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
-const defaultContext: UseThemeProps = { setTheme: () => null, themes: [] };
+const defaultContext: UseThemeProps = { setTheme: () => ({}), themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
