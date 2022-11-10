@@ -8,7 +8,7 @@ const colorSchemes = ["light", "dark"];
 const MEDIA = "(prefers-color-scheme: dark)";
 const isServer = typeof window === "undefined";
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
-const defaultContext: UseThemeProps = { setTheme: (_) => null, themes: [] };
+const defaultContext: UseThemeProps = { setTheme: () => null, themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
@@ -44,7 +44,6 @@ const Theme: React.FC<ThemeProviderProps> = ({
   attribute = "class",
   value,
   children,
-  nonce,
 }) => {
   const [theme, setThemeState] = useState(() => getTheme(storageKey, defaultTheme));
   const [resolvedTheme, setResolvedTheme] = useState(() => getTheme(storageKey));
@@ -83,6 +82,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
     }
 
     enable?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setTheme = useCallback(
@@ -96,6 +96,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
         // Unsupported
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [forcedTheme],
   );
 
@@ -108,6 +109,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
         applyTheme("system");
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme, forcedTheme],
   );
 
@@ -136,11 +138,13 @@ const Theme: React.FC<ThemeProviderProps> = ({
 
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTheme]);
 
   // Whenever theme or forcedTheme changes, apply it
   useEffect(() => {
     applyTheme(forcedTheme ?? theme);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forcedTheme, theme]);
 
   const providerValue = useMemo(
@@ -170,7 +174,6 @@ const Theme: React.FC<ThemeProviderProps> = ({
           value,
           children,
           attrs,
-          nonce,
         }}
       />
       {children}
@@ -189,7 +192,6 @@ const ThemeScript = memo(
     defaultTheme,
     value,
     attrs,
-    nonce,
   }: ThemeProviderProps & { attrs: string[]; defaultTheme: string }) => {
     const defaultSystem = defaultTheme === "system";
 
@@ -270,7 +272,6 @@ const ThemeScript = memo(
       )};}${fallbackColorScheme}}catch(t){}}();`;
     })();
 
-    //return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: scriptSrc }} />;
     return <Script id="next-themes-script">{scriptSrc}</Script>;
   },
   // Never re-render this component
