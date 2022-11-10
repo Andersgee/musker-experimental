@@ -77,9 +77,9 @@ model User {
 
 model Follow {
   createdAt  DateTime @default(now())
-  user       User     @relation("recievedFollows", fields: [userId], references: [id])
+  user       User     @relation("recievedFollows", fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  follower   User     @relation("sentFollows", fields: [followerId], references: [id])
+  follower   User     @relation("sentFollows", fields: [followerId], references: [id], onDelete: Cascade)
   followerId String
 
   @@id([userId, followerId])
@@ -88,7 +88,7 @@ model Follow {
 model Post {
   id        String         @id @default(cuid())
   createdAt DateTime       @default(now())
-  author    User           @relation(fields: [authorId], references: [id])
+  author    User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   text      String         @db.VarChar(10000)
   replies   Reply[]
@@ -97,9 +97,9 @@ model Post {
 
 model PostReaction {
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   text      String
 
@@ -109,9 +109,9 @@ model PostReaction {
 model Reply {
   id        String          @id @default(cuid())
   createdAt DateTime        @default(now())
-  post      Post            @relation(fields: [postId], references: [id])
+  post      Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
-  author    User            @relation(fields: [authorId], references: [id])
+  author    User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   reactions ReplyReaction[]
   text      String          @db.VarChar(10000)
@@ -119,9 +119,9 @@ model Reply {
 
 model ReplyReaction {
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  reply     Reply    @relation(fields: [replyId], references: [id])
+  reply     Reply    @relation(fields: [replyId], references: [id], onDelete: Cascade)
   replyId   String
   text      String
 
@@ -131,9 +131,9 @@ model ReplyReaction {
 model Message {
   id         String            @id @default(cuid())
   createdAt  DateTime          @default(now())
-  author     User              @relation(name: "sentMessages", fields: [authorId], references: [id])
+  author     User              @relation(name: "sentMessages", fields: [authorId], references: [id], onDelete: Cascade)
   authorId   String
-  receiver   User              @relation(name: "receivedMessages", fields: [receiverId], references: [id])
+  receiver   User              @relation(name: "receivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
   reactions  MessageReaction[]
   text       String            @db.VarChar(10000)
@@ -141,9 +141,9 @@ model Message {
 
 model MessageReaction {
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  message   Message  @relation(fields: [messageId], references: [id])
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
   messageId String
   text      String
 
