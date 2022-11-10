@@ -1,9 +1,5 @@
 "use client";
 
-/*
-
-*/
-
 import Script from "next/script";
 import React, { Fragment, createContext, useCallback, useContext, useEffect, useState, useMemo, memo } from "react";
 import type { UseThemeProps, ThemeProviderProps } from "./types";
@@ -21,9 +17,10 @@ export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
  * for the purpose of using it with experimental app dir
  *
  * ```raw
- * 1. use <Script> from next/script instead of <script>
- * 2. added a few types
- * 3. default to attribute="class"
+ * 1. has "use client" as first line
+ * 2. uses <Script> from next/script instead of <script>
+ * 3. added a few types
+ * 4. default to attribute="class"
  * ```
  */
 export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
