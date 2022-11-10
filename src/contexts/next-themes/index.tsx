@@ -1,5 +1,13 @@
 "use client";
 
+/*
+This file is a slightly edited version of next-themes: https://github.com/pacocoursey/next-themes/blob/main/src/index.tsx
+for the purpose of using it with experimental app dir
+
+1. use <Script> from next/script instead of <script>
+2. added a few types
+*/
+
 import Script from "next/script";
 import React, { Fragment, createContext, useCallback, useContext, useEffect, useState, useMemo, memo } from "react";
 import type { UseThemeProps, ThemeProviderProps } from "./types";
