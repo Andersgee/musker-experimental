@@ -29,28 +29,31 @@ export function ExploreFeed({ className }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadMoreIsInView]);
 
+  const posts = query.data?.pages.map((page) => page.items).flat();
+
+  if (!posts) {
+    return <div>no posts</div>;
+  }
+
   return (
     <div className={className}>
-      {query.data?.pages
-        .map((page) => page.items)
-        .flat()
-        .map((post) => {
-          return (
-            <div key={post.id}>
-              <article className="flex">
-                <div>
-                  <ImgUser
-                    href={`/u/${post.author.handle}`}
-                    image={post.author.image || ""}
-                    alt={post.author.handle || post.author.name || ""}
-                  />
-                </div>
-                <p className="font-paragraph">{post.text}</p>
-              </article>
-              <DividerFull />
-            </div>
-          );
-        })}
+      {posts.map((post) => {
+        return (
+          <div key={post.id}>
+            <article className="flex">
+              <div>
+                <ImgUser
+                  href={`/u/${post.author.handle?.text}`}
+                  image={post.author.image || ""}
+                  alt={post.author.handle?.text || ""}
+                />
+              </div>
+              <p className="font-paragraph">{post.text}</p>
+            </article>
+            <DividerFull />
+          </div>
+        );
+      })}
       <div className="flex justify-center">
         <div>
           <button

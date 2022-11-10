@@ -73,14 +73,14 @@ model UserHandle {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-  text   String
+  text   String @unique
 }
 
 model UserBio {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-  text   String
+  text   String @db.VarChar(1000)
 }
 
 // app
@@ -105,7 +105,7 @@ model Post {
   createdAt DateTime       @default(now())
   author    User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  text      String         @db.VarChar(10000)
+  text      String         @db.VarChar(1000)
   replies   Reply[]
   reactions PostReaction[]
 }

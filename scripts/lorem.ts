@@ -7,13 +7,24 @@ const lorem = new LoremIpsum({
 
 const randInt = (max: number) => Math.floor(Math.random() * max) + 1;
 
-export function randomText() {
+export function randomText(maxLen = 1000) {
   const r = Math.random();
   if (r < 0.33) {
-    return lorem.generateWords(randInt(10));
+    return lorem.generateWords(randInt(10)).slice(0, maxLen);
   } else if (r < 0.66) {
-    return lorem.generateSentences(randInt(5));
+    return lorem.generateSentences(randInt(5)).slice(0, maxLen);
   } else {
-    return lorem.generateParagraphs(2);
+    return lorem.generateParagraphs(2).slice(0, maxLen);
   }
+}
+
+export function uniqueWords(n: number) {
+  const words: string[] = [];
+  while (words.length < n) {
+    const word = lorem.generateWords(1);
+    if (!words.includes(word)) {
+      words.push(word);
+    }
+  }
+  return words;
 }

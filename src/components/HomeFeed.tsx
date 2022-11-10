@@ -48,9 +48,9 @@ export function HomeFeed({ className }: Props) {
             <article className="flex">
               <div>
                 <ImgUser
-                  href={`/u/${post.author.handle}`}
+                  href={`/u/${post.author.handle?.text}`}
                   image={post.author.image || ""}
-                  alt={post.author.handle || post.author.name || ""}
+                  alt={post.author.handle?.text || ""}
                 />
               </div>
               <p>{post.text}</p>

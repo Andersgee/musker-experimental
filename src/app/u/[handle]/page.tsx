@@ -17,44 +17,49 @@ export default async function Page({ params }: Props) {
     return <div>missing handle</div>;
   }
 
-  const user = await prisma.user.findFirst({ where: { handle: handle } });
+  const userHandle = await prisma.userHandle.findUnique({
+    where: { text: handle },
+    include: { user: { include: { bio: true } } },
+  });
+
+  if (!userHandle) {
+    return <div>this user does not exist</div>;
+  }
+
+  const user = userHandle.user;
 
   const followers = await prisma.follow.aggregate({
-    where: { userId: user?.id },
+    where: { userId: user.id },
     _count: {
       _all: true,
     },
   });
 
   const following = await prisma.follow.aggregate({
-    where: { followerId: user?.id },
+    where: { followerId: user.id },
     _count: {
       _all: true,
     },
   });
-
-  if (!user) {
-    return <div>this user does not exist</div>;
-  }
 
   return (
     <div className="mx-2">
       <div className="flex items-baseline justify-between">
         <ImgUser
           className="h-28 w-28"
-          href={`/u/${user.handle}`}
-          alt={user.handle || user.name || ""}
+          href={`/u/${userHandle.text}`}
+          alt={userHandle.text || user.name || ""}
           image={user.image || ""}
         />
         <div>
           <FollowButton userId={user.id} />
         </div>
       </div>
-      <h2>{user.handle || user.name}</h2>
-      <p>user.bio: {user.bio}</p>
+      <h2>{userHandle.text}</h2>
+      <p>user.bio: {user.bio?.text}</p>
       <div className="flex gap-3">
-        <Link href={`/u/${user.handle}/following`}>{following._count._all} following</Link>
-        <Link href={`/u/${user.handle}/followers`}>{followers._count._all} followers</Link>
+        <Link href={`/u/${userHandle.text}/following`}>{following._count._all} following</Link>
+        <Link href={`/u/${userHandle.text}/followers`}>{followers._count._all} followers</Link>
       </div>
       <span className="flex items-center">
         <IconDate className="h-5 w-5" />

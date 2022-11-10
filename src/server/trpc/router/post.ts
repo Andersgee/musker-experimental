@@ -65,7 +65,7 @@ export const postRouter = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
         where: { authorId: { in: [...followedIds, sessionUserId] } },
-        include: { author: true },
+        include: { author: { include: { handle: true } } },
       });
 
       let nextCursor: string | undefined = undefined;
@@ -88,7 +88,7 @@ export const postRouter = router({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
-        include: { author: true },
+        include: { author: { include: { handle: true } } },
       });
 
       let nextCursor: string | undefined = undefined;
