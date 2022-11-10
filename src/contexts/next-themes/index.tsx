@@ -271,11 +271,7 @@ const ThemeScript = memo(
     })();
 
     //return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: scriptSrc }} />;
-    return (
-      <Script id="next-themes-script" strategy="beforeInteractive">
-        {scriptSrc}
-      </Script>
-    );
+    return <Script id="next-themes-script">{scriptSrc}</Script>;
   },
   // Never re-render this component
   () => true,
