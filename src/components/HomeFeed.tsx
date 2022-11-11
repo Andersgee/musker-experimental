@@ -4,8 +4,8 @@ import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
-import { ImgUser } from "src/ui/ImgUser";
 import Link from "next/link";
+import { Post } from "./Post";
 
 type Props = {
   className?: string;
@@ -35,7 +35,10 @@ export function HomeFeed({ className }: Props) {
   if (!posts || posts?.length < 1) {
     return (
       <div>
-        go follow some people, such as <Link href="/u/seeduser1">seeduser1</Link>
+        go follow some people,{" "}
+        <Link href="/explore" className="rounded-full bg-black px-3 py-2 text-white">
+          explore here
+        </Link>
       </div>
     );
   }
@@ -45,16 +48,7 @@ export function HomeFeed({ className }: Props) {
       {posts?.map((post) => {
         return (
           <div key={post.id}>
-            <article className="flex">
-              <div>
-                <ImgUser
-                  href={`/u/${post.author.handle?.text}`}
-                  image={post.author.image || ""}
-                  alt={post.author.handle?.text || ""}
-                />
-              </div>
-              <p>{post.text}</p>
-            </article>
+            <Post post={post} />
             <DividerFull />
           </div>
         );

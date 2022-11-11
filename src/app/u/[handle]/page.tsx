@@ -3,6 +3,7 @@ import { FollowButton } from "src/components/FollowButton";
 import { IconDate } from "src/icons/Date";
 import { prisma } from "src/server/db/client";
 import { ImgUser } from "src/ui/ImgUser";
+import { format } from "date-fns";
 
 type Params = Record<string, string | string[]>;
 
@@ -61,9 +62,9 @@ export default async function Page({ params }: Props) {
         <Link href={`/u/${userHandle.text}/following`}>{following._count._all} following</Link>
         <Link href={`/u/${userHandle.text}/followers`}>{followers._count._all} followers</Link>
       </div>
-      <span className="flex items-center">
+      <span className="flex items-center text-sm">
         <IconDate className="h-5 w-5" />
-        joined: user.createdAt
+        Joined {format(user.createdAt, "MMMM yyyy")}
       </span>
     </div>
   );

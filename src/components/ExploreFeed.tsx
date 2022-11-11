@@ -5,6 +5,7 @@ import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 import { ImgUser } from "src/ui/ImgUser";
+import { Post } from "./Post";
 
 type Props = {
   className?: string;
@@ -40,16 +41,7 @@ export function ExploreFeed({ className }: Props) {
       {posts.map((post) => {
         return (
           <div key={post.id}>
-            <article className="flex">
-              <div>
-                <ImgUser
-                  href={`/u/${post.author.handle?.text}`}
-                  image={post.author.image || ""}
-                  alt={post.author.handle?.text || ""}
-                />
-              </div>
-              <p className="font-paragraph">{post.text}</p>
-            </article>
+            <Post post={post} />
             <DividerFull />
           </div>
         );
