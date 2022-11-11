@@ -31,9 +31,5 @@ export default async function Page({ params }: Props) {
     return <div>this post does not exist</div>;
   }
 
-  console.log("typeof post.createdAt:", typeof post.createdAt);
-
-  //return <div>postId: {JSON.stringify(post)}</div>;
-
   return <Post post={post} />;
 }

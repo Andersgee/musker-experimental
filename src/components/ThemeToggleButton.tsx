@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import { IconMoon } from "src/icons/Moon";
 import { IconSun } from "src/icons/Sun";
 
-export function ThemeToggleButton() {
+type Props = {
+  className?: string;
+};
+
+export function ThemeToggleButton({ className = "" }: Props) {
   const { resolvedTheme, setTheme } = useTheme();
   const [darkIcon, setDarkIcon] = useState(false);
 
@@ -26,7 +30,7 @@ export function ThemeToggleButton() {
   };
 
   return (
-    <button aria-label="Toggle theme" onClick={toggleTheme} className="hover:opacity-80">
+    <button className={`${className}`} aria-label="Toggle theme" onClick={toggleTheme}>
       {darkIcon ? <IconMoon /> : <IconSun />}
     </button>
   );

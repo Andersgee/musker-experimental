@@ -1,9 +1,9 @@
 export function DividerFull() {
-  return <hr className="my-4 h-px border-0 bg-gray-200 dark:bg-gray-700" />;
+  return <hr className=" h-px border-0 bg-gray-200 dark:bg-gray-700" />;
 }
 
 export function DividerShort() {
-  return <hr className="my-4 mx-auto h-1 w-48 rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />;
+  return <hr className="mx-auto h-1 w-48 rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />;
 }
 
 export function DividerText({ text }: { text: string }) {

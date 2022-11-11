@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { UserHandleChoose } from "./UserHandleChoose";
+import { SigninButtons } from "src/components/SigninButtons";
 
 type Props = {
   className?: string;
@@ -24,7 +24,12 @@ export function ComposePost({ className }: Props) {
   });
 
   if (!session.data?.user) {
-    return <div>sign in before you can post anything</div>;
+    return (
+      <div>
+        <p>sign in before you can post anything</p>
+        <SigninButtons />
+      </div>
+    );
   }
   return (
     <div className="flex w-full justify-between">
@@ -39,7 +44,6 @@ export function ComposePost({ className }: Props) {
       </div>
 
       <div className="flex-1">
-        <UserHandleChoose />
         <div className="flex items-center">
           <input
             className="w-full"

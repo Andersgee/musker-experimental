@@ -10,20 +10,18 @@ type Props = {
 
 export function Post({ post, className }: Props) {
   return (
-    <Link href={`/u/${post.author.handle?.text}/p/${post.id}`}>
-      <article className="flex">
-        <div>
-          <ImgUser
-            href={`/u/${post.author.handle?.text}`}
-            image={post.author.image || ""}
-            alt={post.author.handle?.text || ""}
-          />
-        </div>
-        <div>
-          <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
-          <p>{post.text}</p>
-        </div>
-      </article>
-    </Link>
+    <article className="flex">
+      <div>
+        <ImgUser
+          href={`/u/${post.author.handle?.text}`}
+          image={post.author.image || ""}
+          alt={post.author.handle?.text || ""}
+        />
+      </div>
+      <Link href={`/u/${post.author.handle?.text}/p/${post.id}`}>
+        <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
+        <p>{post.text}</p>
+      </Link>
+    </article>
   );
 }
