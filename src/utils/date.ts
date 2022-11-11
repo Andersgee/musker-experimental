@@ -5,11 +5,11 @@ export function formatPostCreatedAt(d: Date) {
   if (minutes < 60) {
     return `${minutes}m`;
   } else if (minutes < 24 * 60) {
-    return `${minutes * 60}h`;
+    return `${Math.floor(minutes / 60)}h`;
   }
 
-  //return format(d, "MMM dd");
-  console.log("typeof d:", typeof d);
-  return "hellodate?";
+  return format(d, "MMM dd");
+  //console.log("typeof d:", typeof d);
+  //return "hellodate?";
   //return format(d, "yyyy-MM-dd hh:mm:ss");
 }

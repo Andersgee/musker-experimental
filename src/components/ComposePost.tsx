@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
+import { UserHandleChoose } from "./UserHandleChoose";
 
 type Props = {
   className?: string;
@@ -38,6 +39,7 @@ export function ComposePost({ className }: Props) {
       </div>
 
       <div className="flex-1">
+        <UserHandleChoose />
         <div className="flex items-center">
           <input
             className="w-full"
@@ -48,6 +50,7 @@ export function ComposePost({ className }: Props) {
             onChange={(e) => setText(e.target.value)}
           />
         </div>
+
         <DividerFull />
         <div className="flex items-baseline justify-between">
           <div>tweet options here</div>
