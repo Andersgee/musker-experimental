@@ -1,55 +1,29 @@
+import Link from "next/link";
 import { ImgUser } from "src/ui/ImgUser";
-import { prisma } from "src/server/db/client";
-//import { env } from "src/env/server.mjs";
-//import { use } from "react";
+import { formatPostCreatedAt } from "src/utils/date";
+import type { RouterTypes } from "src/utils/trpc";
 
 type Props = {
-  postId: string;
   className?: string;
+  post: RouterTypes["post"]["homeFeed"]["output"]["items"][number];
 };
 
-// Ok... These server components _CAN NOT_ be imported and used in client components.
-// But they _CAN_ be passed as child or prop to a client component
-// @see https://beta.nextjs.org/docs/rendering/server-and-client-components#
-
-//also good to read: https://beta.nextjs.org/docs/data-fetching/caching#
-
-export function Post({ postId }: Props) {
-  console.log("hello?");
-  //console.log({ env });
-  /*
-  const post = prisma.post.findUnique({
-    where: { id: postId },
-    include: {
-      author: {
-        select: {
-          handle: true,
-          image: true,
-          name: true,
-        },
-      },
-    },
-  });
-  */
-
-  return <div>postId: {postId}</div>;
-
-  /*
-  if (!post) {
-    return <div>no post here</div>;
-  }
-
+export function Post({ post, className }: Props) {
   return (
-    <article className="flex">
-      <div>
-        <ImgUser
-          href={`/u/${post.author.handle}`}
-          image={post.author.image || ""}
-          alt={post.author.handle || post.author.name || ""}
-        />
-      </div>
-      <p>{post.text}</p>
-    </article>
+    <Link href={`/u/${post.author.handle?.text}/p/${post.id}`}>
+      <article className="flex">
+        <div>
+          <ImgUser
+            href={`/u/${post.author.handle?.text}`}
+            image={post.author.image || ""}
+            alt={post.author.handle?.text || ""}
+          />
+        </div>
+        <div>
+          <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
+          <p>{post.text}</p>
+        </div>
+      </article>
+    </Link>
   );
-  */
 }

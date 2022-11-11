@@ -7,7 +7,7 @@ import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
 
 */
-import { Post } from "src/components/Post";
+import { Post } from "src/components-server/Post";
 
 type Params = Record<string, string | string[]>;
 
