@@ -4,15 +4,16 @@ import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
-import { ImgUser } from "src/ui/ImgUser";
+//import { ImgUser } from "src/ui/ImgUser";
 import { Post } from "./Post";
+import { Button } from "src/ui/Button";
 
 type Props = {
   className?: string;
 };
 
 export function ExploreFeed({ className }: Props) {
-  const query = trpc.post.exploreFeed.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.post.exploreFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -20,17 +21,18 @@ export function ExploreFeed({ className }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false, rootMargin: "100%" });
-  const loadMoreIsInView = !!entry?.isIntersecting;
+  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false, rootMargin: "600px" });
 
   useEffect(() => {
-    if (loadMoreIsInView && query.hasNextPage && query.fetchNextPage) {
-      query.fetchNextPage();
+    console.log("triggered effect");
+    if (data && entry?.isIntersecting && hasNextPage && !isFetching) {
+      console.log("fetchNextPage triggered");
+      fetchNextPage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadMoreIsInView]);
+  }, [entry, hasNextPage, data, isFetching, fetchNextPage]);
 
-  const posts = query.data?.pages.map((page) => page.items).flat();
+  const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
+  const posts = data?.pages.map((page) => page.items).flat();
 
   if (!posts) {
     return <div>no posts</div>;
@@ -46,16 +48,13 @@ export function ExploreFeed({ className }: Props) {
           </div>
         );
       })}
-      <div className="flex justify-center">
-        <div>
-          <button
-            ref={ref}
-            onClick={() => query.fetchNextPage()}
-            disabled={!query.hasNextPage || query.isFetchingNextPage}
-          >
-            {query.isFetchingNextPage ? "loading..." : query.hasNextPage ? "Load More" : "-"}
-          </button>
+      <div className="mt-4 flex justify-center">
+        <div ref={ref}>
+          <Button onClick={() => fetchNextPage()} disabled={buttonIsDisabled}>
+            {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+          </Button>
         </div>
+        {!hasNextPage && <div>nothing more to see</div>}
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
     </div>

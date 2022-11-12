@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "src/ui/Button";
 import { trpc } from "src/utils/trpc";
 
 type Props = {
@@ -31,12 +32,8 @@ export function FollowButton({ userId, className }: Props) {
   };
 
   return (
-    <button
-      className="rounded-full bg-black px-3 py-2 
-    text-sm font-bold text-white"
-      onClick={handleClick}
-    >
+    <Button className="w-24 border border-white bg-black text-white" onClick={handleClick}>
       {isFollowing ? "Unfollow" : "Follow"}
-    </button>
+    </Button>
   );
 }
