@@ -2,7 +2,7 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Post } from "./Post";
@@ -21,15 +21,14 @@ export function ExploreFeed({ className }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false, rootMargin: "600px" });
+  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
+  const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {
-    console.log("triggered effect");
-    if (data && entry?.isIntersecting && hasNextPage && !isFetching) {
-      console.log("fetchNextPage triggered");
+    if (isVisible && hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }, [entry, hasNextPage, data, isFetching, fetchNextPage]);
+  }, [isVisible]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const posts = data?.pages.map((page) => page.items).flat();
@@ -54,6 +53,7 @@ export function ExploreFeed({ className }: Props) {
             {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
           </Button>
         </div>
+        <div></div>
         {!hasNextPage && <div>nothing more to see</div>}
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
