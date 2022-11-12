@@ -21,9 +21,12 @@ export function Post({ post, className }: Props) {
           alt={post.author.handle?.text || ""}
         />
       </div>
-      <Link className="flex-1 py-4 hover:bg-neutral-100" href={`/u/${post.author.handle?.text}/p/${post.id}`}>
+      <Link
+        className="flex-1 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        href={`/u/${post.author.handle?.text}/p/${post.id}`}
+      >
         <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
-        <p>{post.text}</p>
+        <pre className="whitespace-pre-wrap">{post.text}</pre>
       </Link>
     </article>
   );

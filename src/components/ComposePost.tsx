@@ -45,10 +45,9 @@ export function ComposePost({ className }: Props) {
 
       <div className="flex-1">
         <div className="flex items-center">
-          <input
-            className="w-full"
+          <textarea
+            className="h-20 w-full p-1"
             aria-label="compose"
-            type={"text"}
             placeholder="Whats's happening?"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -64,6 +63,7 @@ export function ComposePost({ className }: Props) {
             onClick={async () => {
               try {
                 await postCreate.mutateAsync({ text });
+                setText("");
               } catch (error) {}
             }}
           >

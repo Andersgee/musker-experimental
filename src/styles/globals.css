@@ -19,12 +19,14 @@
   h2 {
     letter-spacing: -0.03em;
   }
-
+  /*
   a {
     @apply font-sans text-neutral-600 underline decoration-dotted  hover:text-neutral-500 hover:decoration-solid dark:text-neutral-300 dark:hover:text-neutral-200;
   }
-  p {
-    @apply max-w-[55ch] font-serif text-base font-normal text-neutral-600 dark:text-neutral-300;
+  */
+  p,
+  pre {
+    @apply max-w-[55ch] font-paragraph text-base font-normal text-neutral-600 dark:text-neutral-300;
     word-spacing: 0.5px;
     letter-spacing: 0.15px;
     line-height: 1.55;

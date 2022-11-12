@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 import Link from "next/link";
 import { Post } from "./Post";
+import { IconMusker } from "src/icons/Musker";
 
 type Props = {
   className?: string;
@@ -66,10 +67,13 @@ export function HomeFeed({ className }: Props) {
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
       {!query.hasNextPage && (
-        <p>
-          You have seen all posts from the people you follow. TODO: Put some explore posts and/or recommend some people
-          to follow here.
-        </p>
+        <>
+          <IconMusker className="w-full" />
+          <p>
+            You have seen all posts from the people you follow. TODO: Put some explore posts and/or recommend some
+            people to follow here.
+          </p>
+        </>
       )}
     </div>
   );
