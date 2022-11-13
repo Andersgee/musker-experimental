@@ -4,7 +4,6 @@ import { IconReply } from "src/icons/Reply";
 import { formatCreatedAt } from "src/utils/date";
 import type { RouterTypes } from "src/utils/trpc";
 
-//
 type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
 
 type Props = {
