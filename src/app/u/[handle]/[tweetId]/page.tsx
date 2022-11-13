@@ -52,7 +52,8 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
-      {tweet.parentTweet && <TweetRSC tweet={tweet.parentTweet} />}
+      <div>hello</div>
+      {tweet.parentTweet && <TweetRSC tweet={tweet.parentTweet} showReplyLine={!!tweet.parentTweet} />}
       <TweetRSC tweet={tweet} />
       <TweetComposeReply tweetId={tweet.id} />
       <TweetReplies tweetId={tweet.id} />

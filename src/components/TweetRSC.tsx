@@ -10,13 +10,14 @@ type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "
 type Props = {
   className?: string;
   tweet: Tweet;
+  showReplyLine?: boolean;
 };
 
-export function TweetRSC({ tweet: tweet, className = "" }: Props) {
+export function TweetRSC({ tweet: tweet, showReplyLine = false, className = "" }: Props) {
   const replyCount = tweet._count.childTweets;
   return (
     <article className={`flex ${className}`}>
-      <div className="mt-2">
+      <div className="mt-2 flex flex-col">
         <Link href={`/u/${tweet.author.handle?.text}`} className="w-12">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
@@ -24,6 +25,7 @@ export function TweetRSC({ tweet: tweet, className = "" }: Props) {
             alt={tweet.author.handle?.text}
           />
         </Link>
+        <div className="mt-2 flex-1">{showReplyLine && <div className="ml-3.5 h-full border-l-2 "></div>}</div>
       </div>
       <div>
         <div className="py-2 pl-2">
