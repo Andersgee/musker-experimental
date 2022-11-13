@@ -9,7 +9,7 @@ const N_POSTS_PER_USER = 20;
 type Users = Prisma.UserCreateManyInput[];
 type UserBios = Prisma.UserBioCreateManyInput[];
 type UserHandles = Prisma.UserHandleCreateManyInput[];
-type Posts = Prisma.PostCreateManyInput[];
+type Tweets = Prisma.TweetCreateManyInput[];
 
 function createUsers() {
   const users: Users = [];
@@ -45,8 +45,8 @@ function createHandles(users: Users) {
   return handles;
 }
 
-function createPosts(users: Users) {
-  const posts: Posts = [];
+function createTweets(users: Users) {
+  const posts: Tweets = [];
   users.forEach((user) => {
     for (let i = 0; i < N_POSTS_PER_USER; i++) {
       posts.push({
@@ -69,12 +69,12 @@ async function main() {
   const users = createUsers();
   const userBios = createBios(users);
   const userHandles = createHandles(users);
-  const posts = createPosts(users);
+  const tweets = createTweets(users);
 
   await prisma.user.createMany({ data: users });
   await prisma.userBio.createMany({ data: userBios });
   await prisma.userHandle.createMany({ data: userHandles });
-  await prisma.post.createMany({ data: posts });
+  await prisma.tweet.createMany({ data: tweets });
 }
 
 main();

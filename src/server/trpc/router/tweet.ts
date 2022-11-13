@@ -1,22 +1,7 @@
 import { z } from "zod";
-
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
-export const postRouter = router({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany({
-      include: {
-        author: {
-          select: {
-            name: true,
-            handle: true,
-            image: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-  }),
+export const tweetRouter = router({
   getById: publicProcedure
     .input(
       z.object({
@@ -24,7 +9,7 @@ export const postRouter = router({
       }),
     )
     .query(({ input, ctx }) => {
-      return ctx.prisma.post.findUnique({ where: { id: input.id } });
+      return ctx.prisma.tweet.findUnique({ where: { id: input.id } });
     }),
   create: protectedProcedure
     .input(
@@ -33,7 +18,7 @@ export const postRouter = router({
       }),
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.post.create({
+      return ctx.prisma.tweet.create({
         data: {
           authorId: ctx.session.user.id,
           text: input.text,
@@ -60,7 +45,7 @@ export const postRouter = router({
       //the ids this user is following
       const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
 
-      const items = await ctx.prisma.post.findMany({
+      const items = await ctx.prisma.tweet.findMany({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
@@ -84,7 +69,7 @@ export const postRouter = router({
     .query(async ({ ctx, input }) => {
       const limit = 10;
 
-      const items = await ctx.prisma.post.findMany({
+      const items = await ctx.prisma.tweet.findMany({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },

@@ -17,9 +17,9 @@ export function ComposePost({ className }: Props) {
   //const router = useRouter();
   const [text, setText] = useState("");
   const session = useSession();
-  const postCreate = trpc.post.create.useMutation({
+  const tweetCreate = trpc.tweet.create.useMutation({
     onSuccess: () => {
-      utils.post.homeFeed.invalidate();
+      utils.tweet.homeFeed.invalidate();
     },
   });
 
@@ -58,11 +58,11 @@ export function ComposePost({ className }: Props) {
         <div className="flex items-baseline justify-between">
           <div>tweet options here</div>
           <button
-            disabled={postCreate.isLoading || !session.data?.user || !text}
+            disabled={tweetCreate.isLoading || !session.data?.user || !text}
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {
-                await postCreate.mutateAsync({ text });
+                await tweetCreate.mutateAsync({ text });
                 setText("");
               } catch (error) {}
             }}

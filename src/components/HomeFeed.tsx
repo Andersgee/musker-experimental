@@ -16,7 +16,7 @@ type Props = {
 };
 
 export function HomeFeed({ className }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.post.homeFeed.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.homeFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -34,9 +34,9 @@ export function HomeFeed({ className }: Props) {
   }, [isVisible]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
-  const posts = data?.pages.map((page) => page.items).flat();
+  const tweets = data?.pages.map((page) => page.items).flat();
 
-  if (!posts || posts?.length < 1) {
+  if (!tweets || tweets?.length < 1) {
     return (
       <div>
         go follow some people,{" "}
@@ -49,10 +49,10 @@ export function HomeFeed({ className }: Props) {
 
   return (
     <div className={className}>
-      {posts?.map((post) => {
+      {tweets?.map((tweet) => {
         return (
-          <div key={post.id}>
-            <Post post={post} />
+          <div key={tweet.id}>
+            <Post post={tweet} />
             <DividerFull />
           </div>
         );

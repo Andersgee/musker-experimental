@@ -22,7 +22,7 @@ export default async function Page({ params }: Props) {
     return <div>missing postId</div>;
   }
 
-  const post = await prisma.post.findUnique({
+  const post = await prisma.tweet.findUnique({
     where: { id: postId },
     include: { author: { include: { handle: true } } },
   });

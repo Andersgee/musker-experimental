@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { ImgUser } from "src/ui/ImgUser";
-import { formatPostCreatedAt } from "src/utils/date";
+import { formatCreatedAt } from "src/utils/date";
 import type { RouterTypes } from "src/utils/trpc";
 
 type Props = {
   className?: string;
-  post: RouterTypes["post"]["homeFeed"]["output"]["items"][number];
+  post: RouterTypes["tweet"]["homeFeed"]["output"]["items"][number];
 };
 
 export function Post({ post, className }: Props) {
@@ -25,7 +25,7 @@ export function Post({ post, className }: Props) {
         className="flex-1 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-800"
         href={`/u/${post.author.handle?.text}/p/${post.id}`}
       >
-        <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
+        <div>{`${post.author.handle?.text} - ${formatCreatedAt(post.createdAt)}`}</div>
         <pre className="whitespace-pre-wrap">{post.text}</pre>
       </Link>
     </article>

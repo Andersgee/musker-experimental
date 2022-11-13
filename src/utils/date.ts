@@ -1,6 +1,6 @@
 import { format, differenceInHours, differenceInMinutes } from "date-fns";
 
-export function formatPostCreatedAt(d: Date) {
+export function formatCreatedAt(d: Date) {
   const minutes = differenceInMinutes(new Date(), d);
   if (minutes < 60) {
     return `${minutes}m`;

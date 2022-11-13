@@ -13,7 +13,7 @@ type Props = {
 };
 
 export function ExploreFeed({ className }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.post.exploreFeed.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.exploreFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -31,18 +31,18 @@ export function ExploreFeed({ className }: Props) {
   }, [isVisible]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
-  const posts = data?.pages.map((page) => page.items).flat();
+  const tweets = data?.pages.map((page) => page.items).flat();
 
-  if (!posts) {
+  if (!tweets) {
     return <div>no posts</div>;
   }
 
   return (
     <div className={className}>
-      {posts.map((post) => {
+      {tweets.map((tweet) => {
         return (
-          <div key={post.id}>
-            <Post post={post} />
+          <div key={tweet.id}>
+            <Post post={tweet} />
             <DividerFull />
           </div>
         );
