@@ -1,11 +1,11 @@
-import { ComposePost } from "src/components/ComposePost";
+import { TweetCompose } from "src/components/TweetCompose";
 import { HomeFeed } from "src/components/HomeFeed";
 import { DividerFull } from "src/ui/Divider";
 
 export default function Page() {
   return (
     <div className="">
-      <ComposePost />
+      <TweetCompose />
       <DividerFull />
       <HomeFeed />
     </div>

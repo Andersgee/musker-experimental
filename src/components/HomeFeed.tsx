@@ -5,7 +5,7 @@ import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 import Link from "next/link";
-import { Post } from "./Post";
+import { Tweet } from "./Tweet";
 import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
@@ -15,7 +15,7 @@ type Props = {
   className?: string;
 };
 
-export function HomeFeed({ className }: Props) {
+export function HomeFeed({ className = "" }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.homeFeed.useInfiniteQuery(
     {},
     {
@@ -52,7 +52,7 @@ export function HomeFeed({ className }: Props) {
       {tweets?.map((tweet) => {
         return (
           <div key={tweet.id}>
-            <Post post={tweet} />
+            <Tweet tweet={tweet} />
             <DividerFull />
           </div>
         );
@@ -76,7 +76,7 @@ function EndOfFeed() {
     <div className="mb-4">
       <div className="">
         <IconMusker className="w-full" />
-        <p className="">You have seen all posts from the people you follow. Go follow some people.</p>
+        <p className="">You have seen all tweets from the people you follow. Go follow some people.</p>
       </div>
       <div className="flex w-full justify-center">
         <ButtonLink href="/explore">explore</ButtonLink>

@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-export function FollowButton({ userId, className }: Props) {
+export function FollowButton({ userId, className = "" }: Props) {
   const utils = trpc.useContext();
 
   const { data: isFollowing } = trpc.user.isFollowing.useQuery({ userId });

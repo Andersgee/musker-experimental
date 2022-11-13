@@ -16,7 +16,7 @@ export function UserHandleChoose({ className = "" }: Props) {
   const { data: textHandle } = trpc.handle.getByText.useQuery({ text });
 
   const onSuccess = () => {
-    //utils.post.homeFeed.invalidate();
+    //utils.tweet.homeFeed.invalidate();
     utils.invalidate(); //every single query...
   };
 

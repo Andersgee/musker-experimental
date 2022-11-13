@@ -22,7 +22,7 @@ type SignInButtonsProps = {
 /**
  * Keep same look (light mode) always.
  */
-export function SigninButtons({ className }: SignInButtonsProps) {
+export function SigninButtons({ className = "" }: SignInButtonsProps) {
   const onClick = (providerId: string) => () => {
     signIn(providerId);
   };
@@ -67,7 +67,7 @@ type ProviderIconProps = {
   className?: string;
 };
 
-export function ProviderIcon({ name, className }: ProviderIconProps) {
+export function ProviderIcon({ name, className = "" }: ProviderIconProps) {
   if (name === "GitHub") {
     return <IconGithub width={32} height={32} className={className} />;
   } else if (name === "Discord") {

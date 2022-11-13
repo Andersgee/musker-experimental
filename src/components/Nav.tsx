@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-export function Nav({ className }: Props) {
+export function Nav({ className = "" }: Props) {
   return (
     <nav className={` ${className}`}>
       <ul className="flex items-center sm:flex-col lg:items-start">

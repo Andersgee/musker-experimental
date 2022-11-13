@@ -5,14 +5,14 @@ import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
-import { Post } from "./Post";
+import { Tweet } from "./Tweet";
 import { Button } from "src/ui/Button";
 
 type Props = {
   className?: string;
 };
 
-export function ExploreFeed({ className }: Props) {
+export function ExploreFeed({ className = "" }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.exploreFeed.useInfiniteQuery(
     {},
     {
@@ -34,7 +34,7 @@ export function ExploreFeed({ className }: Props) {
   const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!tweets) {
-    return <div>no posts</div>;
+    return <div>no tweets</div>;
   }
 
   return (
@@ -42,7 +42,7 @@ export function ExploreFeed({ className }: Props) {
       {tweets.map((tweet) => {
         return (
           <div key={tweet.id}>
-            <Post post={tweet} />
+            <Tweet tweet={tweet} />
             <DividerFull />
           </div>
         );

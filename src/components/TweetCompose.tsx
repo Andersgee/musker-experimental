@@ -12,7 +12,7 @@ type Props = {
   className?: string;
 };
 
-export function ComposePost({ className }: Props) {
+export function TweetCompose({ className = "" }: Props) {
   const utils = trpc.useContext(); //https://trpc.io/docs/v10/useContext#helpers
   //const router = useRouter();
   const [text, setText] = useState("");
@@ -26,7 +26,7 @@ export function ComposePost({ className }: Props) {
   if (!session.data?.user) {
     return (
       <div>
-        <p>sign in before you can post anything</p>
+        <p>sign in before you can tweet anything</p>
         <SigninButtons />
       </div>
     );

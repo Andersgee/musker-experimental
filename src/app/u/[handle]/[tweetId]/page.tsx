@@ -7,7 +7,7 @@ import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
 
 */
-import { Post } from "src/components-server/Post";
+import { Tweet } from "src/components-server/Tweet";
 
 type Params = Record<string, string | string[]>;
 
@@ -17,19 +17,19 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  const postId = params?.postId;
-  if (typeof postId !== "string") {
-    return <div>missing postId</div>;
+  const tweetId = params?.tweetId;
+  if (typeof tweetId !== "string") {
+    return <div>missing tweetId</div>;
   }
 
-  const post = await prisma.tweet.findUnique({
-    where: { id: postId },
+  const tweet = await prisma.tweet.findUnique({
+    where: { id: tweetId },
     include: { author: { include: { handle: true } } },
   });
 
-  if (!post) {
-    return <div>this post does not exist</div>;
+  if (!tweet) {
+    return <div>this tweet does not exist</div>;
   }
 
-  return <Post post={post} />;
+  return <Tweet tweet={tweet} />;
 }

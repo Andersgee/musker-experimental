@@ -4,7 +4,7 @@ import { type Prisma } from "@prisma/client";
 import { randomText, uniqueWords } from "./lorem";
 
 const N_USERS = 10;
-const N_POSTS_PER_USER = 20;
+const N_TWEETS_PER_USER = 20;
 
 type Users = Prisma.UserCreateManyInput[];
 type UserBios = Prisma.UserBioCreateManyInput[];
@@ -46,16 +46,16 @@ function createHandles(users: Users) {
 }
 
 function createTweets(users: Users) {
-  const posts: Tweets = [];
+  const tweets: Tweets = [];
   users.forEach((user) => {
-    for (let i = 0; i < N_POSTS_PER_USER; i++) {
-      posts.push({
+    for (let i = 0; i < N_TWEETS_PER_USER; i++) {
+      tweets.push({
         authorId: user.id!,
         text: randomText(),
       });
     }
   });
-  return posts;
+  return tweets;
 }
 
 /**

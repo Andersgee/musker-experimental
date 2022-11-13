@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-export function Header({ className }: Props) {
+export function Header({ className = "" }: Props) {
   //const { data: sessionData } = useSession();
   return (
     <div className={`${className}`}>
