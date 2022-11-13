@@ -73,6 +73,16 @@ export const tweetRouter = router({
           _count: {
             select: { childTweets: true },
           },
+          parentTweet: {
+            include: {
+              author: {
+                include: { handle: true },
+              },
+              _count: {
+                select: { childTweets: true },
+              },
+            },
+          },
         },
       });
 
@@ -102,6 +112,16 @@ export const tweetRouter = router({
           },
           _count: {
             select: { childTweets: true },
+          },
+          parentTweet: {
+            include: {
+              author: {
+                include: { handle: true },
+              },
+              _count: {
+                select: { childTweets: true },
+              },
+            },
           },
         },
       });
@@ -134,6 +154,16 @@ export const tweetRouter = router({
           },
           _count: {
             select: { childTweets: true },
+          },
+          parentTweet: {
+            include: {
+              author: {
+                include: { handle: true },
+              },
+              _count: {
+                select: { childTweets: true },
+              },
+            },
           },
         },
       });

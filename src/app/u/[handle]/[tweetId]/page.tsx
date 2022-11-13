@@ -26,7 +26,24 @@ export default async function Page({ params }: Props) {
 
   const tweet = await prisma.tweet.findUnique({
     where: { id: tweetId },
-    include: { author: { include: { handle: true } } },
+    include: {
+      author: {
+        include: { handle: true },
+      },
+      _count: {
+        select: { childTweets: true },
+      },
+      parentTweet: {
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          _count: {
+            select: { childTweets: true },
+          },
+        },
+      },
+    },
   });
 
   if (!tweet) {
@@ -35,6 +52,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
+      {tweet.parentTweet && <Tweet tweet={tweet.parentTweet} />}
       <Tweet tweet={tweet} />
       <TweetComposeReply tweetId={tweet.id} />
       <TweetReplies tweetId={tweet.id} />

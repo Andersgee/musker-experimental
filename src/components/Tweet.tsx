@@ -27,7 +27,7 @@ export function Tweet({ tweet: tweet, className = "" }: Props) {
         href={`/u/${tweet.author.handle?.text}/${tweet.id}`}
       >
         <div>{`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}</div>
-        <pre className="whitespace-pre-wrap">{tweet.text}</pre>
+        <p>{tweet.text}</p>
         <div>{replyCount > 0 ? `${replyCount} replies` : ""}</div>
       </Link>
     </article>
