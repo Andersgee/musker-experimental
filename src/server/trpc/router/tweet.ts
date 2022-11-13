@@ -25,6 +25,22 @@ export const tweetRouter = router({
         },
       });
     }),
+  createReply: protectedProcedure
+    .input(
+      z.object({
+        tweetId: z.string(),
+        text: z.string(),
+      }),
+    )
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.tweet.create({
+        data: {
+          authorId: ctx.session.user.id,
+          text: input.text,
+          parentTweetId: input.tweetId,
+        },
+      });
+    }),
   homeFeed: protectedProcedure
     .input(
       z.object({
@@ -74,6 +90,42 @@ export const tweetRouter = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
         include: { author: { include: { handle: true } } },
+      });
+
+      let nextCursor: string | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
+  replies: publicProcedure
+    .input(
+      z.object({
+        tweetId: z.string(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 10;
+
+      const items = await ctx.prisma.tweet.findMany({
+        where: { parentTweetId: input.tweetId },
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        take: limit + 1, //get one extra (use it for cursor to next query)
+        orderBy: { createdAt: "desc" },
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          childTweets: {
+            include: {
+              author: {
+                include: { handle: true },
+              },
+            },
+          },
+        },
       });
 
       let nextCursor: string | undefined = undefined;

@@ -21,7 +21,7 @@ export function Layout({ children }: Props) {
       <aside className="hidden  md:col-start-3 md:row-span-2 md:row-start-1 md:block">
         <article className="mx-2 mt-1">
           <h2>What is this?</h2>
-          <p>Musker is a twitter clone built with experimental features of nextjs 13.</p>
+          <p>Musker is a twitter clone built with the latest features of nextjs 13.</p>
           <p></p>
         </article>
       </aside>

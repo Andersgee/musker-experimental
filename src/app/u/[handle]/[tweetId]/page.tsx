@@ -8,6 +8,8 @@ import { format } from "date-fns";
 
 */
 import { Tweet } from "src/components-server/Tweet";
+import { TweetComposeReply } from "src/components/TweetComposeReply";
+import { TweetReplies } from "src/components/TweetReplies";
 
 type Params = Record<string, string | string[]>;
 
@@ -31,5 +33,11 @@ export default async function Page({ params }: Props) {
     return <div>this tweet does not exist</div>;
   }
 
-  return <Tweet tweet={tweet} />;
+  return (
+    <div>
+      <Tweet tweet={tweet} />
+      <TweetComposeReply tweetId={tweet.id} />
+      <TweetReplies tweetId={tweet.id} />
+    </div>
+  );
 }
