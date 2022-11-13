@@ -11,6 +11,7 @@ type Props = {
 };
 
 export function Tweet({ tweet: tweet, className = "" }: Props) {
+  const replyCount = tweet._count.childTweets;
   return (
     <article className={`flex ${className}`}>
       <div className="mt-4">
@@ -27,6 +28,7 @@ export function Tweet({ tweet: tweet, className = "" }: Props) {
       >
         <div>{`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}</div>
         <pre className="whitespace-pre-wrap">{tweet.text}</pre>
+        <div>{replyCount > 0 ? `${replyCount} replies` : ""}</div>
       </Link>
     </article>
   );

@@ -44,14 +44,6 @@ export function TweetReplies({ tweetId, className = "" }: Props) {
         return (
           <div key={tweet.id}>
             <Tweet tweet={tweet} />
-            <div className="ml-8">
-              {tweet.childTweets.map((childTweet) => (
-                <div key={childTweet.id}>
-                  <Tweet tweet={childTweet} />
-                  <DividerFull />
-                </div>
-              ))}
-            </div>
             <DividerFull />
           </div>
         );

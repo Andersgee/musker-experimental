@@ -66,7 +66,14 @@ export const tweetRouter = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
         where: { authorId: { in: [...followedIds, sessionUserId] } },
-        include: { author: { include: { handle: true } } },
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          _count: {
+            select: { childTweets: true },
+          },
+        },
       });
 
       let nextCursor: string | undefined = undefined;
@@ -89,7 +96,14 @@ export const tweetRouter = router({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
-        include: { author: { include: { handle: true } } },
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          _count: {
+            select: { childTweets: true },
+          },
+        },
       });
 
       let nextCursor: string | undefined = undefined;
@@ -118,12 +132,8 @@ export const tweetRouter = router({
           author: {
             include: { handle: true },
           },
-          childTweets: {
-            include: {
-              author: {
-                include: { handle: true },
-              },
-            },
+          _count: {
+            select: { childTweets: true },
           },
         },
       });
