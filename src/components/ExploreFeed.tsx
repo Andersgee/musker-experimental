@@ -7,6 +7,7 @@ import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Tweet } from "./Tweet";
 import { Button } from "src/ui/Button";
+import { useIsIntersecting } from "src/hooks/useIsIntersecting";
 
 type Props = {
   className?: string;
@@ -21,8 +22,9 @@ export function ExploreFeed({ className = "" }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
-  const isVisible = !!entry?.isIntersecting;
+  //const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
+  //const isVisible = !!entry?.isIntersecting;
+  const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
     if (isVisible && hasNextPage && !isFetching) {

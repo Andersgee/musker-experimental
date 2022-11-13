@@ -1,6 +1,6 @@
 import "src/styles/globals.css";
 
-import { Layout } from "src/components-server/Layout";
+import { LayoutRSC } from "src/components/LayoutRSC";
 import { TrpcProvider } from "src/contexts/TrpcContext";
 import { SessionProvider } from "src/contexts/SessionContext";
 import { ThemeProvider } from "src/contexts/next-themes";
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TrpcProvider>
           <ThemeProvider>
             <body>
-              <Layout>{children}</Layout>
+              <LayoutRSC>{children}</LayoutRSC>
             </body>
           </ThemeProvider>
         </TrpcProvider>

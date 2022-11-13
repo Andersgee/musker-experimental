@@ -12,7 +12,7 @@ type Props = {
   tweet: Tweet;
 };
 
-export function Tweet({ tweet: tweet, className = "" }: Props) {
+export function TweetRSC({ tweet: tweet, className = "" }: Props) {
   const replyCount = tweet._count.childTweets;
   return (
     <article className={`flex ${className}`}>

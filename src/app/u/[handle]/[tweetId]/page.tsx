@@ -7,7 +7,7 @@ import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
 
 */
-import { Tweet } from "src/components-server/Tweet";
+import { TweetRSC } from "src/components/TweetRSC";
 import { TweetComposeReply } from "src/components/TweetComposeReply";
 import { TweetReplies } from "src/components/TweetReplies";
 
@@ -52,8 +52,8 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
-      {tweet.parentTweet && <Tweet tweet={tweet.parentTweet} />}
-      <Tweet tweet={tweet} />
+      {tweet.parentTweet && <TweetRSC tweet={tweet.parentTweet} />}
+      <TweetRSC tweet={tweet} />
       <TweetComposeReply tweetId={tweet.id} />
       <TweetReplies tweetId={tweet.id} />
     </div>

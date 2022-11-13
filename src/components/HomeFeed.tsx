@@ -9,7 +9,7 @@ import { Tweet } from "./Tweet";
 import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
-//import { useIsInView } from "src/hooks/useIsInView";
+import { useIsIntersecting } from "src/hooks/useIsIntersecting";
 
 type Props = {
   className?: string;
@@ -24,8 +24,9 @@ export function HomeFeed({ className = "" }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
-  const isVisible = !!entry?.isIntersecting;
+  //const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
+  //const isVisible = !!entry?.isIntersecting;
+  const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
     if (isVisible && hasNextPage && !isFetching) {

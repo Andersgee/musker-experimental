@@ -354,6 +354,7 @@ export function IconMusker({ className, ...rest }: IconProps) {
         strokeLinecap="round"
         strokeDasharray={0.33 * 499.3709716796875}
         strokeDashoffset={0.33 * 2 * 499.3709716796875}
+        style={{ animationDelay: "250ms" }}
       />
       <path
         className="animate-muskstrokedrawslowlinear"
@@ -364,6 +365,7 @@ export function IconMusker({ className, ...rest }: IconProps) {
         strokeLinecap="round"
         strokeDasharray={0.45 * 536.315002441406}
         strokeDashoffset={0.45 * 2 * 536.315002441406}
+        style={{ animationDelay: "0ms" }}
       />
       <path
         className="animate-muskstrokedrawslowlinear"
@@ -374,6 +376,7 @@ export function IconMusker({ className, ...rest }: IconProps) {
         strokeLinecap="round"
         strokeDasharray={0.33 * 684.3558959960938}
         strokeDashoffset={0.33 * 2 * 684.3558959960938}
+        style={{ animationDelay: "600ms" }}
       />
     </svg>
   );

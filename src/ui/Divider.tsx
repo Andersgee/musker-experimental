@@ -1,3 +1,5 @@
+"use client";
+
 export function DividerFull() {
   return <hr className=" h-px border-0 bg-gray-200 dark:bg-gray-700" />;
 }
