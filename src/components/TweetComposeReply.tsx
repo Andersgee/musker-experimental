@@ -28,7 +28,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   return (
     <div className="flex w-full justify-between">
       <div className="">
-        <Link href={`/u/${session.data.user.handle}`} className="flex w-12 items-center justify-center">
+        <Link href={`/u/${session.data.user.handle}`} className="w-12">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}

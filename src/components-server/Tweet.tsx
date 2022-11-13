@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ImgUser } from "src/ui/ImgUser";
+import { IconHeart } from "src/icons/Heart";
+import { IconReply } from "src/icons/Reply";
 import { formatCreatedAt } from "src/utils/date";
 import type { RouterTypes } from "src/utils/trpc";
 
@@ -14,18 +15,33 @@ type Props = {
 export function Tweet({ tweet: tweet, className = "" }: Props) {
   const replyCount = tweet._count.childTweets;
   return (
-    <article className="flex">
-      <div>
-        <ImgUser
-          href={`/u/${tweet.author.handle?.text}`}
-          image={tweet.author.image || ""}
-          alt={tweet.author.handle?.text || ""}
-        />
+    <article className={`flex ${className}`}>
+      <div className="mt-2">
+        <Link href={`/u/${tweet.author.handle?.text}`} className="w-12">
+          <img
+            className="h-8 w-8 rounded-full shadow-imageborder"
+            src={tweet.author.image || ""}
+            alt={tweet.author.handle?.text}
+          />
+        </Link>
       </div>
       <div>
-        <div>{`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}</div>
-        <p>{tweet.text}</p>
-        <div>{replyCount > 0 ? `${replyCount} replies` : ""}</div>
+        <div className="py-2 pl-2">
+          <div className="">{`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}</div>
+          <p>{tweet.text}</p>
+        </div>
+
+        <div className="flex w-full gap-4">
+          <button className="group flex w-20 pt-1">
+            <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+          </button>
+          <button className="group flex w-20">
+            <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+          </button>{" "}
+          <button className="group flex w-20">
+            <IconHeart className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+          </button>
+        </div>
       </div>
     </article>
   );
