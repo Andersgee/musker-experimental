@@ -18,10 +18,10 @@ export function Post({ post, className }: Props) {
           alt={post.author.handle?.text || ""}
         />
       </div>
-      <Link href={`/u/${post.author.handle?.text}/p/${post.id}`}>
+      <div>
         <div>{`${post.author.handle?.text} - ${formatPostCreatedAt(post.createdAt)}`}</div>
         <p>{post.text}</p>
-      </Link>
+      </div>
     </article>
   );
 }

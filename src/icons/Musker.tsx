@@ -65,10 +65,10 @@ export function IconMusker({ className, ...rest }: IconProps) {
       fill="none"
       strokeWidth="5"
       stroke="currentColor"
-      viewBox="0 250 1063 409"
+      viewBox="0 150 1063 509"
       xmlns="http://www.w3.org/2000/svg"
       width="1063"
-      height="409"
+      height="509"
       {...rest}
       className={className}
     >

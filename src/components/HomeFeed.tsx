@@ -2,7 +2,7 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 import Link from "next/link";
 import { Post } from "./Post";
@@ -73,7 +73,7 @@ export function HomeFeed({ className }: Props) {
 
 function EndOfFeed() {
   return (
-    <div className="">
+    <div className="mb-4">
       <div className="">
         <IconMusker className="w-full" />
         <p className="">You have seen all posts from the people you follow. Go follow some people.</p>
