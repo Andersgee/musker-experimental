@@ -12,7 +12,9 @@ import { type Prisma } from "@prisma/client";
  * where a profile page can query that users activity
  * and homefeed can query all the ctx.users sentFollows activities
  */
-const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
+
+//const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
+const tweetInclude = {
   author: {
     include: { handle: true },
   },

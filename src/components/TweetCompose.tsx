@@ -39,7 +39,7 @@ export function TweetCompose({ className = "" }: Props) {
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}
-            alt={session.data.user.handle || session.data.user.name || undefined}
+            alt={myHandle || session.data.user.name || undefined}
           />
         </Link>
       </div>

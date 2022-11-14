@@ -13,7 +13,7 @@ export function SignoutButton({ className = "" }: Props) {
     return null;
   }
   return (
-    <Button className={`bg-red-500 ${className}`} onClick={() => signOut()}>
+    <Button className={`bg-red-500 ${className}`} onClick={() => signOut({ callbackUrl: "/explore" })}>
       sign out
     </Button>
   );
