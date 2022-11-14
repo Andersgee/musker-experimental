@@ -16,9 +16,7 @@ type Props = {
 export function ExploreFeed({ className = "" }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.exploreFeed.useInfiniteQuery(
     {},
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
   /*

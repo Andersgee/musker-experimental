@@ -1,5 +1,8 @@
 import { useCallback } from "react";
 
+/**
+ * calls cb() each time the element linked to ref enters the viewport.
+ */
 export function UseIntersectionObserverCallback<T extends Element>(cb: () => void) {
   const ref = useCallback((node: T) => {
     //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
