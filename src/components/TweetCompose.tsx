@@ -17,6 +17,7 @@ export function TweetCompose({ className = "" }: Props) {
   //const router = useRouter();
   const [text, setText] = useState("");
   const session = useSession();
+  const { data: myHandle } = trpc.user.myHandle.useQuery();
   const tweetCreate = trpc.tweet.create.useMutation({
     onSuccess: () => {
       utils.tweet.homeFeed.invalidate();
@@ -32,9 +33,9 @@ export function TweetCompose({ className = "" }: Props) {
     );
   }
   return (
-    <div className="flex w-full justify-between">
+    <div className={`flex w-full justify-between ${className}`}>
       <div className="">
-        <Link href={`/u/${session.data.user.handle}`} className="flex w-12 items-center justify-center">
+        <Link href={`/u/${myHandle}`} className="flex w-12 items-center justify-center">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}

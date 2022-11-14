@@ -17,6 +17,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   //const router = useRouter();
   const [text, setText] = useState("");
   const session = useSession();
+  const { data: myHandle } = trpc.user.myHandle.useQuery();
   const tweetCreate = trpc.tweet.createReply.useMutation({
     onSuccess: () => utils.tweet.invalidate(),
   });
@@ -26,13 +27,13 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   }
 
   return (
-    <div className="flex w-full justify-between">
+    <div className={`flex w-full justify-between ${className}`}>
       <div className="">
-        <Link href={`/u/${session.data.user.handle}`} className="w-12">
+        <Link href={`/u/${myHandle}`} className="w-12">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}
-            alt={session.data.user.handle || session.data.user.name || undefined}
+            alt={myHandle || session.data.user.name || undefined}
           />
         </Link>
       </div>

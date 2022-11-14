@@ -28,4 +28,19 @@ export const userRouter = router({
       },
     });
   }),
+  myHandle: protectedProcedure.query(async ({ ctx }) => {
+    const res = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        handle: {
+          select: {
+            text: true,
+          },
+        },
+      },
+    });
+    return res?.handle?.text;
+  }),
 });
