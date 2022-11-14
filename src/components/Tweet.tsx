@@ -5,7 +5,7 @@ import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
 import { IconRewteet } from "src/icons/Retweet";
 import { formatCreatedAt } from "src/utils/date";
-import type { RouterTypes } from "src/utils/trpc";
+import { RouterTypes, trpc } from "src/utils/trpc";
 
 type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
 
@@ -16,9 +16,26 @@ type Props = {
 
 export function Tweet({ tweet: tweet, className = "" }: Props) {
   const replyCount = tweet._count.childTweets;
+  const likeCount = tweet._count.tweetLikes;
+  const retweetCount = 0;
+
+  const utils = trpc.useContext();
+  const { data: existingLike } = trpc.tweetLike.getById.useQuery({ tweetId: tweet.id });
+  const { mutateAsync: like } = trpc.tweetLike.like.useMutation();
+  const { mutateAsync: unlike } = trpc.tweetLike.unlike.useMutation();
+
+  const handleHeartClick = async () => {
+    if (existingLike) {
+      await unlike({ tweetId: tweet.id });
+    } else {
+      await like({ tweetId: tweet.id });
+    }
+    utils.tweetLike.invalidate();
+    //utils.tweet.invalidate();
+  };
 
   return (
-    <article className={` flex ${className}`}>
+    <article className={`flex ${className}`}>
       <div className="mt-2">
         <Link href={`/u/${tweet.author.handle?.text}`} className="w-12">
           <img
@@ -40,10 +57,11 @@ export function Tweet({ tweet: tweet, className = "" }: Props) {
             <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
           </button>
           <button className="group flex w-20">
-            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {retweetCount}
           </button>
-          <button className="group flex w-20">
-            <IconHeart className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+          <button className="group flex w-20" onClick={handleHeartClick}>
+            <IconHeart className={`mr-2 h-6 w-6 group-hover:text-blue-500 ${existingLike ? "text-pink-500" : ""}`} />{" "}
+            {likeCount}
           </button>
         </div>
       </div>

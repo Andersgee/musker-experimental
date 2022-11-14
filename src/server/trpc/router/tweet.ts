@@ -14,12 +14,12 @@ import { type Prisma } from "@prisma/client";
  */
 
 //const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
-const tweetInclude = {
+export const tweetInclude = {
   author: {
     include: { handle: true },
   },
   _count: {
-    select: { childTweets: true },
+    select: { childTweets: true, tweetLikes: true },
   },
   parentTweet: {
     include: {
@@ -27,7 +27,7 @@ const tweetInclude = {
         include: { handle: true },
       },
       _count: {
-        select: { childTweets: true },
+        select: { childTweets: true, tweetLikes: true },
       },
     },
   },

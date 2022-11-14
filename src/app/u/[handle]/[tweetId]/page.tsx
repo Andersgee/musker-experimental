@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { TweetRSC } from "src/components/TweetRSC";
 import { TweetComposeReply } from "src/components/TweetComposeReply";
 import { TweetReplies } from "src/components/TweetReplies";
+import { tweetInclude } from "src/server/trpc/router/tweet";
 
 type Params = Record<string, string | string[]>;
 
@@ -26,24 +27,7 @@ export default async function Page({ params }: Props) {
 
   const tweet = await prisma.tweet.findUnique({
     where: { id: tweetId },
-    include: {
-      author: {
-        include: { handle: true },
-      },
-      _count: {
-        select: { childTweets: true },
-      },
-      parentTweet: {
-        include: {
-          author: {
-            include: { handle: true },
-          },
-          _count: {
-            select: { childTweets: true },
-          },
-        },
-      },
-    },
+    include: tweetInclude,
   });
 
   if (!tweet) {
