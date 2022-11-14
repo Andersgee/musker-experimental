@@ -3,10 +3,10 @@
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
-import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Tweet } from "./Tweet";
 import { Button } from "src/ui/Button";
+import { useIsIntersecting } from "src/hooks/useIsIntersecting";
 
 type Props = {
   className?: string;
@@ -22,8 +22,7 @@ export function TweetReplies({ tweetId, className = "" }: Props) {
   );
 
   const ref = useRef(null);
-  const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
-  const isVisible = !!entry?.isIntersecting;
+  const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
     if (isVisible && hasNextPage && !isFetchingNextPage) {
