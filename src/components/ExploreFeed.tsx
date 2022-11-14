@@ -2,7 +2,7 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 //import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Tweet } from "./Tweet";
@@ -14,21 +14,44 @@ type Props = {
 };
 
 export function ExploreFeed({ className = "" }: Props) {
+  const [trigger, setTrigger] = useState(false);
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.exploreFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
+      onSuccess: () => setTrigger((prev) => !prev),
     },
   );
 
-  const ref = useRef(null);
-  const isVisible = useIsIntersecting(ref);
+  //const ref = useRef<HTMLDivElement | null>(null);
+  //const isVisible = useIsIntersecting(ref);
 
+  /*
   useEffect(() => {
+    console.log({ isVisible, hasNextPage, isFetchingNextPage, fetchNextPage, trigger });
     if (isVisible && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage, trigger]);
+  */
+
+  //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
+  const ref = useCallback((node: HTMLDivElement) => {
+    if (node !== null) {
+      const rootMargin = "0px";
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          const isVisible = !!entry?.isIntersecting;
+          if (isVisible) {
+            fetchNextPage();
+          }
+        },
+        { rootMargin },
+      );
+
+      observer.observe(node);
+    }
+  }, []);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

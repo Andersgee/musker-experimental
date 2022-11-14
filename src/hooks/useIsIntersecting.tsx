@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
+import { type MutableRefObject, useEffect, useState, type RefObject } from "react";
 
-export function useIsIntersecting(ref: RefObject<Element>, rootMargin = "0px"): boolean {
+export function useIsIntersecting(ref: MutableRefObject<Element | null>, rootMargin = "0px"): boolean {
   const [isIntersecting, setIntersecting] = useState(false);
 
   useEffect(() => {
