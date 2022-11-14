@@ -30,8 +30,7 @@ export function Tweet({ tweet: tweet, className = "" }: Props) {
     } else {
       await like({ tweetId: tweet.id });
     }
-    utils.tweetLike.invalidate();
-    //utils.tweet.invalidate();
+    utils.tweetLike.invalidate({ tweetId: tweet.id });
   };
 
   return (
