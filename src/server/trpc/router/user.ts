@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = router({
   isFollowing: protectedProcedure.input(z.object({ userId: z.string() })).query(async ({ input, ctx }) => {

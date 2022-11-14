@@ -9,7 +9,5 @@ export function formatCreatedAt(d: Date) {
   }
 
   return format(d, "MMM dd");
-  //console.log("typeof d:", typeof d);
-  //return "hellodate?";
   //return format(d, "yyyy-MM-dd hh:mm:ss");
 }

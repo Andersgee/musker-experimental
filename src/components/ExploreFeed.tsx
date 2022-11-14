@@ -22,15 +22,13 @@ export function ExploreFeed({ className = "" }: Props) {
   );
 
   const ref = useRef(null);
-  //const entry = useIntersectionObserver(ref, { freezeOnceVisible: false });
-  //const isVisible = !!entry?.isIntersecting;
   const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
     if (isVisible && hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }, [isVisible]);
+  }, [isVisible, hasNextPage]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

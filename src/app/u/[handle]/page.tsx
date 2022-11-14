@@ -4,6 +4,7 @@ import { IconDate } from "src/icons/Date";
 import { prisma } from "src/server/db/client";
 import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
+import { UserTweets } from "src/components/UserTweets";
 
 type Params = Record<string, string | string[]>;
 
@@ -44,28 +45,31 @@ export default async function Page({ params }: Props) {
   });
 
   return (
-    <div className="mx-2">
-      <div className="flex items-baseline justify-between">
-        <ImgUser
-          className="h-28 w-28"
-          href={`/u/${userHandle.text}`}
-          alt={userHandle.text || user.name || ""}
-          image={user.image || ""}
-        />
-        <div>
-          <FollowButton userId={user.id} />
+    <div>
+      <div className="mx-2">
+        <div className="flex items-baseline justify-between">
+          <ImgUser
+            className="h-28 w-28"
+            href={`/u/${userHandle.text}`}
+            alt={userHandle.text || user.name || ""}
+            image={user.image || ""}
+          />
+          <div>
+            <FollowButton userId={user.id} />
+          </div>
         </div>
+        <h2>{userHandle.text}</h2>
+        <p>user.bio: {user.bio?.text}</p>
+        <div className="flex gap-3">
+          <Link href={`/u/${userHandle.text}/following`}>{following._count._all} following</Link>
+          <Link href={`/u/${userHandle.text}/followers`}>{followers._count._all} followers</Link>
+        </div>
+        <span className="flex items-center text-sm">
+          <IconDate className="h-5 w-5" />
+          Joined {format(user.createdAt, "MMMM yyyy")}
+        </span>
       </div>
-      <h2>{userHandle.text}</h2>
-      <p>user.bio: {user.bio?.text}</p>
-      <div className="flex gap-3">
-        <Link href={`/u/${userHandle.text}/following`}>{following._count._all} following</Link>
-        <Link href={`/u/${userHandle.text}/followers`}>{followers._count._all} followers</Link>
-      </div>
-      <span className="flex items-center text-sm">
-        <IconDate className="h-5 w-5" />
-        Joined {format(user.createdAt, "MMMM yyyy")}
-      </span>
+      <UserTweets userId={userHandle.userId} />
     </div>
   );
 }

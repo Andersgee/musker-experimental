@@ -11,12 +11,13 @@ import { Button } from "src/ui/Button";
 import { useIsIntersecting } from "src/hooks/useIsIntersecting";
 
 type Props = {
+  userId: string;
   className?: string;
 };
 
-export function HomeFeed({ className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.homeFeed.useInfiniteQuery(
-    {},
+export function UserTweets({ userId, className = "" }: Props) {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.byUser.useInfiniteQuery(
+    { userId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
@@ -34,15 +35,8 @@ export function HomeFeed({ className = "" }: Props) {
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
 
-  if (!tweets || tweets?.length < 1) {
-    return (
-      <div>
-        go follow some people,{" "}
-        <Link href="/explore" className="rounded-full bg-black px-3 py-2 text-white">
-          explore here
-        </Link>
-      </div>
-    );
+  if (!tweets || tweets.length < 1) {
+    return null;
   }
 
   return (
@@ -64,21 +58,7 @@ export function HomeFeed({ className = "" }: Props) {
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
       <div></div>
-      {!hasNextPage && <EndOfFeed />}
-    </div>
-  );
-}
-
-function EndOfFeed() {
-  return (
-    <div className="mb-4">
-      <div className="">
-        <IconMusker className="w-full" />
-        <p className="">You have seen all tweets from the people you follow. Go follow some people.</p>
-      </div>
-      <div className="flex w-full justify-center">
-        <ButtonLink href="/explore">explore</ButtonLink>
-      </div>
+      {!hasNextPage && <div>nothing more to see</div>}
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function TweetReplies({ tweetId, className = "" }: Props) {
     if (isVisible && hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }, [isVisible]);
+  }, [isVisible, hasNextPage]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

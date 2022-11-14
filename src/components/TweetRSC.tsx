@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
+import { IconRewteet } from "src/icons/Retweet";
 import { formatCreatedAt } from "src/utils/date";
 import type { RouterTypes } from "src/utils/trpc";
 
@@ -37,8 +38,8 @@ export function TweetRSC({ tweet: tweet, showReplyLine = false, className = "" }
             <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
           </button>
           <button className="group flex w-20">
-            <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
-          </button>{" "}
+            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+          </button>
           <button className="group flex w-20">
             <IconHeart className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
           </button>
