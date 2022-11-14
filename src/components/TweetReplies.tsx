@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function TweetReplies({ tweetId, className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.replies.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.replies.useInfiniteQuery(
     { tweetId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -26,10 +26,10 @@ export function TweetReplies({ tweetId, className = "" }: Props) {
   const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {
-    if (isVisible && hasNextPage && !isFetching) {
+    if (isVisible && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [isVisible, hasNextPage]);
+  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

@@ -15,7 +15,7 @@ type Props = {
 };
 
 export function HomeFeed({ className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.homeFeed.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.homeFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -26,10 +26,10 @@ export function HomeFeed({ className = "" }: Props) {
   const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
-    if (isVisible && hasNextPage && !isFetching) {
+    if (isVisible && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [isVisible, hasNextPage]);
+  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

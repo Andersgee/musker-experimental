@@ -5,7 +5,7 @@ import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
 import { IconRewteet } from "src/icons/Retweet";
 import { formatCreatedAt } from "src/utils/date";
-import { RouterTypes, trpc } from "src/utils/trpc";
+import { type RouterTypes, trpc } from "src/utils/trpc";
 
 type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
 

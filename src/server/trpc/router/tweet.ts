@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-
-import { type Prisma } from "@prisma/client";
+//import { type Prisma } from "@prisma/client";
 
 /**
  * common arg for what to include in tweet across different queries

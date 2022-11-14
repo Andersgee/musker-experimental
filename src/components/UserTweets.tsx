@@ -3,10 +3,7 @@
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import { Tweet } from "./Tweet";
-import { IconMusker } from "src/icons/Musker";
-import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { useIsIntersecting } from "src/hooks/useIsIntersecting";
 
@@ -16,7 +13,7 @@ type Props = {
 };
 
 export function UserTweets({ userId, className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } = trpc.tweet.byUser.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.byUser.useInfiniteQuery(
     { userId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -27,10 +24,10 @@ export function UserTweets({ userId, className = "" }: Props) {
   const isVisible = useIsIntersecting(ref);
 
   useEffect(() => {
-    if (isVisible && hasNextPage && !isFetching) {
+    if (isVisible && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [isVisible, hasNextPage]);
+  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

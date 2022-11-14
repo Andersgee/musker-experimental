@@ -1,12 +1,4 @@
 import { prisma } from "src/server/db/client";
-/*
-import Link from "next/link";
-import { FollowButton } from "src/components/FollowButton";
-import { IconDate } from "src/icons/Date";
-import { ImgUser } from "src/ui/ImgUser";
-import { format } from "date-fns";
-
-*/
 import { TweetRSC } from "src/components/TweetRSC";
 import { TweetComposeReply } from "src/components/TweetComposeReply";
 import { TweetReplies } from "src/components/TweetReplies";

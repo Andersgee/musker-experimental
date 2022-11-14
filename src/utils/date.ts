@@ -1,4 +1,4 @@
-import { format, differenceInHours, differenceInMinutes } from "date-fns";
+import { format, differenceInMinutes } from "date-fns";
 
 export function formatCreatedAt(d: Date) {
   const minutes = differenceInMinutes(new Date(), d);

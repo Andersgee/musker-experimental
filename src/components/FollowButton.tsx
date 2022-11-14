@@ -32,7 +32,7 @@ export function FollowButton({ userId, className = "" }: Props) {
   };
 
   return (
-    <Button className="w-24 border border-white bg-black text-white" onClick={handleClick}>
+    <Button className={`w-24 border border-white bg-black text-white ${className}`} onClick={handleClick}>
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>
   );
