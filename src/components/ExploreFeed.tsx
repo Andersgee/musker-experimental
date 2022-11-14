@@ -2,41 +2,28 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 //import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Tweet } from "./Tweet";
 import { Button } from "src/ui/Button";
-import { useIsIntersecting } from "src/hooks/useIsIntersecting";
+import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 
 type Props = {
   className?: string;
 };
 
 export function ExploreFeed({ className = "" }: Props) {
-  const [trigger, setTrigger] = useState(false);
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.exploreFeed.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      onSuccess: () => setTrigger((prev) => !prev),
     },
   );
 
-  //const ref = useRef<HTMLDivElement | null>(null);
-  //const isVisible = useIsIntersecting(ref);
-
   /*
-  useEffect(() => {
-    console.log({ isVisible, hasNextPage, isFetchingNextPage, fetchNextPage, trigger });
-    if (isVisible && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage, trigger]);
-  */
-
-  //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
   const ref = useCallback((node: HTMLDivElement) => {
+    //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
     if (node !== null) {
       const rootMargin = "0px";
       const observer = new IntersectionObserver(
@@ -48,10 +35,13 @@ export function ExploreFeed({ className = "" }: Props) {
         },
         { rootMargin },
       );
-
       observer.observe(node);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  */
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(() => fetchNextPage());
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
