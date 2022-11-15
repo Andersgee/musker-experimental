@@ -2,7 +2,6 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Tweet } from "./Tweet";
 import { IconMusker } from "src/icons/Musker";
@@ -23,7 +22,8 @@ export function HomeFeed({ className = "" }: Props) {
   );
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    if (!!entry?.isIntersecting) {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
       fetchNextPage();
     }
   });

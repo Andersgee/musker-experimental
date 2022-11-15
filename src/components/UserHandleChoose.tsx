@@ -15,13 +15,16 @@ export function UserHandleChoose({ className = "" }: Props) {
   const { data: myHandle } = trpc.handle.getMy.useQuery();
   const { data: textHandle } = trpc.handle.getByText.useQuery({ text });
 
-  const onSuccess = () => {
-    //utils.tweet.homeFeed.invalidate();
-    utils.invalidate(); //every single query...
-  };
-
-  const { mutateAsync: updateHandle } = trpc.handle.update.useMutation({ onSuccess });
-  const { mutateAsync: createHandle } = trpc.handle.create.useMutation({ onSuccess });
+  const { mutateAsync: updateHandle } = trpc.handle.update.useMutation({
+    onSuccess: () => {
+      //utils.handle.invalidate();
+    },
+  });
+  const { mutateAsync: createHandle } = trpc.handle.create.useMutation({
+    onSuccess: () => {
+      //utils.handle.invalidate();
+    },
+  });
 
   return (
     <div className={className}>

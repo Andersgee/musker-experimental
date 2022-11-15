@@ -28,3 +28,9 @@ export function uniqueWords(n: number) {
   }
   return words;
 }
+
+const fromDate = new Date(2021, 0, 1);
+const toDate = new Date(2022, 0, 1);
+export function randomDate(a: Date = fromDate, b: Date = toDate) {
+  return new Date(a.getTime() + Math.random() * (b.getTime() - a.getTime()));
+}

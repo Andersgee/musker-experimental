@@ -19,7 +19,9 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   const session = useSession();
   const { data: myHandle } = trpc.user.myHandle.useQuery();
   const tweetCreate = trpc.tweet.createReply.useMutation({
-    onSuccess: () => utils.tweet.invalidate(),
+    onSuccess: () => {
+      //utils.tweet.invalidate();
+    },
   });
 
   if (!session.data?.user) {

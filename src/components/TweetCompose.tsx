@@ -20,7 +20,7 @@ export function TweetCompose({ className = "" }: Props) {
   const { data: myHandle } = trpc.user.myHandle.useQuery();
   const tweetCreate = trpc.tweet.create.useMutation({
     onSuccess: () => {
-      utils.tweet.homeFeed.invalidate();
+      //utils.tweet.homeFeed.invalidate();
     },
   });
 

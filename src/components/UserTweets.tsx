@@ -20,7 +20,8 @@ export function UserTweets({ userId, className = "" }: Props) {
   );
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    if (!!entry?.isIntersecting) {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
       fetchNextPage();
     }
   });

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../src/server/db/client";
 import { type Prisma } from "@prisma/client";
-import { randomText, uniqueWords } from "./lorem";
+import { randomDate, randomText, uniqueWords } from "./lorem";
 
 const N_USERS = 10;
 const N_TWEETS_PER_USER = 20;
@@ -52,6 +52,7 @@ function createTweets(users: Users) {
       tweets.push({
         authorId: user.id!,
         text: randomText(),
+        createdAt: randomDate(),
       });
     }
   });

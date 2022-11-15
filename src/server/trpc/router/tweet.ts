@@ -96,7 +96,8 @@ export const tweetRouter = router({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
-        where: { authorId: { in: [...followedIds, sessionUserId] } },
+        //where: { authorId: { in: [...followedIds, sessionUserId] } },
+        where: { authorId: { in: followedIds } },
         include: tweetInclude,
       });
 

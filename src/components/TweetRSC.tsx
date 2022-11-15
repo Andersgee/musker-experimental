@@ -15,6 +15,8 @@ type Props = {
 
 export function TweetRSC({ tweet: tweet, showReplyLine = false, className = "" }: Props) {
   const replyCount = tweet._count.childTweets;
+  const likeCount = tweet._count.tweetLikes;
+  const retweetCount = 0;
   return (
     <article className={`flex ${className}`}>
       <div className="mt-2 flex flex-col">
@@ -38,10 +40,10 @@ export function TweetRSC({ tweet: tweet, showReplyLine = false, className = "" }
             <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
           </button>
           <button className="group flex w-20">
-            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {retweetCount}
           </button>
           <button className="group flex w-20">
-            <IconHeart className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+            <IconHeart className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {likeCount}
           </button>
         </div>
       </div>

@@ -23,12 +23,11 @@ export function UseIntersectionObserverCallback<T extends Element>(
   options?: IntersectionObserverInit,
 ) {
   //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
-  const ref = useCallback((node: T) => {
+  return useCallback((node: T) => {
     if (node !== null) {
       const observer = new IntersectionObserver(callback, options);
       observer.observe(node);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return ref;
 }

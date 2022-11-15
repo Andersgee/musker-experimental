@@ -14,12 +14,12 @@ export function FollowButton({ userId, className = "" }: Props) {
   const { data: isFollowing } = trpc.user.isFollowing.useQuery({ userId });
   const { mutateAsync: follow } = trpc.user.follow.useMutation({
     onSuccess: () => {
-      utils.user.isFollowing.invalidate();
+      //utils.user.isFollowing.invalidate();
     },
   });
   const { mutateAsync: unfollow } = trpc.user.unfollow.useMutation({
     onSuccess: () => {
-      utils.user.isFollowing.invalidate();
+      //utils.user.isFollowing.invalidate();
     },
   });
 

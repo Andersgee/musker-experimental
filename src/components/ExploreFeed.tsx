@@ -19,11 +19,11 @@ export function ExploreFeed({ className = "" }: Props) {
   );
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    if (!!entry?.isIntersecting) {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
       fetchNextPage();
     }
   });
-
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
 
