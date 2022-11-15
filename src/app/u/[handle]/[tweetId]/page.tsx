@@ -30,7 +30,7 @@ export default async function Page({ params }: Props) {
     <div>
       {tweet.parentTweet && <TweetRSC tweet={tweet.parentTweet} showReplyLine={!!tweet.parentTweet} />}
       <TweetRSC tweet={tweet} />
-      <TweetComposeReply tweetId={tweet.id} />
+      <TweetComposeReply tweetId={tweet.id} tweetAuthor={tweet.author.handle?.text} />
       <TweetReplies tweetId={tweet.id} />
     </div>
   );

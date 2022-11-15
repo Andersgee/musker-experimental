@@ -10,9 +10,10 @@ import { trpc } from "src/utils/trpc";
 type Props = {
   className?: string;
   tweetId: string;
+  tweetAuthor?: string;
 };
 
-export function TweetComposeReply({ tweetId, className = "" }: Props) {
+export function TweetComposeReply({ tweetId, tweetAuthor, className = "" }: Props) {
   const utils = trpc.useContext();
   //const router = useRouter();
   const [text, setText] = useState("");
@@ -40,7 +41,8 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
         </Link>
       </div>
 
-      <div className="flex-1">
+      <div className="ml-4 flex-1">
+        <p>(Replying to {tweetAuthor})</p>
         <div className="flex items-center">
           <textarea
             autoFocus={true}
