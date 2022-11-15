@@ -5,14 +5,26 @@ const lorem = new LoremIpsum({
   wordsPerSentence: { min: 4, max: 16 },
 });
 
-const randInt = (max: number) => Math.floor(Math.random() * max) + 1;
+/** a number [ 0...N-1 ] */
+export function randInt(N: number) {
+  return Math.floor(Math.random() * N);
+}
+
+export function randUniqueInts(N: number, len: number) {
+  if (len > N) throw "randUniqueInts args must have len <= N";
+  const nums = new Set<number>();
+  while (nums.size < len) {
+    nums.add(randInt(N));
+  }
+  return [...nums];
+}
 
 export function randomText(maxLen = 1000) {
   const r = Math.random();
   if (r < 0.33) {
-    return lorem.generateWords(randInt(10)).slice(0, maxLen);
+    return lorem.generateWords(randInt(10) + 1).slice(0, maxLen);
   } else if (r < 0.66) {
-    return lorem.generateSentences(randInt(5)).slice(0, maxLen);
+    return lorem.generateSentences(randInt(5) + 1).slice(0, maxLen);
   } else {
     return lorem.generateParagraphs(2).slice(0, maxLen);
   }

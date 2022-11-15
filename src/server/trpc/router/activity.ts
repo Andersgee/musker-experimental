@@ -32,7 +32,7 @@ export const tweetInclude = {
   },
 };
 
-export const tweetRouter = router({
+export const activityRouter = router({
   followedActivity: protectedProcedure
     .input(
       z.object({
