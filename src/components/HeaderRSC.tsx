@@ -10,7 +10,7 @@ type Props = {
 export function HeaderRSC({ className = "" }: Props) {
   //const { data: sessionData } = useSession();
   return (
-    <div className={`${className}`}>
+    <div className={`bg-neutral-50 dark:bg-neutral-900 ${className}`}>
       <header className="flex items-center justify-between">
         <div className="flex items-center">
           <Pathname className="ml-4 font-medium capitalize" />

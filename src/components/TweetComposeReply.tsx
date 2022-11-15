@@ -20,7 +20,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   const { data: myHandle } = trpc.user.myHandle.useQuery();
   const tweetCreate = trpc.tweet.createReply.useMutation({
     onSuccess: () => {
-      //utils.tweet.invalidate();
+      utils.tweet.replies.invalidate({ tweetId });
     },
   });
 
@@ -43,6 +43,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
       <div className="flex-1">
         <div className="flex items-center">
           <textarea
+            autoFocus={true}
             className="h-20 w-full p-1"
             aria-label="compose"
             placeholder="Tweet your reply"

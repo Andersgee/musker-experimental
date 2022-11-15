@@ -13,27 +13,31 @@ export function UserHandleChoose({ className = "" }: Props) {
   const id = useId();
   const [text, setText] = useState("");
   const { data: myHandle } = trpc.handle.getMy.useQuery();
-  const { data: textHandle } = trpc.handle.getByText.useQuery({ text });
+  const { data: existingHandle } = trpc.handle.getByText.useQuery({ text });
 
   const { mutateAsync: updateHandle } = trpc.handle.update.useMutation({
     onSuccess: () => {
-      //utils.handle.invalidate();
+      utils.handle.getMy.invalidate();
+      utils.handle.getByText.invalidate();
     },
   });
   const { mutateAsync: createHandle } = trpc.handle.create.useMutation({
     onSuccess: () => {
-      //utils.handle.invalidate();
+      utils.handle.getMy.invalidate();
+      utils.handle.getByText.invalidate();
     },
   });
 
   return (
     <div className={className}>
-      <label htmlFor={id} className="block">
+      <label htmlFor={id} className="block font-paragraph">
         choose handle
       </label>
       <input type="text" placeholder={myHandle?.text || "name"} onChange={(e) => setText(e.target.value)} />
       <Button
-        disabled={!!textHandle || text.length < 3}
+        //className={existingHandle ? "disabled:bg-red-300" : ""}
+        disabled={!!existingHandle || text.length < 3}
+        className="mr-1"
         onClick={async () => {
           try {
             if (myHandle) {
@@ -44,8 +48,10 @@ export function UserHandleChoose({ className = "" }: Props) {
           } catch (error) {}
         }}
       >
-        {myHandle ? "Update" : "Create"}
+        {myHandle ? "Pick" : "Create"}
       </Button>
+      {existingHandle && <span className="text-sm">(not available)</span>}
+      {text.length < 3 && <span className="text-sm">(min 3 chars)</span>}
     </div>
   );
 }

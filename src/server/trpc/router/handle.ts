@@ -6,7 +6,7 @@ export const handleRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        text: z.string(),
+        text: z.string().min(3),
       }),
     )
     .mutation(({ input, ctx }) => {
@@ -20,7 +20,7 @@ export const handleRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        text: z.string(),
+        text: z.string().min(3),
       }),
     )
     .mutation(({ input, ctx }) => {

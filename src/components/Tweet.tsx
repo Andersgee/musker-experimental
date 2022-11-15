@@ -1,12 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { IconHeart } from "src/icons/Heart";
-import { IconReply } from "src/icons/Reply";
-import { IconRewteet } from "src/icons/Retweet";
 import { formatCreatedAt } from "src/utils/date";
 import { type RouterTypes, trpc } from "src/utils/trpc";
+import { TweetActions } from "./TweetActions";
 
 type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
 
@@ -15,26 +12,7 @@ type Props = {
   tweet: Tweet;
 };
 
-export function Tweet({ tweet: tweet, className = "" }: Props) {
-  const replyCount = tweet._count.childTweets;
-  const likeCount = tweet._count.tweetLikes;
-  const retweetCount = 0;
-  const { data: session } = useSession();
-
-  const utils = trpc.useContext();
-  const { data: existingLike } = trpc.tweetLike.getById.useQuery({ tweetId: tweet.id }, { enabled: !!session?.user });
-  const { mutateAsync: like } = trpc.tweetLike.like.useMutation();
-  const { mutateAsync: unlike } = trpc.tweetLike.unlike.useMutation();
-
-  const handleHeartClick = async () => {
-    if (existingLike) {
-      await unlike({ tweetId: tweet.id });
-    } else {
-      await like({ tweetId: tweet.id });
-    }
-    utils.tweetLike.getById.invalidate({ tweetId: tweet.id });
-  };
-
+export function Tweet({ tweet, className = "" }: Props) {
   return (
     <article className={`flex ${className}`}>
       <div className="mt-2">
@@ -53,18 +31,12 @@ export function Tweet({ tweet: tweet, className = "" }: Props) {
             <p>{tweet.text}</p>
           </div>
         </Link>
-        <div className="flex w-full gap-4">
-          <button className="group flex w-20 pt-1">
-            <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
-          </button>
-          <button className="group flex w-20">
-            <IconRewteet className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {retweetCount}
-          </button>
-          <button className="group flex w-20" title="Like" onClick={handleHeartClick}>
-            <IconHeart className={`mr-2 h-6 w-6 ${existingLike ? "text-pink-600" : "group-hover:text-pink-300"}`} />{" "}
-            {likeCount}
-          </button>
-        </div>
+        <TweetActions
+          tweetId={tweet.id}
+          authorHandle={tweet.author.handle?.text || ""}
+          likes={tweet._count.tweetLikes}
+          replies={tweet._count.childTweets}
+        />
       </div>
     </article>
   );
