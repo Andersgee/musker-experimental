@@ -1,22 +1,31 @@
 import { useCallback } from "react";
 
 /**
- * calls cb() each time the element linked to ref enters the viewport.
+ * Wrapper for ```new IntersectionObserver(callback, options)```
+ *
+ * [MDN Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+ *
+ * note to self:
+ * This is the simplest I could make it... options are static (can not be changed after init)
+ *
+ * ### Example
+ *
+ * ```ts
+ * const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+ *   if (!!entry?.isIntersecting) {
+ *     fetchNextPage();
+ *   }
+ * });
+ * ```
  */
-export function UseIntersectionObserverCallback<T extends Element>(cb: () => void) {
+export function UseIntersectionObserverCallback<T extends Element>(
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+) {
+  //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
   const ref = useCallback((node: T) => {
-    //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
     if (node !== null) {
-      const rootMargin = "0px";
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          const isVisible = !!entry?.isIntersecting;
-          if (isVisible) {
-            cb();
-          }
-        },
-        { rootMargin },
-      );
+      const observer = new IntersectionObserver(callback, options);
       observer.observe(node);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

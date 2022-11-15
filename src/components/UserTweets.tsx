@@ -2,10 +2,9 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useEffect, useRef } from "react";
 import { Tweet } from "./Tweet";
 import { Button } from "src/ui/Button";
-import { useIsIntersecting } from "src/hooks/useIsIntersecting";
+import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 
 type Props = {
   userId: string;
@@ -20,14 +19,11 @@ export function UserTweets({ userId, className = "" }: Props) {
     },
   );
 
-  const ref = useRef(null);
-  const isVisible = useIsIntersecting(ref);
-
-  useEffect(() => {
-    if (isVisible && hasNextPage && !isFetchingNextPage) {
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    if (!!entry?.isIntersecting) {
       fetchNextPage();
     }
-  }, [isVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  });
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();

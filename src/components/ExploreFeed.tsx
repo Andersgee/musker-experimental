@@ -2,7 +2,6 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { useCallback } from "react";
 //import { useIntersectionObserver } from "src/hooks/useIntersectionObserver";
 //import { ImgUser } from "src/ui/ImgUser";
 import { Tweet } from "./Tweet";
@@ -19,27 +18,11 @@ export function ExploreFeed({ className = "" }: Props) {
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
-  /*
-  const ref = useCallback((node: HTMLDivElement) => {
-    //see https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
-    if (node !== null) {
-      const rootMargin = "0px";
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          const isVisible = !!entry?.isIntersecting;
-          if (isVisible) {
-            fetchNextPage();
-          }
-        },
-        { rootMargin },
-      );
-      observer.observe(node);
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    if (!!entry?.isIntersecting) {
+      fetchNextPage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  */
-
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(() => fetchNextPage());
+  });
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
