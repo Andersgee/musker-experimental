@@ -42,6 +42,7 @@ export function Tweet({ tweet, className = "" }: Props) {
           authorHandle={tweet.author.handle?.text || ""}
           likes={tweet._count.tweetLikes}
           replies={tweet._count.childTweets}
+          retweets={tweet._count.retweets}
         />
       </div>
     </article>

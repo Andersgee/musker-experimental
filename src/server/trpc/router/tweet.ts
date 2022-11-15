@@ -12,13 +12,13 @@ import { type Prisma } from "@prisma/client";
  * and homefeed can query all the ctx.users sentFollows activities
  */
 
-//const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
+//export const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
 export const tweetInclude = {
   author: {
     include: { handle: true },
   },
   _count: {
-    select: { childTweets: true, tweetLikes: true },
+    select: { childTweets: true, tweetLikes: true, retweets: true },
   },
   parentTweet: {
     include: {
@@ -26,7 +26,7 @@ export const tweetInclude = {
         include: { handle: true },
       },
       _count: {
-        select: { childTweets: true, tweetLikes: true },
+        select: { childTweets: true, tweetLikes: true, retweets: true },
       },
     },
   },

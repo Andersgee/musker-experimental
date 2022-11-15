@@ -65,6 +65,7 @@ model User {
   recievedFollows  Follow[]          @relation("recievedFollows")
   tweets           Tweet[]
   tweetLikes       TweetLike[]
+  retweets         Retweet[]
 }
 
 model Tweet {
@@ -74,12 +75,23 @@ model Tweet {
   authorId      String
   text          String      @db.VarChar(1000)
   tweetLikes    TweetLike[]
+  retweets      Retweet[]
   childTweets   Tweet[]     @relation("tweet")
   parentTweet   Tweet?      @relation("tweet", fields: [parentTweetId], references: [id])
   parentTweetId String?
 }
 
 model TweetLike {
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  tweetId   String
+
+  @@id([userId, tweetId])
+}
+
+model Retweet {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String

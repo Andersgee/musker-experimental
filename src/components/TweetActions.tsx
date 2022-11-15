@@ -14,12 +14,13 @@ type Props = {
   authorHandle: string;
   likes: number;
   replies: number;
+  retweets: number;
 };
 
-export function TweetActions({ tweetId, authorHandle, likes, replies, className = "" }: Props) {
+export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, className = "" }: Props) {
   const [replyCount, setReplyCount] = useState(replies);
   const [likeCount, setLikeCount] = useState(likes);
-  const retweetCount = 0;
+  const [retweetCount, setRetweetCount] = useState(retweets);
   const { data: session } = useSession();
 
   const utils = trpc.useContext();
