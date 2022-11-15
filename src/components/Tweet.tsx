@@ -5,7 +5,8 @@ import { formatCreatedAt } from "src/utils/date";
 import { type RouterTypes, trpc } from "src/utils/trpc";
 import { TweetActions } from "./TweetActions";
 
-type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
+//type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
+type Tweet = RouterTypes["tweet"]["homeFeed"]["output"]["items"][number];
 
 type Props = {
   className?: string;
@@ -27,7 +28,12 @@ export function Tweet({ tweet, className = "" }: Props) {
       <div className="flex-1">
         <Link href={`/u/${tweet.author.handle?.text}/${tweet.id}`}>
           <div className="py-2 pl-2 hover:bg-neutral-100 dark:hover:bg-neutral-800">
-            <div className="">{`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}</div>
+            <h3 className="text-base font-normal">
+              {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}{" "}
+              <span className=" text-neutral-500">
+                {tweet.parentTweet?.author && `(Replying to ${tweet.parentTweet.author.handle?.text})`}
+              </span>
+            </h3>
             <p>{tweet.text}</p>
           </div>
         </Link>

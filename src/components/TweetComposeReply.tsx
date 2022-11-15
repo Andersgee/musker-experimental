@@ -29,7 +29,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
   }
 
   return (
-    <div className={`flex w-full justify-between ${className}`}>
+    <div className={`mt-2 flex w-full justify-between ${className}`}>
       <div className="">
         <Link href={`/u/${myHandle}`} className="w-12">
           <img
@@ -53,7 +53,7 @@ export function TweetComposeReply({ tweetId, className = "" }: Props) {
         </div>
 
         <DividerFull />
-        <div className="flex items-baseline justify-between">
+        <div className="mt-2 flex items-baseline justify-between ">
           <div>tweet options here</div>
           <button
             disabled={tweetCreate.isLoading || !session.data?.user || !text}

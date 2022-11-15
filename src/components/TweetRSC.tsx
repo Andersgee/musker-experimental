@@ -3,7 +3,12 @@ import { formatCreatedAt } from "src/utils/date";
 import { type RouterTypes } from "src/utils/trpc";
 import { TweetActions } from "./TweetActions";
 
-type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+//type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
+type TweetItem = RouterTypes["tweet"]["homeFeed"]["output"]["items"][number];
+
+type Tweet = Optional<TweetItem, "parentTweet">;
 
 type Props = {
   className?: string;
