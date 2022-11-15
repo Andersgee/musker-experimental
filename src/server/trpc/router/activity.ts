@@ -65,6 +65,13 @@ export const activityRouter = router({
                 },
               },
             },
+            {
+              retweets: {
+                some: {
+                  userId: { in: followedIds },
+                },
+              },
+            },
           ],
         },
         include: tweetInclude,
