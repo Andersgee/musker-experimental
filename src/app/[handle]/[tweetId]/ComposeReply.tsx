@@ -12,7 +12,7 @@ type Props = {
   tweetId: string;
 };
 
-export function TweetComposeReply({ tweetId, className = "" }: Props) {
+export function ComposeReply({ tweetId, className = "" }: Props) {
   const utils = trpc.useContext();
   //const router = useRouter();
   const [text, setText] = useState("");

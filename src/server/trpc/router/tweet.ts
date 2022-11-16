@@ -159,7 +159,14 @@ export const tweetRouter = router({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
-        include: tweetInclude,
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          _count: {
+            select: { childTweets: true, tweetLikes: true, retweets: true },
+          },
+        },
       });
 
       let nextCursor: string | undefined = undefined;
