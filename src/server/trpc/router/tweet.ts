@@ -79,7 +79,7 @@ export const tweetRouter = router({
   createReply: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        parentTweetId: z.string(),
         text: z.string(),
       }),
     )
@@ -87,8 +87,8 @@ export const tweetRouter = router({
       return ctx.prisma.tweet.create({
         data: {
           authorId: ctx.session.user.id,
+          parentTweetId: input.parentTweetId,
           text: input.text,
-          parentTweetId: input.tweetId,
         },
       });
     }),
@@ -192,79 +192,6 @@ export const tweetRouter = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         orderBy: { createdAt: "desc" },
         include: tweetInclude,
-      });
-
-      let nextCursor: string | undefined = undefined;
-      if (items.length > limit) {
-        const nextItem = items.pop(); //dont return the one extra
-        nextCursor = nextItem?.id;
-      }
-      return { items, nextCursor };
-    }),
-  home: protectedProcedure
-    .input(
-      z.object({
-        cursor: z.string().nullish(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const limit = 30;
-      const sessionUserId = ctx.session.user.id;
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: sessionUserId },
-        include: {
-          sentFollows: true,
-        },
-      });
-
-      //the ids this user is following
-      const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
-      //const followedIdsAndMe = [...followedIds, sessionUserId];
-
-      const items = await ctx.prisma.tweet.findMany({
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
-        orderBy: { createdAt: "desc" },
-        //where: { authorId: { in: [...followedIds, sessionUserId] } },
-        where: {
-          /*
-          home
-          -tweets from this user
-          -tweets from followed users
-          - likes from followed users
-          - retweets from followed users
-          - replies from followed users if also following the repliedto user
-          quotetweets from followed users
-          mentions from followed users if also following the mentioned user
-          */
-          OR: [
-            { authorId: sessionUserId },
-            { authorId: { in: followedIds } },
-            {
-              parentTweet: {
-                authorId: { in: followedIds },
-              },
-            },
-            {
-              tweetLikes: {
-                some: {
-                  userId: { in: followedIds },
-                },
-              },
-            },
-            {
-              retweets: {
-                some: {
-                  userId: { in: followedIds },
-                },
-              },
-            },
-          ],
-        },
-
-        //where: { authorId: { in: followedIds } },
-        include: tweetHomeInclude,
       });
 
       let nextCursor: string | undefined = undefined;

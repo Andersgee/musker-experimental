@@ -62,7 +62,7 @@ export function TweetComposeReply({ tweetId, tweetAuthor, className = "" }: Prop
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {
-                await tweetCreate.mutateAsync({ tweetId, text });
+                await tweetCreate.mutateAsync({ parentTweetId: tweetId, text });
                 setText("");
               } catch (error) {}
             }}
