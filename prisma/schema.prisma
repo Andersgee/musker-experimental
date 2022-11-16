@@ -93,6 +93,7 @@ model TweetLike {
 
 model Retweet {
   createdAt DateTime @default(now())
+  text      String?  @db.VarChar(1000)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)

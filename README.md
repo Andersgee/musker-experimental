@@ -25,7 +25,7 @@ see [different types of tweets](https://help.twitter.com/en/using-twitter/types-
 
 - [ ] profile page of sender
 - [ ] home of sender
-- [ ] home of of followers
+- [ ] home of followers
 
 ###### replies
 
@@ -47,3 +47,26 @@ see [different types of tweets](https://help.twitter.com/en/using-twitter/types-
 ###### quote tweet
 
 - [ ] same as retweet but with text
+
+##### likes
+
+- [ ] notifications of tweet author
+- [ ] home of followers (maybe)
+
+#### home
+
+tweets from this user
+tweets from followed users
+likes from followed users
+retweets from followed users
+quotetweets from followed users
+replies from followed users if also following the repliedto user
+mentions from followed users if also following the mentioned user
+
+#### notifications
+
+replies on this users tweets
+likes on this users tweets
+mentions of this user
+retweets of this users tweets
+quotetweets of this users tweets

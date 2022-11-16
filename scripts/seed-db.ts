@@ -14,6 +14,7 @@ type UserBios = Prisma.UserBioCreateManyInput[];
 type UserHandles = Prisma.UserHandleCreateManyInput[];
 type Tweets = Prisma.TweetCreateManyInput[];
 type TweetLikes = Prisma.TweetLikeCreateManyInput[];
+type Retweets = Prisma.RetweetCreateManyInput[];
 
 async function createUsers() {
   const users: Users = [];
@@ -21,7 +22,8 @@ async function createUsers() {
     users.push({
       name: `seeduser${i}`,
       email: `seeduser${i}@some.org`,
-      image: "https://randomsvgface.andyfx.net",
+      //image: "https://randomsvgface.andyfx.net",
+      image: `/seeduser/avatar${i}.svg`,
     });
   }
   return await prisma.user.createMany({ data: users });
@@ -106,7 +108,7 @@ async function createRetweets() {
   const users = await prisma.user.findMany();
   const tweets = await prisma.tweet.findMany();
 
-  const retweets: TweetLikes = [];
+  const retweets: Retweets = [];
   users.forEach((user) => {
     const userId = user.id;
     const indexes = randUniqueInts(tweets.length, N_RETWEETS_PER_USER);
@@ -115,6 +117,7 @@ async function createRetweets() {
         userId,
         tweetId: tweets[i]!.id,
         createdAt: randomDate(),
+        text: Math.random() < 0.8 ? undefined : randomText(), // no text means retweet, text means quotetweet
       });
     });
   });
