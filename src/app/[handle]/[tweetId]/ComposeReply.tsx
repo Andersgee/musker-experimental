@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-//import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
