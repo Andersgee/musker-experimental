@@ -5,7 +5,9 @@ import { tweetRouter } from "./tweet";
 import { tweetLikeRouter } from "./tweetLike";
 import { retweetRouter } from "./retweet";
 import { userRouter } from "./user";
+
 import { home } from "./home";
+import { profile } from "./profile";
 
 export const appRouter = router({
   user: userRouter,
@@ -15,6 +17,7 @@ export const appRouter = router({
   auth: authRouter,
   handle: handleRouter,
   home,
+  profile,
 });
 
 // export type definition of API

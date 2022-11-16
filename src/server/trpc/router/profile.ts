@@ -1,50 +1,35 @@
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { type Prisma } from "@prisma/client";
 
 /**
  * for readability, put this stuff in function
  *
  * 1. tweets from this user
- * 2. tweets from followed users
- * 3. retweets from this user
- * 4. retweets from this user followed users
- * 5. likes from followed users
- * 6. replies from followed users if also following the repliedto user
- * 7. ---TODO--- mentions from followed users if also following the mentioned user
+ * 2. retweets from this user
+ * 3. likes from this user
  */
-function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
-  const ids = [...followedIds, sessionUserId];
-  const where: Prisma.TweetFindManyArgs["where"] = {
+function tweetsWhereInput(userId: string) {
+  const where: NonNullable<Prisma.TweetFindManyArgs["where"]> = {
+    //const tweetHomeWhere = {
     OR: [
-      //1, 2
-      { authorId: { in: ids } },
-      //3, 4
+      //1
+      { authorId: userId },
+      //2
       {
         retweets: {
           some: {
-            userId: { in: ids },
+            userId: { in: userId },
           },
         },
       },
-      //5
+      //3
       {
         tweetLikes: {
           some: {
-            userId: { in: followedIds },
+            userId: { in: userId },
           },
         },
-      },
-      //6
-      {
-        AND: [
-          { authorId: { in: followedIds } },
-          {
-            parentTweet: {
-              authorId: { in: followedIds },
-            },
-          },
-        ],
       },
     ],
   };
@@ -52,35 +37,23 @@ function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
   return where;
 }
 
-export const home = router({
-  tweets: protectedProcedure
+export const profile = router({
+  tweets: publicProcedure
     .input(
       z.object({
+        userId: z.string(),
         cursor: z.string().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const limit = 30;
-      const sessionUserId = ctx.session.user.id;
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: sessionUserId },
-        select: {
-          sentFollows: {
-            select: {
-              userId: true,
-            },
-          },
-        },
-      });
-
-      const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
+      const userId = input.userId;
 
       const items = await ctx.prisma.tweet.findMany({
         orderBy: { createdAt: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
-        where: tweetsWhereInput(sessionUserId, followedIds),
+        where: tweetsWhereInput(userId),
         include: {
           author: {
             include: { handle: true },
@@ -100,7 +73,7 @@ export const home = router({
           },
           tweetLikes: {
             where: {
-              userId: { in: followedIds },
+              userId: userId,
             },
             select: {
               userId: true,
@@ -117,7 +90,7 @@ export const home = router({
           },
           retweets: {
             where: {
-              userId: { in: followedIds },
+              userId: userId,
             },
             select: {
               userId: true,
