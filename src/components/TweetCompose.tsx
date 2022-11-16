@@ -35,7 +35,7 @@ export function TweetCompose({ className = "" }: Props) {
   return (
     <div className={`mt-2 flex w-full justify-between ${className}`}>
       <div className="">
-        <Link href={`/u/${myHandle}`} className="flex w-12 items-center justify-center">
+        <Link href={`/${myHandle}`} className="flex w-12 items-center justify-center">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={session.data.user.image || undefined}

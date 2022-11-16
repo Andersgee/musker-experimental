@@ -1,7 +1,6 @@
 import { prisma } from "src/server/db/client";
 import { TweetRSC } from "src/components/TweetRSC";
 import { TweetComposeReply } from "src/components/TweetComposeReply";
-import { TweetReplies } from "src/components/TweetReplies";
 import { tweetInclude } from "src/server/trpc/router/tweet";
 
 type Params = Record<string, string | string[]>;
@@ -31,7 +30,8 @@ export default async function Page({ params }: Props) {
       {tweet.parentTweet && <TweetRSC tweet={tweet.parentTweet} showReplyLine={!!tweet.parentTweet} />}
       <TweetRSC tweet={tweet} />
       <TweetComposeReply tweetId={tweet.id} tweetAuthor={tweet.author.handle?.text} />
-      <TweetReplies tweetId={tweet.id} />
+
+      <div>tweetreplies for tweet.id:{tweet.id}</div>
     </div>
   );
 }

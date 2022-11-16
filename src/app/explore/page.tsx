@@ -1,5 +1,6 @@
-import { ExploreFeed } from "src/components/ExploreFeed";
+//import { ExploreFeed } from "src/components/ExploreFeed";
 
 export default function Page() {
-  return <ExploreFeed />;
+  //return <ExploreFeed />;
+  return <div>explore</div>;
 }

@@ -2,44 +2,33 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { type Prisma } from "@prisma/client";
 
-//export const tweetsInclude: NonNullable<Prisma.TweetFindManyArgs["include"]> = {
-export const tweetsInclude = {
-  author: {
-    include: { handle: true },
-  },
-  _count: {
-    select: { childTweets: true, tweetLikes: true, retweets: true },
-  },
-  parentTweet: {
-    include: {
-      author: {
-        include: { handle: true },
-      },
-      _count: {
-        select: { childTweets: true, tweetLikes: true, retweets: true },
-      },
-    },
-  },
-};
-
 /**
- * home
+ * for readability, put this stuff in function
+ *
  * 1. tweets from this user
  * 2. tweets from followed users
- * 3. likes from followed users
- * 4. retweets from followed users
- * 5. replies from followed users if also following the repliedto user
- * 6. ---TODO--- mentions from followed users if also following the mentioned user
+ * 3. tweets/retweets from this user
+ * 4. retweets from this user followed users
+ * 5. likes from followed users
+ * 6. replies from followed users if also following the repliedto user
+ * 7. ---TODO--- mentions from followed users if also following the mentioned user
  */
-function tweetHomeWhereArg(sessionUserId: string, followedIds: string[]) {
-  //const tweetHomeWhere: NonNullable<Prisma.TweetFindManyArgs["where"]> = {
-  const tweetHomeWhere = {
+function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
+  const ids = [...followedIds, sessionUserId];
+  const tweetHomeWhere: NonNullable<Prisma.TweetFindManyArgs["where"]> = {
+    //const tweetHomeWhere = {
     OR: [
-      //1
-      { authorId: sessionUserId },
-      //2
-      { authorId: { in: followedIds } },
-      //3
+      //1, 2
+      { authorId: { in: ids } },
+      //3, 4
+      {
+        retweets: {
+          some: {
+            userId: { in: ids },
+          },
+        },
+      },
+      //5
       {
         tweetLikes: {
           some: {
@@ -47,15 +36,7 @@ function tweetHomeWhereArg(sessionUserId: string, followedIds: string[]) {
           },
         },
       },
-      //4
-      {
-        retweets: {
-          some: {
-            userId: { in: followedIds },
-          },
-        },
-      },
-      //5
+      //6
       {
         AND: [
           { authorId: { in: followedIds } },
@@ -97,12 +78,62 @@ export const home = router({
       const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
 
       const items = await ctx.prisma.tweet.findMany({
+        orderBy: { createdAt: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
-        orderBy: { createdAt: "desc" },
-        //where: { authorId: { in: [...followedIds, sessionUserId] } },
-        where: tweetHomeWhereArg(sessionUserId, followedIds),
-        include: tweetsInclude,
+        where: tweetsWhereInput(sessionUserId, followedIds),
+        include: {
+          author: {
+            include: { handle: true },
+          },
+          _count: {
+            select: { childTweets: true, tweetLikes: true, retweets: true },
+          },
+          parentTweet: {
+            include: {
+              author: {
+                include: { handle: true },
+              },
+              _count: {
+                select: { childTweets: true, tweetLikes: true, retweets: true },
+              },
+            },
+          },
+          tweetLikes: {
+            where: {
+              userId: { in: followedIds },
+            },
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          retweets: {
+            where: {
+              userId: { in: followedIds },
+            },
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       let nextCursor: string | undefined = undefined;

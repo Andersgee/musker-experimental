@@ -20,7 +20,7 @@ export function TweetRSC({ tweet, showReplyLine = false, className = "" }: Props
   return (
     <article className={`flex ${className}`}>
       <div className="mt-2 flex flex-col">
-        <Link href={`/u/${tweet.author.handle?.text}`} className="w-12">
+        <Link href={`/${tweet.author.handle?.text}`} className="w-12">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
             src={tweet.author.image || ""}

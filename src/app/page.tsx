@@ -1,5 +1,5 @@
 import { TweetCompose } from "src/components/TweetCompose";
-import { HomeFeed } from "src/components/HomeFeed";
+import { Tweets } from "./Tweets";
 import { DividerFull } from "src/ui/Divider";
 
 export default function Page() {
@@ -7,7 +7,7 @@ export default function Page() {
     <div className="">
       <TweetCompose />
       <DividerFull />
-      <HomeFeed />
+      <Tweets />
     </div>
   );
 }

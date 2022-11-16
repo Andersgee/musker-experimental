@@ -3,15 +3,8 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { type Prisma } from "@prisma/client";
 
 /**
- * common arg for what to include in tweet across different queries
- *
- * TODO: hearts and retweets and more possible parent tweets (up to 3?)
- *
- * in fact, might want to do an "activity" router instead
- * where a profile page can query that users activity
- * and homefeed can query all the ctx.users sentFollows activities
+ * use this const in include whenever using prisma.tweet.find calls.
  */
-
 //export const tweetInclude: Prisma.TweetFindManyArgs["include"] = {
 export const tweetInclude = {
   author: {
@@ -32,8 +25,8 @@ export const tweetInclude = {
   },
 };
 
-export const tweetHomeInclude: NonNullable<Prisma.TweetFindManyArgs["include"]> = {
-  //export const homeInclude = {
+//export const tweetHomeInclude: NonNullable<Prisma.TweetFindManyArgs["include"]> = {
+export const homeInclude = {
   author: {
     include: { handle: true },
   },

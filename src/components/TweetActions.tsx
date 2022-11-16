@@ -56,7 +56,7 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
 
   return (
     <div className={`flex w-full gap-4 ${className}`}>
-      <Link title="reply" className="group flex w-20 pt-1" href={`/u/${authorHandle}/${tweetId}`}>
+      <Link title="reply" className="group flex w-20 pt-1" href={`/${authorHandle}/${tweetId}`}>
         <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
       </Link>
       <button className="group flex w-20" title="retweet" onClick={handleRetweetClick}>
