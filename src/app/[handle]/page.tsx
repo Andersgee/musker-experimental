@@ -6,6 +6,8 @@ import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
 import { Tweets } from "./Tweets";
 
+export const dynamicParams = true;
+
 type Params = Record<string, string | string[]>;
 
 type Props = {
