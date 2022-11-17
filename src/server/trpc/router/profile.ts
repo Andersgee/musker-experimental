@@ -89,4 +89,53 @@ export const profile = router({
       }
       return { items, nextCursor };
     }),
+
+  likes: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 30;
+      const userId = input.userId;
+
+      const items = await ctx.prisma.tweetLike.findMany({
+        orderBy: { createdAt: "desc" },
+        cursor: input.cursor
+          ? {
+              userId_tweetId: {
+                userId: userId,
+                tweetId: input.cursor,
+              },
+            }
+          : undefined,
+        take: limit + 1, //get one extra (use it for cursor to next query)
+        where: {
+          userId: userId,
+        },
+        include: {
+          tweet: {
+            include: {
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+              author: {
+                include: {
+                  handle: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      let nextCursor: string | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.tweetId;
+      }
+      return { items, nextCursor };
+    }),
 });

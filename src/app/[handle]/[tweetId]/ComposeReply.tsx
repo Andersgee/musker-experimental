@@ -42,7 +42,7 @@ export function ComposeReply({ tweetId, className = "" }: Props) {
       <div className="ml-4 flex-1">
         <div className="flex items-center">
           <textarea
-            autoFocus={true}
+            //autoFocus={true}
             className="h-20 w-full p-1"
             aria-label="compose"
             placeholder="Tweet your reply"

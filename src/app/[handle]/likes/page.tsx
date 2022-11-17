@@ -1,5 +1,5 @@
 import { prisma } from "src/server/db/client";
-import { Tweets } from "./Tweets";
+import { Likes } from "./Likes";
 
 type Params = Record<string, string | string[]>;
 
@@ -21,5 +21,5 @@ export default async function Page({ params }: Props) {
     return null;
   }
 
-  return <Tweets userId={userHandle.userId} />;
+  return <Likes userId={userHandle.userId} userHandle={handle} />;
 }
