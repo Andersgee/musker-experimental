@@ -103,7 +103,7 @@ export const tweet = router({
         select: {
           retweets: {
             where: {
-              authorId: input.tweetId,
+              authorId: ctx.session.user.id,
             },
           },
         },

@@ -1,34 +1,6 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { type Prisma } from "@prisma/client";
-
-/**
- * for readability, put this stuff in function
- *
- * 1. tweets from this user
- * 2. retweets from this user
- * 3. likes from this user
- */
-function tweetsWhereInput(userId: string) {
-  const where: NonNullable<Prisma.TweetFindManyArgs["where"]> = {
-    //const tweetHomeWhere = {
-    OR: [
-      //1
-      { authorId: userId },
-
-      //3
-      {
-        likes: {
-          some: {
-            userId: { in: userId },
-          },
-        },
-      },
-    ],
-  };
-
-  return where;
-}
+import { router, publicProcedure } from "../trpc";
+//import { type Prisma } from "@prisma/client";
 
 export const profile = router({
   tweets: publicProcedure
@@ -46,7 +18,20 @@ export const profile = router({
         orderBy: { createdAt: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
-        where: tweetsWhereInput(userId),
+        where: {
+          OR: [
+            //1
+            { authorId: userId },
+            //3
+            {
+              likes: {
+                some: {
+                  userId: { in: userId },
+                },
+              },
+            },
+          ],
+        },
         include: {
           _count: {
             select: { replies: true, retweets: true, likes: true },
