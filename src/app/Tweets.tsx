@@ -1,7 +1,7 @@
 "use client";
 
 import { DividerFull } from "src/ui/Divider";
-import { trpc, type RouterTypes } from "src/utils/trpc";
+import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
 import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
@@ -12,7 +12,7 @@ import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
 import { IconRewteet } from "src/icons/Retweet";
 
-type Tweet = RouterTypes["home"]["tweets"]["output"]["items"][number];
+type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
 type Props = {
   className?: string;

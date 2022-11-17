@@ -22,9 +22,9 @@ export const trpc = createTRPCNext<AppRouter>({
 });
 */
 
-import { type AppRouter } from "../server/trpc/router/_app";
+import type { AppRouter } from "../server/trpc/router/_app";
 import { createTRPCReact } from "@trpc/react-query";
-import { type GetInferenceHelpers } from "@trpc/server";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -34,8 +34,5 @@ export const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
-/**
- * Inference helpers
- * @example type HelloOutput = RouterTypes['example']['hello']['output']
- **/
-export type RouterTypes = GetInferenceHelpers<AppRouter>;
+export type RouterInput = inferRouterInputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;

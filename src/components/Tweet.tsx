@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { formatCreatedAt } from "src/utils/date";
-import { type RouterTypes, trpc } from "src/utils/trpc";
+import { trpc, type RouterOutput } from "src/utils/trpc";
 import { TweetActions } from "./TweetActions";
 
-//type Tweet = Omit<RouterTypes["tweet"]["homeFeed"]["output"]["items"][number], "parentTweet">;
-//type Tweet = RouterTypes["tweet"]["homeFeed"]["output"]["items"][number];
-type Tweet = RouterTypes["home"]["tweets"]["output"]["items"][number];
+type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
 type Props = {
   className?: string;

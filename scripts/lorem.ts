@@ -16,7 +16,7 @@ export function randUniqueInts(N: number, len: number) {
   while (nums.size < len) {
     nums.add(randInt(N));
   }
-  return [...nums];
+  return Array.from(nums);
 }
 
 export function randomText(maxLen = 1000) {

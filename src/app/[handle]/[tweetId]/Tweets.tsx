@@ -1,7 +1,7 @@
 "use client";
 
 import { DividerFull } from "src/ui/Divider";
-import { trpc, type RouterTypes } from "src/utils/trpc";
+import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
 import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
@@ -10,7 +10,7 @@ import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserv
 import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 
-type Tweet = RouterTypes["tweet"]["replies"]["output"]["items"][number];
+type Tweet = RouterOutput["tweet"]["replies"]["items"][number];
 
 type Props = {
   tweetId: string;
