@@ -65,35 +65,28 @@ model User {
   recievedFollows  Follow[]          @relation("recievedFollows")
   tweets           Tweet[]
   tweetLikes       TweetLike[]
-  retweets         Retweet[]
 }
 
 model Tweet {
-  id            String      @id @default(cuid())
-  createdAt     DateTime    @default(now())
-  author        User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId      String
-  text          String      @db.VarChar(1000)
-  tweetLikes    TweetLike[]
-  retweets      Retweet[]
-  childTweets   Tweet[]     @relation("tweet")
-  parentTweet   Tweet?      @relation("tweet", fields: [parentTweetId], references: [id])
-  parentTweetId String?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  text      String   @db.VarChar(1000)
+
+  likes TweetLike[]
+
+  replies          Tweet[] @relation("reply")
+  repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id])
+  repliedToTweetId String?
+
+  retweets           Tweet[] @relation("retweet")
+  retweetedToTweet   Tweet?  @relation("retweet", fields: [retweetedToTweetId], references: [id])
+  retweetedToTweetId String?
 }
 
 model TweetLike {
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  tweetId   String
-
-  @@id([userId, tweetId])
-}
-
-model Retweet {
-  createdAt DateTime @default(now())
-  text      String?  @db.VarChar(1000)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)

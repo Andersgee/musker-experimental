@@ -33,8 +33,8 @@ export function TweetRSC({ tweet, drawReplyLine = true, className = "" }: Props)
         <TweetActions
           tweetId={tweet.id}
           authorHandle={tweet.author.handle?.text || ""}
-          likes={tweet._count.tweetLikes}
-          replies={tweet._count.childTweets}
+          likes={tweet._count.likes}
+          replies={tweet._count.replies}
           retweets={tweet._count.retweets}
         />
       </div>

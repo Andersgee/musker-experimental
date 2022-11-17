@@ -10,7 +10,7 @@ import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserv
 import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 
-type Tweet = RouterOutput["tweet"]["replies"]["items"][number];
+type Tweet = RouterOutput["replies"]["tweets"]["items"][number];
 
 type Props = {
   tweetId: string;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export function Tweets({ tweetId, className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = trpc.tweet.replies.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = trpc.replies.tweets.useInfiniteQuery(
     { tweetId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -102,8 +102,8 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <TweetActions
             tweetId={tweet.id}
             authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.tweetLikes}
-            replies={tweet._count.childTweets}
+            likes={tweet._count.likes}
+            replies={tweet._count.replies}
             retweets={tweet._count.retweets}
           />
         </div>

@@ -22,12 +22,7 @@ export async function getTweet(id: string | null | undefined) {
         include: { handle: true },
       },
       _count: {
-        select: { childTweets: true, tweetLikes: true, retweets: true },
-      },
-      parentTweet: {
-        select: {
-          id: true,
-        },
+        select: { replies: true, retweets: true, likes: true },
       },
     },
   });
@@ -46,7 +41,7 @@ export default async function Page({ params }: Props) {
   let tweetId: string | null | undefined = pageTweetId;
   while (tweetId) {
     const tweet: Tweet | null = await getTweet(tweetId);
-    tweetId = tweet?.parentTweetId;
+    tweetId = tweet?.repliedToTweetId;
     if (tweet) {
       tweets.push(tweet);
     }

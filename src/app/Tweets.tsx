@@ -81,12 +81,12 @@ function EndOfFeed() {
 function Tweet({ tweet }: { tweet: Tweet }) {
   return (
     <div className="mt-2">
-      {tweet.tweetLikes.length > 0 && (
+      {tweet.likes.length > 0 && (
         <div className="flex font-paragraph text-sm">
           <div className="flex w-10 justify-end">
             <IconHeart className="mr-2 w-4" />
           </div>
-          {tweet.tweetLikes.map((tweetLike) => (
+          {tweet.likes.map((tweetLike) => (
             <Link key={tweetLike.userId} href={`/${tweetLike.user.handle?.text}`} className="hover:underline">
               {tweetLike.user.handle?.text}
             </Link>
@@ -100,8 +100,8 @@ function Tweet({ tweet }: { tweet: Tweet }) {
             <IconRewteet className="mr-2 w-4" />
           </div>
           {tweet.retweets.map((retweet) => (
-            <Link key={retweet.userId} href={`/${retweet.user.handle?.text}`} className="hover:underline">
-              {retweet.user.handle?.text}
+            <Link key={retweet.authorId} href={`/${retweet.author.handle?.text}`} className="hover:underline">
+              {retweet.author.handle?.text}
             </Link>
           ))}
           <div className="ml-1">retweeted</div>
@@ -124,7 +124,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
               <h3 className="text-base font-normal">
                 {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}{" "}
                 <span className=" text-neutral-500">
-                  {tweet.parentTweet?.author && `(Replying to ${tweet.parentTweet.author.handle?.text})`}
+                  {tweet.repliedToTweet && `(Replying to ${tweet.repliedToTweet.author.handle?.text})`}
                 </span>
               </h3>
               <p>{tweet.text}</p>
@@ -133,8 +133,8 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <TweetActions
             tweetId={tweet.id}
             authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.tweetLikes}
-            replies={tweet._count.childTweets}
+            likes={tweet._count.likes}
+            replies={tweet._count.replies}
             retweets={tweet._count.retweets}
           />
         </div>

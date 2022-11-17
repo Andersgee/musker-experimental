@@ -19,17 +19,9 @@ function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
     OR: [
       //1, 2
       { authorId: { in: ids } },
-      //3, 4
-      {
-        retweets: {
-          some: {
-            userId: { in: ids },
-          },
-        },
-      },
       //5
       {
-        tweetLikes: {
+        likes: {
           some: {
             userId: { in: followedIds },
           },
@@ -40,8 +32,10 @@ function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
         AND: [
           { authorId: { in: followedIds } },
           {
-            parentTweet: {
-              authorId: { in: followedIds },
+            repliedToTweet: {
+              authorId: {
+                in: followedIds,
+              },
             },
           },
         ],
@@ -86,19 +80,10 @@ export const home = router({
             include: { handle: true },
           },
           _count: {
-            select: { childTweets: true, tweetLikes: true, retweets: true },
+            select: { replies: true, retweets: true, likes: true },
           },
-          parentTweet: {
-            include: {
-              author: {
-                include: { handle: true },
-              },
-              _count: {
-                select: { childTweets: true, tweetLikes: true, retweets: true },
-              },
-            },
-          },
-          tweetLikes: {
+
+          likes: {
             where: {
               userId: { in: followedIds },
             },
@@ -115,13 +100,27 @@ export const home = router({
               },
             },
           },
+          repliedToTweet: {
+            select: {
+              authorId: true,
+              author: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           retweets: {
             where: {
-              userId: { in: followedIds },
+              authorId: { in: followedIds },
             },
             select: {
-              userId: true,
-              user: {
+              authorId: true,
+              author: {
                 select: {
                   handle: {
                     select: {

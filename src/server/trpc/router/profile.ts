@@ -15,17 +15,10 @@ function tweetsWhereInput(userId: string) {
     OR: [
       //1
       { authorId: userId },
-      //2
-      {
-        retweets: {
-          some: {
-            userId: { in: userId },
-          },
-        },
-      },
+
       //3
       {
-        tweetLikes: {
+        likes: {
           some: {
             userId: { in: userId },
           },
@@ -55,29 +48,15 @@ export const profile = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         where: tweetsWhereInput(userId),
         include: {
+          _count: {
+            select: { replies: true, retweets: true, likes: true },
+          },
           author: {
             include: { handle: true },
           },
-          _count: {
-            select: { childTweets: true, tweetLikes: true, retweets: true },
-          },
-          parentTweet: {
-            include: {
-              author: {
-                include: { handle: true },
-              },
-              _count: {
-                select: { childTweets: true, tweetLikes: true, retweets: true },
-              },
-            },
-          },
-          tweetLikes: {
-            where: {
-              userId: userId,
-            },
+          repliedToTweet: {
             select: {
-              userId: true,
-              user: {
+              author: {
                 select: {
                   handle: {
                     select: {
@@ -88,7 +67,7 @@ export const profile = router({
               },
             },
           },
-          retweets: {
+          likes: {
             where: {
               userId: userId,
             },

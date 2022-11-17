@@ -14,7 +14,6 @@ type UserBios = Prisma.UserBioCreateManyInput[];
 type UserHandles = Prisma.UserHandleCreateManyInput[];
 type Tweets = Prisma.TweetCreateManyInput[];
 type TweetLikes = Prisma.TweetLikeCreateManyInput[];
-type Retweets = Prisma.RetweetCreateManyInput[];
 
 async function createUsers() {
   const users: Users = [];
@@ -68,21 +67,21 @@ async function createTweets() {
 
 async function createTweetReplies() {
   const users = await prisma.user.findMany();
-  const parentTweets = await prisma.tweet.findMany();
+  const tweets = await prisma.tweet.findMany();
 
-  const tweets: Tweets = [];
+  const replies: Tweets = [];
   users.forEach((user) => {
     for (let i = 0; i < N_TWEETREPLIES_PER_USER; i++) {
-      const parentTweetId = parentTweets[randInt(parentTweets.length)]!.id;
-      tweets.push({
-        parentTweetId,
+      const repliedToTweetId = tweets[randInt(tweets.length)]!.id;
+      replies.push({
+        repliedToTweetId,
         authorId: user.id,
         text: randomText(),
         createdAt: randomDate(),
       });
     }
   });
-  return await prisma.tweet.createMany({ data: tweets });
+  return await prisma.tweet.createMany({ data: replies });
 }
 
 async function createTweetLikes() {
@@ -108,20 +107,20 @@ async function createRetweets() {
   const users = await prisma.user.findMany();
   const tweets = await prisma.tweet.findMany();
 
-  const retweets: Retweets = [];
+  const retweets: Tweets = [];
   users.forEach((user) => {
     const userId = user.id;
     const indexes = randUniqueInts(tweets.length, N_RETWEETS_PER_USER);
     indexes.forEach((i) => {
       retweets.push({
-        userId,
-        tweetId: tweets[i]!.id,
+        authorId: userId,
+        retweetedToTweetId: tweets[i]!.id,
         createdAt: randomDate(),
-        text: Math.random() < 0.8 ? undefined : randomText(), // no text means retweet, text means quotetweet
+        text: Math.random() < 0.8 ? "" : randomText(), // no text means retweet, text means quotetweet
       });
     });
   });
-  return await prisma.retweet.createMany({ data: retweets });
+  return await prisma.tweet.createMany({ data: retweets });
 }
 
 /**

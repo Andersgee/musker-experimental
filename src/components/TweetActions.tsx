@@ -24,13 +24,13 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
   const { data: session } = useSession();
 
   const utils = trpc.useContext();
-  const { data: existingLike } = trpc.tweetLike.getById.useQuery({ tweetId }, { enabled: !!session?.user });
-  const { mutateAsync: like } = trpc.tweetLike.like.useMutation();
-  const { mutateAsync: unlike } = trpc.tweetLike.unlike.useMutation();
+  const { data: existingLike } = trpc.tweet.existingLike.useQuery({ tweetId }, { enabled: !!session?.user });
+  const { mutateAsync: like } = trpc.tweet.like.useMutation();
+  const { mutateAsync: unlike } = trpc.tweet.unlike.useMutation();
 
-  const { data: existingRetweet } = trpc.retweet.getById.useQuery({ tweetId }, { enabled: !!session?.user });
-  const { mutateAsync: retweet } = trpc.retweet.like.useMutation();
-  const { mutateAsync: unretweet } = trpc.retweet.unlike.useMutation();
+  const { data: existingRetweet } = trpc.tweet.existingRetweet.useQuery({ tweetId }, { enabled: !!session?.user });
+  const { mutateAsync: retweet } = trpc.tweet.retweet.useMutation();
+  const { mutateAsync: unretweet } = trpc.tweet.unretweet.useMutation();
 
   const handleLikeClick = async () => {
     if (existingLike) {
@@ -40,7 +40,7 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
       await like({ tweetId });
       setLikeCount((prev) => prev + 1);
     }
-    utils.tweetLike.getById.invalidate({ tweetId });
+    utils.tweet.existingLike.invalidate({ tweetId });
   };
 
   const handleRetweetClick = async () => {
@@ -48,10 +48,10 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
       await unretweet({ tweetId });
       setRetweetCount((prev) => prev - 1);
     } else {
-      await retweet({ tweetId });
+      await retweet({ tweetId, text: "" });
       setRetweetCount((prev) => prev + 1);
     }
-    utils.retweet.getById.invalidate({ tweetId });
+    utils.tweet.existingRetweet.invalidate({ tweetId });
   };
 
   return (

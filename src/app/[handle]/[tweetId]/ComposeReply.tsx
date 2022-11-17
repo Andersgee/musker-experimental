@@ -17,9 +17,9 @@ export function ComposeReply({ tweetId, className = "" }: Props) {
   const [text, setText] = useState("");
   const session = useSession();
   const { data: myHandle } = trpc.user.myHandle.useQuery();
-  const tweetCreate = trpc.tweet.createReply.useMutation({
+  const { mutateAsync: reply, isLoading } = trpc.tweet.reply.useMutation({
     onSuccess: () => {
-      utils.tweet.replies.invalidate({ tweetId });
+      utils.replies.tweets.invalidate({ tweetId });
     },
   });
 
@@ -55,11 +55,11 @@ export function ComposeReply({ tweetId, className = "" }: Props) {
         <div className="mt-2 flex items-baseline justify-between ">
           <div>tweet options here</div>
           <button
-            disabled={tweetCreate.isLoading || !session.data?.user || !text}
+            disabled={isLoading || !session.data?.user || !text}
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {
-                await tweetCreate.mutateAsync({ parentTweetId: tweetId, text });
+                await reply({ tweetId, text });
                 setText("");
               } catch (error) {}
             }}
