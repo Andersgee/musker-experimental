@@ -20,9 +20,7 @@ export const profile = router({
         take: limit + 1, //get one extra (use it for cursor to next query)
         where: {
           OR: [
-            //1
-            { authorId: userId },
-            //3
+            { authorId: userId }, //this includes retweets (which are just regular tweets)
             {
               likes: {
                 some: {
@@ -38,6 +36,18 @@ export const profile = router({
           },
           author: {
             include: { handle: true },
+          },
+          retweetedToTweet: {
+            include: {
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+              author: {
+                include: {
+                  handle: true,
+                },
+              },
+            },
           },
           repliedToTweet: {
             select: {

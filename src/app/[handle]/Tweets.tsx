@@ -46,7 +46,12 @@ export function Tweets({ userId, className = "" }: Props) {
       {tweets?.map((tweet) => {
         return (
           <div key={tweet.id}>
-            <Tweet tweet={tweet} />
+            {tweet.retweetedToTweet ? (
+              <ReTweet retweeterHandle={tweet.author.handle?.text} tweet={tweet.retweetedToTweet} />
+            ) : (
+              <Tweet tweet={tweet} />
+            )}
+
             <DividerFull />
           </div>
         );
@@ -125,6 +130,53 @@ function Tweet({ tweet }: { tweet: Tweet }) {
                 <span className=" text-neutral-500">
                   {tweet.repliedToTweet && `(Replying to ${tweet.repliedToTweet.author.handle?.text})`}
                 </span>
+              </h3>
+              <p>{tweet.text}</p>
+            </div>
+          </Link>
+          <TweetActions
+            tweetId={tweet.id}
+            authorHandle={tweet.author.handle?.text || ""}
+            likes={tweet._count.likes}
+            replies={tweet._count.replies}
+            retweets={tweet._count.retweets}
+          />
+        </div>
+      </article>
+    </div>
+  );
+}
+
+type RetweetedTweet = NonNullable<Tweet["retweetedToTweet"]>;
+
+function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterHandle?: string }) {
+  return (
+    <div className="mt-2">
+      <div className="flex font-paragraph text-sm">
+        <div className="flex w-10 justify-end">
+          <IconRewteet className="mr-2 w-4" />
+        </div>
+        <Link href={`/${retweeterHandle}`} className="hover:underline">
+          {retweeterHandle}
+        </Link>
+        <div className="ml-1">retweeted</div>
+      </div>
+
+      <article className="flex">
+        <div className="">
+          <a href={`/${tweet.author.handle?.text}`} className="w-12">
+            <img
+              className="h-8 w-8 rounded-full shadow-imageborder"
+              src={tweet.author.image || ""}
+              alt={tweet.author.handle?.text}
+            />
+          </a>
+        </div>
+        <div className="flex-1 py-2 pl-2 ">
+          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <h3 className="text-base font-normal">
+                {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}
               </h3>
               <p>{tweet.text}</p>
             </div>
