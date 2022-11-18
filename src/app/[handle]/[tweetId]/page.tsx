@@ -1,5 +1,5 @@
 import { type inferAsyncReturnType } from "@trpc/server";
-import { ComposeReply } from "./ComposeReply";
+import { CreateReplyTweet } from "./CreateReplyTweet";
 import { prisma } from "src/server/db/client";
 import { TweetRSC } from "./TweetRSC";
 import { Tweets } from "./Tweets";
@@ -53,7 +53,7 @@ export default async function Page({ params }: Props) {
       {tweets.reverse().map((t) => (
         <TweetRSC key={t.id} tweet={t} />
       ))}
-      <ComposeReply tweetId={pageTweetId} />
+      <CreateReplyTweet tweetId={pageTweetId} />
       <Tweets tweetId={pageTweetId} />
     </div>
   );

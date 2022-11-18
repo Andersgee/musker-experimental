@@ -8,10 +8,11 @@ import { trpc } from "src/utils/trpc";
 import { useDialogContext } from "src/contexts/Dialog";
 
 type Props = {
+  tweetId: number;
   className?: string;
 };
 
-export function CreateTweet({ className = "" }: Props) {
+export function CreateReplyTweet({ tweetId, className = "" }: Props) {
   const { setShowSignIn } = useDialogContext();
   const utils = trpc.useContext();
   const [text, setText] = useState("");
@@ -21,7 +22,7 @@ export function CreateTweet({ className = "" }: Props) {
   const { data: myHandle } = trpc.user.myHandle.useQuery(undefined, {
     enabled: userExists,
   });
-  const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
+  const { mutateAsync: create, isLoading } = trpc.tweet.reply.useMutation({
     onSuccess: () => {
       utils.home.tweets.invalidate();
     },
@@ -32,7 +33,7 @@ export function CreateTweet({ className = "" }: Props) {
       setShowSignIn(true);
       setShowInfoText(true);
     } else {
-      await create({ text });
+      await create({ tweetId, text });
       setText("");
     }
   };
@@ -58,7 +59,7 @@ export function CreateTweet({ className = "" }: Props) {
           <textarea
             className="h-20 w-full p-1"
             aria-label="compose"
-            placeholder="Whats's happening?"
+            placeholder="Tweet your reply"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
