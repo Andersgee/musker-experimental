@@ -21,7 +21,7 @@ export function SignInDialog() {
 
   if (showSignIn && !session?.user) {
     return (
-      <div ref={ref} className="absolute top-0 right-0 z-10 border-2 bg-neutral-50 shadow-md ">
+      <div ref={ref} className="fixed top-0 right-0 z-10 border-2 bg-neutral-50 shadow-md ">
         <SigninButtons />
       </div>
     );
