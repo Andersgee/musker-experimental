@@ -10,7 +10,6 @@ import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserv
 import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
-import { IconRewteet } from "src/icons/Retweet";
 
 type Tweet = RouterOutput["profile"]["likes"]["items"][number]["tweet"];
 
@@ -39,7 +38,7 @@ export function Likes({ userId, userHandle, className = "" }: Props) {
   const tweetLikes = data?.pages.map((page) => page.items).flat();
 
   if (!isLoading && (!tweetLikes || tweetLikes?.length < 1)) {
-    return <EndOfFeed />;
+    return null;
   }
 
   return (
@@ -58,24 +57,8 @@ export function Likes({ userId, userHandle, className = "" }: Props) {
             {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
           </Button>
         </div>
-        {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
       <div></div>
-      {!hasNextPage && <EndOfFeed />}
-    </div>
-  );
-}
-
-function EndOfFeed() {
-  return (
-    <div className="mb-4">
-      <div className="">
-        <IconMusker className="w-full" />
-        <p className="">You have seen all tweets from the people you follow. Go follow some people.</p>
-      </div>
-      <div className="flex w-full justify-center">
-        <ButtonLink href="/explore">explore</ButtonLink>
-      </div>
     </div>
   );
 }

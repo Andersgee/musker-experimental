@@ -37,7 +37,7 @@ export function Tweets({ className = "" }: Props) {
   const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!isLoading && (!tweets || tweets?.length < 1)) {
-    return <EndOfFeed />;
+    return null;
   }
 
   return (
@@ -69,7 +69,10 @@ function EndOfFeed() {
     <div className="mb-4">
       <div className="">
         <IconMusker className="w-full" />
-        <p className="">You have seen all tweets from the people you follow. Go follow some people.</p>
+        <h3 className="text-center">
+          You have seen all tweets from the people you follow. <br />
+          Go follow some people.
+        </h3>
       </div>
       <div className="flex w-full justify-center">
         <ButtonLink href="/explore">explore</ButtonLink>

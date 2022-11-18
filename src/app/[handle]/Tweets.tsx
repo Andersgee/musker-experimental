@@ -38,7 +38,7 @@ export function Tweets({ userId, className = "" }: Props) {
   const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!isLoading && (!tweets || tweets?.length < 1)) {
-    return <EndOfFeed />;
+    return null;
   }
 
   return (
@@ -65,21 +65,7 @@ export function Tweets({ userId, className = "" }: Props) {
         {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
       <div></div>
-      {!hasNextPage && <EndOfFeed />}
-    </div>
-  );
-}
-
-function EndOfFeed() {
-  return (
-    <div className="mb-4">
-      <div className="">
-        <IconMusker className="w-full" />
-        <p className="">You have seen all tweets from the people you follow. Go follow some people.</p>
-      </div>
-      <div className="flex w-full justify-center">
-        <ButtonLink href="/explore">explore</ButtonLink>
-      </div>
+      {!hasNextPage && <div>nothing more to see</div>}
     </div>
   );
 }
