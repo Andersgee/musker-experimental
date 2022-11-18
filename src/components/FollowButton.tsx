@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useDialogContext } from "src/contexts/Dialog";
 import { Button } from "src/ui/Button";
 import { trpc } from "src/utils/trpc";
 
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function FollowButton({ userId, className = "" }: Props) {
+  const { setShowSignIn } = useDialogContext();
   const { data: session } = useSession();
   const userExists = !!session?.user;
   const utils = trpc.useContext();
@@ -32,6 +34,10 @@ export function FollowButton({ userId, className = "" }: Props) {
   });
 
   const handleClick = () => {
+    if (!userExists) {
+      setShowSignIn(true);
+      return;
+    }
     if (isFollowing) {
       unfollow({ userId });
     } else {
