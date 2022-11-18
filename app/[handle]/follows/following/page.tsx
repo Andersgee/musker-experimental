@@ -5,5 +5,15 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  return <div>following page</div>;
+  const handle = params?.handle;
+  if (typeof handle !== "string") {
+    return <div>missing handle</div>;
+  }
+
+  return (
+    <div>
+      <div>following page</div>
+      <div>params: {JSON.stringify(params)}</div>
+    </div>
+  );
 }
