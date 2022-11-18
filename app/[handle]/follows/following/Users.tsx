@@ -2,10 +2,10 @@
 
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-//import { trpc, type RouterOutput } from "src/utils/trpc";
-//import Link from "next/link";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
+import Link from "next/link";
+import { FollowButton } from "src/components/FollowButton";
 
 type Props = {
   className?: string;
@@ -39,7 +39,13 @@ export function Users({ userId, className = "" }: Props) {
       {follows.map((follow) => {
         return (
           <div key={follow.userId}>
-            <div>{follow.user.handle?.text}</div>
+            <div className="flex">
+              <Link href={`/${follow.user.handle?.text}`} className="flex flex-1 items-center">
+                <img src={follow.user.image || undefined} alt={follow.user.handle?.text} className="h-12 w-12" />
+                <h3>{follow.user.handle?.text}</h3>
+              </Link>
+              <FollowButton userId={follow.userId} />
+            </div>
             <DividerFull />
           </div>
         );
