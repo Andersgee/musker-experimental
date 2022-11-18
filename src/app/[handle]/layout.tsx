@@ -4,6 +4,7 @@ import { IconDate } from "src/icons/Date";
 import { prisma } from "src/server/db/client";
 import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
+import { ProfileNav } from "./ProfileNav";
 
 type Params = Record<string, string | string[]>;
 
@@ -63,10 +64,7 @@ export default async function Layout({ children, params }: Props) {
           Joined {format(user.createdAt, "MMMM yyyy")}
         </span>
       </div>
-      <div>
-        <Link href={`/${handle}`}>Tweets</Link>
-        <Link href={`/${handle}/likes`}>Likes</Link>
-      </div>
+      <ProfileNav handle={handle} />
       {children}
     </div>
   );
