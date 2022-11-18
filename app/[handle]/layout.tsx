@@ -56,8 +56,8 @@ export default async function Layout({ children, params }: Props) {
         <h2>{handle}</h2>
         <p>user.bio: {user.bio?.text}</p>
         <div className="flex gap-3">
-          <Link href={`/${handle}/following`}>{sentFollowsCount} following</Link>
-          <Link href={`/${handle}/followers`}>{recievedFollowsCount} followers</Link>
+          <Link href={`/${handle}/follows/following`}>{sentFollowsCount} following</Link>
+          <Link href={`/${handle}/follows/followers`}>{recievedFollowsCount} followers</Link>
         </div>
         <span className="flex items-center text-sm">
           <IconDate className="h-5 w-5" />

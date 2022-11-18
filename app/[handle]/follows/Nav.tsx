@@ -7,22 +7,18 @@ type Props = {
   handle: string;
 };
 
-export function ProfileNav({ handle }: Props) {
+export function Nav({ handle }: Props) {
   const segment = useSelectedLayoutSegment();
-  const hide = segment !== null && segment !== "with_replies" && segment !== "likes";
-  if (hide) {
-    return null;
-  }
   return (
     <div className="mt-4 mb-6 flex justify-evenly">
-      <NavLink href={`/${handle}`} active={segment === null}>
-        Tweets
+      <NavLink href={`/${handle}/follows`} active={segment === null}>
+        Followers you know
       </NavLink>
-      <NavLink href={`/${handle}/with_replies`} active={segment === "with_replies"}>
-        Tweets & replies
+      <NavLink href={`/${handle}/follows/followers`} active={segment === "followers"}>
+        Followers
       </NavLink>
-      <NavLink href={`/${handle}/likes`} active={segment === "likes"}>
-        Likes
+      <NavLink href={`/${handle}/follows/following`} active={segment === "following"}>
+        Following
       </NavLink>
     </div>
   );
