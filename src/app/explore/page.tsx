@@ -1,6 +1,5 @@
-//import { ExploreFeed } from "src/components/ExploreFeed";
+import { Tweets } from "./Tweets";
 
-export default function Page() {
-  //return <ExploreFeed />;
-  return <div>explore</div>;
+export default async function Page() {
+  return <Tweets />;
 }

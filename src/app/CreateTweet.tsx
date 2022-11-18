@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-//import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
@@ -12,15 +11,14 @@ type Props = {
   className?: string;
 };
 
-export function TweetCompose({ className = "" }: Props) {
-  const utils = trpc.useContext(); //https://trpc.io/docs/v10/useContext#helpers
-  //const router = useRouter();
+export function CreateTweet({ className = "" }: Props) {
+  const utils = trpc.useContext();
   const [text, setText] = useState("");
   const session = useSession();
   const { data: myHandle } = trpc.user.myHandle.useQuery();
-  const tweetCreate = trpc.tweet.create.useMutation({
+  const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
     onSuccess: () => {
-      //utils.tweet.homeFeed.invalidate();
+      utils.home.tweets.invalidate();
     },
   });
 
@@ -59,11 +57,11 @@ export function TweetCompose({ className = "" }: Props) {
         <div className="mt-2 flex items-baseline justify-between">
           <div>tweet options here</div>
           <button
-            disabled={tweetCreate.isLoading || !session.data?.user || !text}
+            disabled={isLoading || !session.data?.user || !text}
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {
-                await tweetCreate.mutateAsync({ text });
+                await create({ text });
                 setText("");
               } catch (error) {}
             }}
@@ -72,6 +70,7 @@ export function TweetCompose({ className = "" }: Props) {
           </button>
         </div>
       </div>
+      <DividerFull />
     </div>
   );
 }

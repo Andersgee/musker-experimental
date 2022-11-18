@@ -10,13 +10,13 @@ import { Montserrat } from "@next/font/google";
 
 //https://beta.nextjs.org/docs/optimizing/fonts#with-tailwind-css
 //const oswald = Oswald({ weight: "variable", subsets: ["latin"], variable: "--font-paragraph" });
-const fontparagraph = Montserrat({ weight: "variable", subsets: ["latin"], variable: "--font-paragraph" });
+const montserrat = Montserrat({ weight: "variable", subsets: ["latin"], variable: "--font-paragraph" });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={fontparagraph.variable}>
+    <html lang="en" className={montserrat.variable}>
       <head>
-        <title>Create Next App</title>
+        <title>Musker</title>
         <meta name="description" content="musker" />
         <link rel="icon" href="/favicon.ico" />
       </head>

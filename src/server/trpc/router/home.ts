@@ -1,50 +1,5 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { type Prisma } from "@prisma/client";
-
-/**
- * for readability, put this stuff in function
- *
- * 1. tweets from this user
- * 2. tweets from followed users
- * 3. retweets from this user
- * 4. retweets from this user followed users
- * 5. likes from followed users
- * 6. replies from followed users if also following the repliedto user
- * 7. ---TODO--- mentions from followed users if also following the mentioned user
- */
-function tweetsWhereInput(sessionUserId: string, followedIds: string[]) {
-  const ids = [...followedIds, sessionUserId];
-  const where: Prisma.TweetFindManyArgs["where"] = {
-    OR: [
-      //1, 2
-      { authorId: { in: ids } },
-      //5
-      {
-        likes: {
-          some: {
-            userId: { in: followedIds },
-          },
-        },
-      },
-      //6
-      {
-        AND: [
-          { authorId: { in: followedIds } },
-          {
-            repliedToTweet: {
-              authorId: {
-                in: followedIds,
-              },
-            },
-          },
-        ],
-      },
-    ],
-  };
-
-  return where;
-}
 
 export const home = router({
   tweets: protectedProcedure
@@ -80,17 +35,17 @@ export const home = router({
           OR: [
             //any tweets/replies/retweets by self
             { authorId: sessionUserId },
-            //tweets by followed that are not replies
+            //tweets that are not replies by followed users
             {
-              authorId: { in: followedIdsAndMe },
+              authorId: { in: followedIds },
               repliedToTweetId: null,
             },
-            //replies by followed users if also folloing the replied to user
+            //tweets that are replies by followed users if also folloing the replied to user
             {
               authorId: { in: followedIdsAndMe },
               repliedToTweetId: { in: followedIdsAndMe },
             },
-            //liked by followed users
+            //tweets that are liked by followed users
             {
               likes: {
                 some: {
@@ -101,13 +56,12 @@ export const home = router({
           ],
         },
         include: {
-          author: {
-            include: { handle: true },
-          },
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-
+          author: {
+            include: { handle: true },
+          },
           likes: {
             where: {
               userId: { in: followedIds },
@@ -115,6 +69,23 @@ export const home = router({
             select: {
               userId: true,
               user: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          retweets: {
+            where: {
+              authorId: { in: followedIds },
+            },
+            select: {
+              authorId: true,
+              author: {
                 select: {
                   handle: {
                     select: {
@@ -148,23 +119,6 @@ export const home = router({
               author: {
                 include: {
                   handle: true,
-                },
-              },
-            },
-          },
-          retweets: {
-            where: {
-              authorId: { in: followedIds },
-            },
-            select: {
-              authorId: true,
-              author: {
-                select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
                 },
               },
             },
