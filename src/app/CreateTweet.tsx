@@ -5,18 +5,22 @@ import Link from "next/link";
 import { useState } from "react";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
-import { SigninButtons } from "src/components/SigninButtons";
+import { useDialogContext } from "src/contexts/Dialog";
+import { Button } from "src/ui/Button";
 
 type Props = {
   className?: string;
 };
 
 export function CreateTweet({ className = "" }: Props) {
+  const { setShowSignIn } = useDialogContext();
   const utils = trpc.useContext();
   const [text, setText] = useState("");
   const { data: session } = useSession();
+  const [showInfoText, setShowInfoText] = useState(false);
+  const userExists = !!session?.user;
   const { data: myHandle } = trpc.user.myHandle.useQuery(undefined, {
-    enabled: !!session?.user,
+    enabled: userExists,
   });
   const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
     onSuccess: () => {
@@ -24,25 +28,31 @@ export function CreateTweet({ className = "" }: Props) {
     },
   });
 
-  if (!session?.user) {
-    return (
-      <div>
-        <TweetComposeNotSignedIn />
-        <SigninButtons />
-      </div>
-    );
-  }
+  const handleClick = async () => {
+    if (!userExists) {
+      setShowSignIn(true);
+      setShowInfoText(true);
+    } else {
+      await create({ text });
+      setText("");
+    }
+  };
+
   return (
     <div className={`mt-2 flex w-full justify-between ${className}`}>
-      <div className="">
-        <Link href={`/${myHandle}`} className="flex w-12 items-center justify-center">
-          <img
-            className="h-8 w-8 rounded-full shadow-imageborder"
-            src={session.user.image || undefined}
-            alt={myHandle || undefined}
-          />
-        </Link>
-      </div>
+      {session?.user ? (
+        <div className="">
+          <Link href={`/${myHandle}`} className="flex w-12 items-center justify-center">
+            <img
+              className="h-8 w-8 rounded-full shadow-imageborder"
+              src={session.user?.image || undefined}
+              alt={myHandle || undefined}
+            />
+          </Link>
+        </div>
+      ) : (
+        <div className="w-12"></div>
+      )}
 
       <div className="flex-1">
         <div className="flex items-center">
@@ -58,58 +68,21 @@ export function CreateTweet({ className = "" }: Props) {
         <DividerFull />
         <div className="mt-2 flex items-baseline justify-between">
           <div>tweet options here</div>
-          <button
-            disabled={isLoading || !text}
-            className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
-            onClick={async () => {
-              try {
-                await create({ text });
-                setText("");
-              } catch (error) {}
-            }}
-          >
-            Tweet
-          </button>
+          <div className="flex flex-col items-end">
+            <button
+              disabled={isLoading || !text}
+              className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
+              onClick={handleClick}
+            >
+              Tweet
+            </button>
+            {showInfoText && !userExists && (
+              <div className="rounded-full font-bold text-orange-500">need to sign in first</div>
+            )}
+          </div>
         </div>
       </div>
       <DividerFull />
-    </div>
-  );
-}
-
-/**
- * basically copy paste of the above but with everyting disabled
- */
-function TweetComposeNotSignedIn() {
-  return (
-    <div className="mt-2 flex w-full justify-between">
-      <div className="">
-        <div className="flex w-12 items-center justify-center">
-          <div className="h-8 w-8 rounded-full shadow-imageborder" />
-        </div>
-      </div>
-
-      <div className="flex-1">
-        <div className="flex items-center">
-          <textarea
-            disabled={true}
-            className="h-20 w-full p-1"
-            aria-label="compose"
-            placeholder="Whats's happening? (need to sign in)"
-          />
-        </div>
-
-        <DividerFull />
-        <div className="flex items-baseline justify-between">
-          <div>tweet options here</div>
-          <button
-            disabled={true}
-            className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
-          >
-            Tweet
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

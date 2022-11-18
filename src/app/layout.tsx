@@ -5,6 +5,7 @@ import { TrpcProvider } from "src/contexts/TrpcContext";
 import { SessionProvider } from "src/contexts/SessionContext";
 import { ThemeProvider } from "src/contexts/next-themes";
 import { Montserrat } from "@next/font/google";
+import { DialogProvider } from "src/contexts/Dialog";
 
 //const montserrat = Montserrat({ weight: "variable", subsets: ["latin"] });
 
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <SessionProvider>
         <TrpcProvider>
           <ThemeProvider>
-            <body>
-              <LayoutRSC>{children}</LayoutRSC>
-            </body>
+            <DialogProvider>
+              <body>
+                <LayoutRSC>{children}</LayoutRSC>
+              </body>
+            </DialogProvider>
           </ThemeProvider>
         </TrpcProvider>
       </SessionProvider>
