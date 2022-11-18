@@ -4,13 +4,9 @@ import { prisma } from "src/server/db/client";
 import { TweetRSC } from "./TweetRSC";
 import { Tweets } from "./Tweets";
 import { numberFromHashidParam } from "src/utils/hashids";
+import { redirect } from "next/navigation";
 
 type Params = Record<string, string | string[]>;
-
-type Props = {
-  params?: Params;
-  searchParams?: Params;
-};
 
 export type Tweet = NonNullable<inferAsyncReturnType<typeof getTweet>>;
 
@@ -29,10 +25,16 @@ export async function getTweet(id: number | null | undefined) {
   });
 }
 
+type Props = {
+  params?: Params;
+  searchParams?: Params;
+};
+
 export default async function Page({ params }: Props) {
   const pageTweetId = numberFromHashidParam(params?.tweetId);
   if (!pageTweetId) {
-    return <div>missing tweetId.. params: {JSON.stringify(params)}</div>;
+    //https://beta.nextjs.org/docs/api-reference/redirect
+    redirect("/"); //does not actually redirect? just triggers the error page?
   }
 
   //walk upward parent chain and grab all tweets
@@ -50,6 +52,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
+      <div>params: {JSON.stringify(params)}</div>
       {tweets.reverse().map((t) => (
         <TweetRSC key={t.id} tweet={t} />
       ))}
