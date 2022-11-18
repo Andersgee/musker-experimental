@@ -5,7 +5,7 @@ export const home = router({
   tweets: protectedProcedure
     .input(
       z.object({
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -40,10 +40,12 @@ export const home = router({
               authorId: { in: followedIds },
               repliedToTweetId: null,
             },
-            //tweets that are replies by followed users if also folloing the replied to user
+            //tweets that are replies by followed users if also following the replied to user
             {
               authorId: { in: followedIdsAndMe },
-              repliedToTweetId: { in: followedIdsAndMe },
+              repliedToTweet: {
+                authorId: { in: followedIdsAndMe },
+              },
             },
             //tweets that are liked by followed users
             {
@@ -126,7 +128,7 @@ export const home = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;

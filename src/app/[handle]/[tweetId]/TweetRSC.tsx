@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TweetActions } from "src/components/TweetActions";
+import { hashidFromNumber } from "src/utils/hashids";
 import { CreatedAtText } from "./CreatedAtText";
 import { type Tweet } from "./page";
 
@@ -23,7 +24,7 @@ export function TweetRSC({ tweet, drawReplyLine = true, className = "" }: Props)
         <div className="mt-2 flex-1">{drawReplyLine && <div className="ml-3.5 h-full border-l-2 "></div>}</div>
       </div>
       <div className="flex-1 py-2 pl-2 ">
-        <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+        <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
           <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
             <h3 className="text-base font-normal">{tweet.author.handle?.text}</h3>
             {tweet.author.handle?.text} - <CreatedAtText createdAtNumber={tweet.createdAt.getTime()} />

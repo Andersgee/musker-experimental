@@ -12,6 +12,8 @@ import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
 import { IconRewteet } from "src/icons/Retweet";
 import { IconReply } from "src/icons/Reply";
+import { useSession } from "next-auth/react";
+import { hashidFromNumber } from "src/utils/hashids";
 
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
@@ -20,9 +22,11 @@ type Props = {
 };
 
 export function Tweets({ className = "" }: Props) {
+  const { data: session } = useSession();
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = trpc.home.tweets.useInfiniteQuery(
     {},
     {
+      enabled: !!session?.user,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
@@ -100,7 +104,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <div className="ml-1">
             replied to{" "}
             <Link
-              href={`/${tweet.repliedToTweet.author.handle?.text}/${tweet.repliedToTweet?.id}`}
+              href={`/${tweet.repliedToTweet.author.handle?.text}/${hashidFromNumber(tweet.repliedToTweet.id)}`}
               className="hover:underline"
             >
               tweet by {tweet.repliedToTweet.author.handle?.text}
@@ -145,7 +149,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
@@ -192,7 +196,7 @@ function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterH
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}

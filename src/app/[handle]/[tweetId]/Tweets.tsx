@@ -3,17 +3,16 @@
 import { DividerFull } from "src/ui/Divider";
 import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
-import { IconMusker } from "src/icons/Musker";
-import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
+import { hashidFromNumber } from "src/utils/hashids";
 
 type Tweet = RouterOutput["replies"]["tweets"]["items"][number];
 
 type Props = {
-  tweetId: string;
+  tweetId: number;
   className?: string;
 };
 
@@ -76,7 +75,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}

@@ -14,15 +14,17 @@ type Props = {
 export function CreateTweet({ className = "" }: Props) {
   const utils = trpc.useContext();
   const [text, setText] = useState("");
-  const session = useSession();
-  const { data: myHandle } = trpc.user.myHandle.useQuery();
+  const { data: session } = useSession();
+  const { data: myHandle } = trpc.user.myHandle.useQuery(undefined, {
+    enabled: !!session?.user,
+  });
   const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
     onSuccess: () => {
       utils.home.tweets.invalidate();
     },
   });
 
-  if (!session.data?.user) {
+  if (!session?.user) {
     return (
       <div>
         <TweetComposeNotSignedIn />
@@ -36,8 +38,8 @@ export function CreateTweet({ className = "" }: Props) {
         <Link href={`/${myHandle}`} className="flex w-12 items-center justify-center">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
-            src={session.data.user.image || undefined}
-            alt={myHandle || session.data.user.name || undefined}
+            src={session.user.image || undefined}
+            alt={myHandle || undefined}
           />
         </Link>
       </div>
@@ -57,7 +59,7 @@ export function CreateTweet({ className = "" }: Props) {
         <div className="mt-2 flex items-baseline justify-between">
           <div>tweet options here</div>
           <button
-            disabled={isLoading || !session.data?.user || !text}
+            disabled={isLoading || !text}
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {

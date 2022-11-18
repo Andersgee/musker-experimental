@@ -8,22 +8,22 @@ import { trpc } from "src/utils/trpc";
 
 type Props = {
   className?: string;
-  tweetId: string;
+  tweetId: number;
 };
 
 export function ComposeReply({ tweetId, className = "" }: Props) {
   const utils = trpc.useContext();
   //const router = useRouter();
   const [text, setText] = useState("");
-  const session = useSession();
-  const { data: myHandle } = trpc.user.myHandle.useQuery();
+  const { data: session } = useSession();
+  const { data: myHandle } = trpc.user.myHandle.useQuery(undefined, { enabled: !!session?.user });
   const { mutateAsync: reply, isLoading } = trpc.tweet.reply.useMutation({
     onSuccess: () => {
       utils.replies.tweets.invalidate({ tweetId });
     },
   });
 
-  if (!session.data?.user) {
+  if (!session?.user) {
     return <div>sign in to reply</div>;
   }
 
@@ -33,8 +33,8 @@ export function ComposeReply({ tweetId, className = "" }: Props) {
         <Link href={`/${myHandle}`} className="w-12">
           <img
             className="h-8 w-8 rounded-full shadow-imageborder"
-            src={session.data.user.image || undefined}
-            alt={myHandle || session.data.user.name || undefined}
+            src={session.user.image || undefined}
+            alt={myHandle || undefined}
           />
         </Link>
       </div>
@@ -55,7 +55,7 @@ export function ComposeReply({ tweetId, className = "" }: Props) {
         <div className="mt-2 flex items-baseline justify-between ">
           <div>tweet options here</div>
           <button
-            disabled={isLoading || !session.data?.user || !text}
+            disabled={isLoading || !text}
             className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
             onClick={async () => {
               try {

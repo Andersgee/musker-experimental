@@ -6,8 +6,8 @@ export const replies = router({
   tweets: publicProcedure
     .input(
       z.object({
-        tweetId: z.string(),
-        cursor: z.string().nullish(),
+        tweetId: z.number(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -28,7 +28,7 @@ export const replies = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;

@@ -11,6 +11,7 @@ import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 import { IconRewteet } from "src/icons/Retweet";
 import { IconReply } from "src/icons/Reply";
+import { hashidFromNumber } from "src/utils/hashids";
 
 type Tweet = RouterOutput["explore"]["tweets"]["items"][number];
 
@@ -118,7 +119,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
@@ -165,7 +166,7 @@ function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterH
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}

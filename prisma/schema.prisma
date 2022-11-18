@@ -68,7 +68,7 @@ model User {
 }
 
 model Tweet {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
@@ -78,11 +78,11 @@ model Tweet {
 
   replies          Tweet[] @relation("reply")
   repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id])
-  repliedToTweetId String?
+  repliedToTweetId Int?
 
   retweets           Tweet[] @relation("retweet")
   retweetedToTweet   Tweet?  @relation("retweet", fields: [retweetedToTweetId], references: [id])
-  retweetedToTweetId String?
+  retweetedToTweetId Int?
 }
 
 model TweetLike {
@@ -90,7 +90,7 @@ model TweetLike {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  tweetId   String
+  tweetId   Int
 
   @@id([userId, tweetId])
 }

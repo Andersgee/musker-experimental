@@ -10,7 +10,7 @@ import { trpc } from "src/utils/trpc";
 
 type Props = {
   className?: string;
-  tweetId: string;
+  tweetId: number;
   authorHandle: string;
   likes: number;
   replies: number;

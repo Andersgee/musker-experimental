@@ -20,7 +20,7 @@ export const tweet = router({
   reply: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
         text: z.string(),
       }),
     )
@@ -36,7 +36,7 @@ export const tweet = router({
   delete: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -47,7 +47,7 @@ export const tweet = router({
   existingLike: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -64,7 +64,7 @@ export const tweet = router({
   like: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -78,7 +78,7 @@ export const tweet = router({
   unlike: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -94,7 +94,7 @@ export const tweet = router({
   existingRetweet: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -118,7 +118,7 @@ export const tweet = router({
     .input(
       z.object({
         text: z.string(),
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -130,32 +130,22 @@ export const tweet = router({
         },
       });
     }),
+  /**
+   * tweetId is the original tweets id.
+   * use tweet.delete() instead if you already have the actual retweeted id.
+   * */
   unretweet: protectedProcedure
     .input(
       z.object({
-        tweetId: z.string(),
+        tweetId: z.number(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const tweet = await ctx.prisma.tweet.findUnique({
+    .mutation(({ ctx, input }) => {
+      //must use deleteMany since delete is only by id
+      return ctx.prisma.tweet.deleteMany({
         where: {
-          id: input.tweetId,
-        },
-        select: {
-          retweets: {
-            where: {
-              authorId: ctx.session.user.id,
-            },
-            select: {
-              id: true,
-            },
-          },
-        },
-      });
-      const retweetId = tweet?.retweets[0]?.id;
-      return ctx.prisma.tweet.delete({
-        where: {
-          id: retweetId,
+          authorId: ctx.session.user.id,
+          retweetedToTweetId: input.tweetId,
         },
       });
     }),

@@ -6,7 +6,7 @@ export const explore = router({
   tweets: publicProcedure
     .input(
       z.object({
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -53,7 +53,7 @@ export const explore = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;

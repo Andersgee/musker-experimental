@@ -7,7 +7,7 @@ export const profile = router({
     .input(
       z.object({
         userId: z.string(),
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -74,7 +74,7 @@ export const profile = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;
@@ -85,7 +85,7 @@ export const profile = router({
     .input(
       z.object({
         userId: z.string(),
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -98,7 +98,7 @@ export const profile = router({
         take: limit + 1,
         where: {
           authorId: userId, //tweets,retweets and replies are all just regular tweets
-          repliedToTweetId: null, //dont include if is reply
+          repliedToTweetId: null, //only include if is not reply
         },
         include: {
           _count: {
@@ -153,7 +153,7 @@ export const profile = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;
@@ -165,7 +165,7 @@ export const profile = router({
     .input(
       z.object({
         userId: z.string(),
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -233,7 +233,7 @@ export const profile = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.id;
@@ -245,7 +245,7 @@ export const profile = router({
     .input(
       z.object({
         userId: z.string(),
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -282,7 +282,7 @@ export const profile = router({
         },
       });
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
         nextCursor = nextItem?.tweetId;

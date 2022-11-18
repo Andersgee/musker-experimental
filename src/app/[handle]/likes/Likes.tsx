@@ -10,6 +10,7 @@ import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserv
 import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
+import { hashidFromNumber } from "src/utils/hashids";
 
 type Tweet = RouterOutput["profile"]["likes"]["items"][number]["tweet"];
 
@@ -87,7 +88,7 @@ function Tweet({ likerHandle, tweet }: { likerHandle: string; tweet: Tweet }) {
           </a>
         </div>
         <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
                 {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}
