@@ -91,7 +91,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
             <IconReply className="mr-2 w-4" />
           </div>
           <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
-            {tweet.author.handle?.text}
+            {tweet.author.handle?.text}{" "}
           </Link>
           <div className="ml-1">
             replied to{" "}
@@ -101,7 +101,6 @@ function Tweet({ tweet }: { tweet: Tweet }) {
             >
               tweet by {tweet.repliedToTweet.author.handle?.text}
             </Link>
-            )
           </div>
         </div>
       )}

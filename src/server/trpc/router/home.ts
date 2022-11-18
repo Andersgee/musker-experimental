@@ -70,11 +70,36 @@ export const home = router({
 
       const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
 
+      const followedIdsAndMe = [...followedIds, sessionUserId];
+
       const items = await ctx.prisma.tweet.findMany({
         orderBy: { createdAt: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
-        where: tweetsWhereInput(sessionUserId, followedIds),
+        where: {
+          OR: [
+            //any tweets/replies/retweets by self
+            { authorId: sessionUserId },
+            //tweets by followed that are not replies
+            {
+              authorId: { in: followedIdsAndMe },
+              repliedToTweetId: null,
+            },
+            //replies by followed users if also folloing the replied to user
+            {
+              authorId: { in: followedIdsAndMe },
+              repliedToTweetId: { in: followedIdsAndMe },
+            },
+            //liked by followed users
+            {
+              likes: {
+                some: {
+                  userId: { in: followedIds },
+                },
+              },
+            },
+          ],
+        },
         include: {
           author: {
             include: { handle: true },
@@ -102,6 +127,7 @@ export const home = router({
           },
           repliedToTweet: {
             select: {
+              id: true,
               authorId: true,
               author: {
                 select: {
@@ -110,6 +136,18 @@ export const home = router({
                       text: true,
                     },
                   },
+                },
+              },
+            },
+          },
+          retweetedToTweet: {
+            include: {
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+              author: {
+                include: {
+                  handle: true,
                 },
               },
             },

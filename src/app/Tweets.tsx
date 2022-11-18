@@ -11,6 +11,7 @@ import { TweetActions } from "src/components/TweetActions";
 import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
 import { IconRewteet } from "src/icons/Retweet";
+import { IconReply } from "src/icons/Reply";
 
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
@@ -45,7 +46,11 @@ export function Tweets({ className = "" }: Props) {
       {tweets?.map((tweet) => {
         return (
           <div key={tweet.id}>
-            <Tweet tweet={tweet} />
+            {tweet.retweetedToTweet ? (
+              <ReTweet retweeterHandle={tweet.author.handle?.text} tweet={tweet.retweetedToTweet} />
+            ) : (
+              <Tweet tweet={tweet} />
+            )}
             <DividerFull />
           </div>
         );
@@ -84,17 +89,23 @@ function EndOfFeed() {
 function Tweet({ tweet }: { tweet: Tweet }) {
   return (
     <div className="mt-2">
-      {tweet.likes.length > 0 && (
+      {tweet.repliedToTweet && (
         <div className="flex font-paragraph text-sm">
           <div className="flex w-10 justify-end">
-            <IconHeart className="mr-2 w-4" />
+            <IconReply className="mr-2 w-4" />
           </div>
-          {tweet.likes.map((tweetLike) => (
-            <Link key={tweetLike.userId} href={`/${tweetLike.user.handle?.text}`} className="hover:underline">
-              {tweetLike.user.handle?.text}
+          <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
+            {tweet.author.handle?.text}{" "}
+          </Link>
+          <div className="ml-1">
+            replied to{" "}
+            <Link
+              href={`/${tweet.repliedToTweet.author.handle?.text}/${tweet.repliedToTweet?.id}`}
+              className="hover:underline"
+            >
+              tweet by {tweet.repliedToTweet.author.handle?.text}
             </Link>
-          ))}
-          <div className="ml-1">liked</div>
+          </div>
         </div>
       )}
       {tweet.retweets.length > 0 && (
@@ -110,6 +121,65 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <div className="ml-1">retweeted</div>
         </div>
       )}
+      {tweet.likes.length > 0 && (
+        <div className="flex font-paragraph text-sm">
+          <div className="flex w-10 justify-end">
+            <IconHeart className="mr-2 w-4" />
+          </div>
+          {tweet.likes.map((tweetLike) => (
+            <Link key={tweetLike.userId} href={`/${tweetLike.user.handle?.text}`} className="hover:underline">
+              {tweetLike.user.handle?.text}
+            </Link>
+          ))}
+          <div className="ml-1">liked</div>
+        </div>
+      )}
+      <article className="flex">
+        <div className="">
+          <a href={`/${tweet.author.handle?.text}`} className="w-12">
+            <img
+              className="h-8 w-8 rounded-full shadow-imageborder"
+              src={tweet.author.image || ""}
+              alt={tweet.author.handle?.text}
+            />
+          </a>
+        </div>
+        <div className="flex-1 py-2 pl-2 ">
+          <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
+            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <h3 className="text-base font-normal">
+                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
+              </h3>
+              <p>{tweet.text}</p>
+            </div>
+          </Link>
+          <TweetActions
+            tweetId={tweet.id}
+            authorHandle={tweet.author.handle?.text || ""}
+            likes={tweet._count.likes}
+            replies={tweet._count.replies}
+            retweets={tweet._count.retweets}
+          />
+        </div>
+      </article>
+    </div>
+  );
+}
+
+type RetweetedTweet = NonNullable<Tweet["retweetedToTweet"]>;
+
+function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterHandle?: string }) {
+  return (
+    <div className="mt-2">
+      <div className="flex font-paragraph text-sm">
+        <div className="flex w-10 justify-end">
+          <IconRewteet className="mr-2 w-4" />
+        </div>
+        <Link href={`/${retweeterHandle}`} className="hover:underline">
+          {retweeterHandle}
+        </Link>
+        <div className="ml-1">retweeted</div>
+      </div>
 
       <article className="flex">
         <div className="">
@@ -125,10 +195,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <Link href={`/${tweet.author.handle?.text}/${tweet.id}`}>
             <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
               <h3 className="text-base font-normal">
-                {`${tweet.author.handle?.text} - ${formatCreatedAt(tweet.createdAt)}`}{" "}
-                <span className=" text-neutral-500">
-                  {tweet.repliedToTweet && `(Replying to ${tweet.repliedToTweet.author.handle?.text})`}
-                </span>
+                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
               </h3>
               <p>{tweet.text}</p>
             </div>

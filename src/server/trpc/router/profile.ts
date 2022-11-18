@@ -160,6 +160,7 @@ export const profile = router({
       }
       return { items, nextCursor };
     }),
+  //twitter does not have the option to only see replies from a user as far as I can see?
   replies: publicProcedure
     .input(
       z.object({
