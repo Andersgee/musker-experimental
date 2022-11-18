@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import { useDialogContext } from "src/contexts/Dialog";
 import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
 import { IconRewteet } from "src/icons/Retweet";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, className = "" }: Props) {
+  const { setShowSignIn } = useDialogContext();
   //const [replyCount, setReplyCount] = useState(replies);
   const replyCount = replies;
   const [likeCount, setLikeCount] = useState(likes);
@@ -26,15 +28,30 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
   const userExists = !!session?.user;
 
   const utils = trpc.useContext();
-  const { data: existingLike } = trpc.tweet.existingLike.useQuery({ tweetId }, { enabled: userExists });
+  const { data: existingLike } = trpc.tweet.existingLike.useQuery(
+    { tweetId },
+    {
+      enabled: userExists,
+    },
+  );
   const { mutateAsync: like } = trpc.tweet.like.useMutation();
   const { mutateAsync: unlike } = trpc.tweet.unlike.useMutation();
 
-  const { data: existingRetweet } = trpc.tweet.existingRetweet.useQuery({ tweetId }, { enabled: userExists });
+  const { data: existingRetweet } = trpc.tweet.existingRetweet.useQuery(
+    {
+      tweetId,
+    },
+    { enabled: userExists },
+  );
   const { mutateAsync: retweet } = trpc.tweet.retweet.useMutation();
   const { mutateAsync: unretweet } = trpc.tweet.unretweet.useMutation();
 
   const handleLikeClick = async () => {
+    if (!userExists) {
+      setShowSignIn(true);
+      return;
+    }
+
     if (existingLike) {
       await unlike({ tweetId });
       setLikeCount((prev) => prev - 1);
@@ -46,6 +63,11 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
   };
 
   const handleRetweetClick = async () => {
+    if (!userExists) {
+      setShowSignIn(true);
+      return;
+    }
+
     if (existingRetweet) {
       await unretweet({ tweetId });
       setRetweetCount((prev) => prev - 1);
