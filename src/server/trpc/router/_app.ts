@@ -6,6 +6,7 @@ import { profile } from "./profile";
 import { explore } from "./explore";
 import { replies } from "./replies";
 import { tweet } from "./tweet";
+import { follows } from "./follows";
 
 export const appRouter = router({
   user: userRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   replies,
   tweet,
   explore,
+  follows,
 });
 
 // export type definition of API
