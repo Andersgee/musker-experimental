@@ -14,6 +14,7 @@ type UserBios = Prisma.UserBioCreateManyInput[];
 type UserHandles = Prisma.UserHandleCreateManyInput[];
 type Tweets = Prisma.TweetCreateManyInput[];
 type TweetLikes = Prisma.TweetLikeCreateManyInput[];
+type Follows = Prisma.FollowCreateManyInput[];
 
 async function createUsers() {
   const users: Users = [];
@@ -123,6 +124,23 @@ async function createRetweets() {
   return await prisma.tweet.createMany({ data: retweets });
 }
 
+async function createFollows() {
+  const users = await prisma.user.findMany();
+
+  const follows: Follows = [];
+  users.forEach((user, i) => {
+    const indexes = randUniqueInts(users.length, 3).filter((x) => x !== i);
+
+    indexes.forEach((i) => {
+      follows.push({
+        userId: users[i]!.id,
+        followerId: user.id,
+      });
+    });
+  });
+  return await prisma.follow.createMany({ data: follows });
+}
+
 /**
  * must have "type": "module" in package.json
  * also see package.json script tsnode
@@ -141,6 +159,8 @@ async function main() {
 
   await createTweetLikes();
   await createRetweets();
+
+  await createFollows();
 }
 
 main();
