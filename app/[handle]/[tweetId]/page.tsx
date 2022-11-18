@@ -4,7 +4,7 @@ import { prisma } from "src/server/db/client";
 import { TweetRSC } from "./TweetRSC";
 import { Tweets } from "./Tweets";
 import { numberFromHashidParam } from "src/utils/hashids";
-import { redirect } from "next/navigation";
+//import { redirect } from "next/navigation";
 
 type Params = Record<string, string | string[]>;
 
@@ -33,8 +33,11 @@ type Props = {
 export default async function Page({ params }: Props) {
   const pageTweetId = numberFromHashidParam(params?.tweetId);
   if (!pageTweetId) {
+    return <div>nothing to see here</div>;
     //https://beta.nextjs.org/docs/api-reference/redirect
-    redirect("/"); //does not actually redirect? just triggers the error page?
+    //redirect("/");
+    //so that does not actually redirect?
+    //it just errors without triggering error page?
   }
 
   //walk upward parent chain and grab all tweets
@@ -48,6 +51,10 @@ export default async function Page({ params }: Props) {
     if (tweet) {
       tweets.push(tweet);
     }
+  }
+
+  if (tweets.length < 1) {
+    return <div>nothing to see here</div>;
   }
 
   return (
