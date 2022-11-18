@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useId, useState } from "react";
 import { Button } from "src/ui/Button";
 import { trpc } from "src/utils/trpc";
@@ -9,11 +10,14 @@ type Props = {
 };
 
 export function UserHandleChoose({ className = "" }: Props) {
+  const { data: session } = useSession();
+  const userExists = !!session?.user;
+
   const utils = trpc.useContext();
   const id = useId();
   const [text, setText] = useState("");
-  const { data: myHandle } = trpc.handle.getMy.useQuery();
-  const { data: existingHandle } = trpc.handle.getByText.useQuery({ text });
+  const { data: myHandle } = trpc.handle.getMy.useQuery(undefined, { enabled: userExists });
+  const { data: existingHandle } = trpc.handle.getByText.useQuery({ text }, { enabled: userExists });
 
   const { mutateAsync: updateHandle } = trpc.handle.update.useMutation({
     onSuccess: () => {

@@ -8,8 +8,8 @@ type Props = {
 };
 
 export function SignoutButton({ className = "" }: Props) {
-  const session = useSession();
-  if (!session.data?.user) {
+  const { data: session } = useSession();
+  if (!session?.user) {
     return null;
   }
   return (

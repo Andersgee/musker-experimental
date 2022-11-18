@@ -11,12 +11,13 @@ type Props = {
 
 export function FollowButton({ userId, className = "" }: Props) {
   const { data: session } = useSession();
+  const userExists = !!session?.user;
   const utils = trpc.useContext();
 
   const { data: isFollowing } = trpc.user.isFollowing.useQuery(
     { userId },
     {
-      enabled: !!session?.user,
+      enabled: userExists,
     },
   );
   const { mutateAsync: follow } = trpc.user.follow.useMutation({

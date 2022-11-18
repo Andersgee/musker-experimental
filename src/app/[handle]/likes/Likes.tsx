@@ -3,8 +3,6 @@
 import { DividerFull } from "src/ui/Divider";
 import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
-import { IconMusker } from "src/icons/Musker";
-import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { TweetActions } from "src/components/TweetActions";

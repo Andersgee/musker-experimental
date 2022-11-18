@@ -18,17 +18,19 @@ type Props = {
 };
 
 export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, className = "" }: Props) {
-  const [replyCount, setReplyCount] = useState(replies);
+  //const [replyCount, setReplyCount] = useState(replies);
+  const replyCount = replies;
   const [likeCount, setLikeCount] = useState(likes);
   const [retweetCount, setRetweetCount] = useState(retweets);
   const { data: session } = useSession();
+  const userExists = !!session?.user;
 
   const utils = trpc.useContext();
-  const { data: existingLike } = trpc.tweet.existingLike.useQuery({ tweetId }, { enabled: !!session?.user });
+  const { data: existingLike } = trpc.tweet.existingLike.useQuery({ tweetId }, { enabled: userExists });
   const { mutateAsync: like } = trpc.tweet.like.useMutation();
   const { mutateAsync: unlike } = trpc.tweet.unlike.useMutation();
 
-  const { data: existingRetweet } = trpc.tweet.existingRetweet.useQuery({ tweetId }, { enabled: !!session?.user });
+  const { data: existingRetweet } = trpc.tweet.existingRetweet.useQuery({ tweetId }, { enabled: userExists });
   const { mutateAsync: retweet } = trpc.tweet.retweet.useMutation();
   const { mutateAsync: unretweet } = trpc.tweet.unretweet.useMutation();
 

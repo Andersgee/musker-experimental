@@ -23,17 +23,18 @@ type Props = {
 
 export function Tweets({ className = "" }: Props) {
   const { data: session } = useSession();
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = trpc.home.tweets.useInfiniteQuery(
+  const userExists = !!session?.user;
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.home.tweets.useInfiniteQuery(
     {},
     {
-      enabled: !!session?.user,
+      enabled: userExists,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage !== false) {
+    if (userExists && isVisible && hasNextPage) {
       fetchNextPage();
     }
   });
@@ -41,7 +42,7 @@ export function Tweets({ className = "" }: Props) {
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
 
-  if (!isLoading && (!tweets || tweets?.length < 1)) {
+  if (!userExists) {
     return null;
   }
 
