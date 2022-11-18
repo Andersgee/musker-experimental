@@ -19,13 +19,12 @@ type Props = {
 };
 
 export function Tweets({ userId, className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
-    trpc.profile.tweetsWithoutReplies.useInfiniteQuery(
-      { userId },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      },
-    );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = trpc.profile.tweets.useInfiniteQuery(
+    { userId },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;

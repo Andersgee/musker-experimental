@@ -17,18 +17,9 @@ export const profile = router({
       const items = await ctx.prisma.tweet.findMany({
         orderBy: { createdAt: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
+        take: limit + 1,
         where: {
-          OR: [
-            { authorId: userId }, //this includes retweets (which are just regular tweets)
-            {
-              likes: {
-                some: {
-                  userId: { in: userId },
-                },
-              },
-            },
-          ],
+          authorId: userId, //tweets,retweets and replies are all just regular tweets
         },
         include: {
           _count: {
@@ -51,6 +42,165 @@ export const profile = router({
           },
           repliedToTweet: {
             select: {
+              id: true,
+              author: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          likes: {
+            where: {
+              userId: userId,
+            },
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      let nextCursor: string | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
+  tweetsWithoutReplies: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 30;
+      const userId = input.userId;
+
+      const items = await ctx.prisma.tweet.findMany({
+        orderBy: { createdAt: "desc" },
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        take: limit + 1,
+        where: {
+          authorId: userId, //tweets,retweets and replies are all just regular tweets
+          repliedToTweetId: null, //dont include if is reply
+        },
+        include: {
+          _count: {
+            select: { replies: true, retweets: true, likes: true },
+          },
+          author: {
+            include: { handle: true },
+          },
+          retweetedToTweet: {
+            include: {
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+              author: {
+                include: {
+                  handle: true,
+                },
+              },
+            },
+          },
+          repliedToTweet: {
+            select: {
+              id: true,
+              author: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          likes: {
+            where: {
+              userId: userId,
+            },
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  handle: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      let nextCursor: string | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
+  replies: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 30;
+      const userId = input.userId;
+
+      const items = await ctx.prisma.tweet.findMany({
+        orderBy: { createdAt: "desc" },
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        take: limit + 1, //get one extra (use it for cursor to next query)
+        where: {
+          authorId: userId, //tweets,retweets and replies are all just regular tweets
+          repliedToTweetId: { not: null }, //require tweet to be reply
+        },
+        include: {
+          _count: {
+            select: { replies: true, retweets: true, likes: true },
+          },
+          author: {
+            include: { handle: true },
+          },
+          retweetedToTweet: {
+            include: {
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+              author: {
+                include: {
+                  handle: true,
+                },
+              },
+            },
+          },
+          repliedToTweet: {
+            select: {
+              id: true,
               author: {
                 select: {
                   handle: {
