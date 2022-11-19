@@ -4,9 +4,8 @@ import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import Link from "next/link";
-import { FollowButton } from "src/components/FollowButton";
 import { useSession } from "next-auth/react";
+import { UserRow } from "./UserRow";
 
 type Props = {
   className?: string;
@@ -40,20 +39,16 @@ export function Users({ userId, className = "" }: Props) {
 
   return (
     <div className={className}>
-      {follows.map((user) => {
-        return (
-          <div key={user.id}>
-            <div className="flex">
-              <Link href={`/${user.handle?.text}`} className="flex flex-1 items-center">
-                <img src={user.image || undefined} alt={user.handle?.text} className="h-12 w-12" />
-                <h3>{user.handle?.text}</h3>
-              </Link>
-              <FollowButton userId={user.id} />
-            </div>
-            <DividerFull />
-          </div>
-        );
-      })}
+      <ul>
+        {follows.map((user) => {
+          return (
+            <li key={user.id}>
+              <UserRow userId={user.id} image={user.image || ""} handle={user.handle?.text || ""} />
+              <DividerFull />
+            </li>
+          );
+        })}
+      </ul>
       <div className="mt-4 flex justify-center">
         <div ref={ref}>
           <Button onClick={() => fetchNextPage()} disabled={buttonIsDisabled}>

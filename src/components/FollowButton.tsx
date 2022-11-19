@@ -2,15 +2,13 @@
 
 import { useSession } from "next-auth/react";
 import { useDialogContext } from "src/contexts/Dialog";
-import { Button } from "src/ui/Button";
 import { trpc } from "src/utils/trpc";
 
 type Props = {
   userId: string;
-  className?: string;
 };
 
-export function FollowButton({ userId, className = "" }: Props) {
+export function FollowButton({ userId }: Props) {
   const { setShowSignIn } = useDialogContext();
   const { data: session } = useSession();
   const userExists = !!session?.user;
@@ -46,8 +44,27 @@ export function FollowButton({ userId, className = "" }: Props) {
   };
 
   return (
-    <Button className={`w-24 border border-white bg-black text-white ${className}`} onClick={handleClick}>
-      {isFollowing ? "Unfollow" : "Follow"}
-    </Button>
+    <button
+      onClick={handleClick}
+      className={`group w-24 rounded-full border border-neutral-500 px-3 py-2 font-bold ${
+        isFollowing
+          ? "bg-black text-neutral-300"
+          : "bg-neutral-100 text-neutral-800 hover:bg-white dark:bg-neutral-300 dark:hover:bg-white"
+      }`}
+    >
+      <span className="block group-hover:hidden">{isFollowing ? "Following" : "Follow"}</span>
+      <span className={`hidden group-hover:block ${isFollowing ? "text-red-500" : ""}`}>
+        {isFollowing ? "Unfollow" : "Follow"}
+      </span>
+    </button>
   );
 }
+
+/*
+
+    <Button
+      className={`w-24 border border-white ${isFollowing ? "bg-neutral-700 text-neutral-300" : "bg-black text-white"}`}
+    >
+
+
+    */
