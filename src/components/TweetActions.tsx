@@ -86,7 +86,7 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
       </Link>
       <button className="group flex w-20" title="Retweet" onClick={handleRetweetClick}>
         <IconRewteet
-          className={`mr-2 h-6 w-6 ${existingRetweet ? "text-fuchsia-600" : "group-hover:text-fuchsia-300"}`}
+          className={`mr-2 h-6 w-6 ${existingRetweet ? "text-emerald-600" : "group-hover:text-emerald-300"}`}
         />
         {retweetCount}
       </button>

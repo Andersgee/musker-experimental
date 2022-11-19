@@ -24,7 +24,7 @@ export function CreateReplyTweet({ tweetId, className = "" }: Props) {
   });
   const { mutateAsync: create, isLoading } = trpc.tweet.reply.useMutation({
     onSuccess: () => {
-      utils.home.tweets.invalidate();
+      utils.replies.tweets.invalidate({ tweetId });
     },
   });
 
