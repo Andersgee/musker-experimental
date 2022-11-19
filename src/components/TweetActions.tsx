@@ -7,6 +7,7 @@ import { useDialogContext } from "src/contexts/Dialog";
 import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
 import { IconRewteet } from "src/icons/Retweet";
+import { hashidFromNumber } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 
 type Props = {
@@ -80,7 +81,7 @@ export function TweetActions({ tweetId, authorHandle, likes, replies, retweets, 
 
   return (
     <div className={`flex w-full gap-4 ${className}`}>
-      <Link title="Reply" className="group flex w-20 pt-1" href={`/${authorHandle}/${tweetId}`}>
+      <Link title="Reply" className="group flex w-20 pt-1" href={`/${authorHandle}/${hashidFromNumber(tweetId)}`}>
         <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
       </Link>
       <button className="group flex w-20" title="Retweet" onClick={handleRetweetClick}>

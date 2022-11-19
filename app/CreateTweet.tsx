@@ -66,7 +66,7 @@ export function CreateTweet({ className = "" }: Props) {
 
         <DividerFull />
         <div className="mt-2 flex items-baseline justify-between">
-          <div>tweet options here</div>
+          <div></div>
           <div className="flex flex-col items-end">
             <button
               disabled={isLoading || !text}

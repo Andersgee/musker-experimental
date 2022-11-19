@@ -106,29 +106,24 @@ export const follows = router({
       const items = await ctx.prisma.user.findMany({
         orderBy: { createdAt: "desc" },
         where: {
-          AND: [
-            //follows userId
-            {
-              sentFollows: {
-                some: {
-                  userId: input.userId,
-                },
-              },
+          //is following userId
+          sentFollows: {
+            some: {
+              userId: input.userId,
             },
-            //I follow
-            {
-              recievedFollows: {
-                some: {
-                  userId: ctx.session.user.id,
-                },
-              },
+          },
+          //is followed by me
+          recievedFollows: {
+            some: {
+              followerId: ctx.session.user.id,
             },
-          ],
+          },
         },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
         select: {
           id: true,
+          image: true,
           handle: true,
         },
       });

@@ -15,6 +15,9 @@ import { IconReply } from "src/icons/Reply";
 import { useSession } from "next-auth/react";
 import { hashidFromNumber } from "src/utils/hashids";
 
+import { Tweets as TweetsExplore } from "./explore/Tweets";
+import { useDialogContext } from "src/contexts/Dialog";
+
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
 type Props = {
@@ -38,12 +41,38 @@ export function Tweets({ className = "" }: Props) {
       fetchNextPage();
     }
   });
+  const { setShowSignIn } = useDialogContext();
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
   const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!userExists) {
-    return null;
+    return (
+      <>
+        <div className="mb-12 flex flex-col items-center gap-2 text-center">
+          <IconMusker className="h-auto w-full" />
+
+          <h3>You are not signed in</h3>
+          <p>showing you explore feed instead of your personal feed</p>
+          <Button className="block w-32" onClick={() => setShowSignIn(true)}>
+            sign in
+          </Button>
+        </div>
+        <DividerFull />
+        <TweetsExplore />
+      </>
+    );
+  }
+
+  if (userExists && tweets && tweets.length < 1) {
+    return (
+      <div className="text-center">
+        <IconMusker className="w-full" />
+        <h3>Go follow some people to make this feed peronal.</h3>
+        <p>(Until then you will just see the general explore feed here)</p>
+        <TweetsExplore />
+      </div>
+    );
   }
 
   return (

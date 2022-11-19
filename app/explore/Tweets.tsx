@@ -3,8 +3,6 @@
 import { DividerFull } from "src/ui/Divider";
 import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
-import { IconMusker } from "src/icons/Musker";
-import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { TweetActions } from "src/components/TweetActions";
@@ -61,26 +59,6 @@ export function Tweets({ className = "" }: Props) {
             {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
           </Button>
         </div>
-        {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
-      </div>
-      <div></div>
-      {!hasNextPage && <EndOfFeed />}
-    </div>
-  );
-}
-
-function EndOfFeed() {
-  return (
-    <div className="mb-4">
-      <div className="">
-        <IconMusker className="w-full" />
-        <h3 className="text-center">
-          You have seen all tweets from the people you follow. <br />
-          Go follow some people.
-        </h3>
-      </div>
-      <div className="flex w-full justify-center">
-        <ButtonLink href="/explore">explore</ButtonLink>
       </div>
     </div>
   );
