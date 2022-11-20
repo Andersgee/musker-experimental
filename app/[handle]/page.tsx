@@ -1,7 +1,6 @@
 import { prisma } from "src/server/db/client";
 import { Tweets } from "./Tweets";
-
-type Params = Record<string, string | string[]>;
+import type { Params } from "src/utils/param";
 
 type Props = {
   params?: Params;

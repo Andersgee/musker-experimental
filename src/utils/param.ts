@@ -1,3 +1,5 @@
+export type Params = Record<string, string | string[]>;
+
 export type Param = string | string[] | undefined;
 
 /** grab param[0] if its an array, else just param or undefined */
