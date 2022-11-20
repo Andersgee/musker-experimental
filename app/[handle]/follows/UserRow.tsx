@@ -14,7 +14,7 @@ export function UserRow({ userId, image, handle, className = "" }: Props) {
   return (
     <div className={`my-2 flex ${className}`}>
       <Link href={`/${handle}`} className="flex flex-1 items-center">
-        <img src={image} alt={handle} className="h-8 w-8" />
+        <img src={image} alt={handle} className="h-8 w-8 rounded-full shadow-imageborder" />
         <h3>{handle}</h3>
       </Link>
       <FollowButton userId={userId} />

@@ -21,9 +21,12 @@ export default async function Layout({ children, params }: Props) {
 
   const userHandle = await prisma.userHandle.findUnique({
     where: { text: handle },
-    include: {
+    select: {
       user: {
-        include: {
+        select: {
+          id: true,
+          image: true,
+          createdAt: true,
           bio: true,
           _count: {
             select: {

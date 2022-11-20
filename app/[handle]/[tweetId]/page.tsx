@@ -14,10 +14,9 @@ export async function getTweet(id: number | null | undefined) {
   if (!id) return null;
   return prisma.tweet.findUnique({
     where: { id },
-    include: {
-      author: {
-        include: { handle: true },
-      },
+    select: {
+      id: true,
+      repliedToTweetId: true,
       _count: {
         select: { replies: true, retweets: true, likes: true },
       },

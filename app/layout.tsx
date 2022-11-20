@@ -16,11 +16,6 @@ const montserrat = Montserrat({ weight: "variable", subsets: ["latin"], variable
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={montserrat.variable}>
-      <head>
-        <title>Musker</title>
-        <meta name="description" content="musker" />
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <SessionProvider>
         <TrpcProvider>
           <ThemeProvider>
