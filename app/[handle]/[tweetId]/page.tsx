@@ -16,7 +16,19 @@ export async function getTweet(id: number | null | undefined) {
     where: { id },
     select: {
       id: true,
+      text: true,
+      createdAt: true,
       repliedToTweetId: true,
+      author: {
+        select: {
+          image: true,
+          handle: {
+            select: {
+              text: true,
+            },
+          },
+        },
+      },
       _count: {
         select: { replies: true, retweets: true, likes: true },
       },

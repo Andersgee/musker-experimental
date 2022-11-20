@@ -1,13 +1,26 @@
-/*
-see 
-https://ogp.me/
-*/
+function getBaseUrl() {
+  if (typeof window !== "undefined") return ""; // browser should use relative url
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
+}
+
+/** allow relative urls such as "/about" */
+function absUrl(url?: string) {
+  if (!url) return url;
+
+  const baseUrl = getBaseUrl();
+  if (url.startsWith("/")) {
+    return `${baseUrl}${url}`;
+  } else {
+    return url;
+  }
+}
 
 type Props = {
   /**
    * The title of your object as it should appear within the graph, e.g., "The Rock".
    */
-  title?: string;
+  title: string;
   /**
    * The type of your object, e.g., "website" or "video.movie". Depending on the type you specify, other properties may also be required.
    */
@@ -22,9 +35,8 @@ type Props = {
    * The canonical URL of your object that will be used as its permanent ID in the graph, e.g., "https://www.imdb.com/title/tt0117500".
    */
   url: string;
-
   /**
-   * A URL to an audio file to accompany this object.
+   * A URL to an audio file to accompany this object. example "https://example.com/bond/theme.mp3"
    */
   audio?: string;
   /**
@@ -54,24 +66,29 @@ type Props = {
 };
 
 /**
- * meta tags for head
+ * meta tags for SEO, with sensible required fields although technically nothing is required.
+ *
+ * NOTE: for convenience, this function allows relative url such as `"/about"` instead of `"https://some.page.com/about"`
  *
  * reference:
  * https://ogp.me/
  * https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/summary-card-with-large-image
  * https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+ * https://api.slack.com/robots
+ *
  *
  * testing:
  * facebook: https://developers.facebook.com/tools/debug/
  * google: https://developers.google.com/search/docs/appearance/structured-data
  * twitter: https://cards-dev.twitter.com/validator
+ * slack: apparently uses same as twitter
  *
  * NOTE:
  * at the moment title will not update on client navigation without hacky stuff:
  * https://beta.nextjs.org/docs/api-reference/file-conventions/head
  */
-export function Head({
-  title = "Musker",
+export function SEO({
+  title,
   type = "website",
   site_name = "Musker",
   url,
@@ -92,24 +109,23 @@ export function Head({
       <meta name="theme-color" content="#FAFAFA" /> {/* adress bar color, same as bgcolor looks good. */}
       {/* manifest and icons */}
       <link rel="manifest" href="/manifest.json" />
-      <link rel="apple-touch-icon" href="/icons/apple-touch-icon-192x192.png" />
       <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
       <link rel="icon" type="image/png" href="/icons/favicon.png" />
-      {/* OG Basic Metadata */}
-      <meta property="og:title" content={title} />
+      <link rel="apple-touch-icon" href="/icons/apple-touch-icon-192x192.png" />
+      {/* OG Metadata */}
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
-      <meta property="og:image" content={image} />
-      {/* OG Optional Metadata */}
+      <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content={site_name} />
-      {audio && <meta property="og:audio" content="https://example.com/bond/theme.mp3" />}
+      <meta property="og:url" content={absUrl(url)} />
+      <meta property="og:image" content={absUrl(image)} />
+      {audio && <meta property="og:audio" content={absUrl(audio)} />}
+      {video && <meta property="og:video" content={absUrl(video)} />}
       {determiner && <meta property="og:determiner" content={determiner} />}
       {locale && <meta property="og:locale" content={locale} />}
       {locale_alternatives?.map((alternative) => (
         <meta key={alternative} property="og:locale:alternate" content={alternative} />
       ))}
-      {video && <meta property="og:video" content={video} />}
       {/* Twitter card */}
       <meta name="twitter:card" content="summary_large_image" />
       {/* twitter uses og tags for these if not provided so not needed.
