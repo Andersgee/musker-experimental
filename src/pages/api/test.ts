@@ -1,19 +1,21 @@
 import { Client } from "@planetscale/database";
-import { fetch } from "undici";
+//import { fetch } from "undici";
 
 export const config = {
-  fetch,
   runtime: "experimental-edge",
 };
 
-const db = new Client({
+const client = new Client({
+  //fetch,
   url: process.env.DATABASE_URL,
 });
 
 export default async function handler(req: Request) {
   console.log("HANDLER IS HERE");
-  const conn = db.connection();
-  const results = await conn.execute("select 1 from User");
+  console.log("process.env.DATABASE_URL", process.env.DATABASE_URL);
+  const conn = client.connection();
+  console.log("conn:", conn);
+  const results = await conn.execute("select * from User");
   console.log({ results });
 
   //const json = JSON.stringify(results);
