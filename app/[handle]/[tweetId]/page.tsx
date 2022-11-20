@@ -70,6 +70,8 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
+      <div>{JSON.stringify(params)}</div>
+      <div>pageTweetId: {pageTweetId}</div>
       {tweets.reverse().map((t) => (
         <TweetRSC key={t.id} tweet={t} />
       ))}

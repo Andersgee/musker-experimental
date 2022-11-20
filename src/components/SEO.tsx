@@ -5,7 +5,7 @@ function getBaseUrl() {
 }
 
 /** allow relative urls such as "/about" */
-function absUrl(url?: string) {
+export function absUrl(url?: string) {
   if (!url) return url;
 
   const baseUrl = getBaseUrl();
