@@ -83,9 +83,12 @@ type Props = {
  * twitter: https://cards-dev.twitter.com/validator
  * slack: apparently uses same as twitter
  *
- * NOTE:
+ * EXPERIMENTAL:
  * at the moment title will not update on client navigation without hacky stuff:
  * https://beta.nextjs.org/docs/api-reference/file-conventions/head
+ *
+ * EXPERIMENTAL2:
+ * apparently putting a comment after a tag breaks build. so put comments on their own lines
  */
 export function SEO({
   title,
@@ -106,12 +109,13 @@ export function SEO({
       <title>{title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#FAFAFA" /> {/* adress bar color, same as bgcolor looks good. */}
+      {/* adress bar color, same as bgcolor looks good. */}
+      <meta name="theme-color" content="#FAFAFA" />
       {/* manifest and icons */}
-      <link rel="manifest" href="/manifest.json" />
-      <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
-      <link rel="icon" type="image/png" href="/icons/favicon.png" />
-      <link rel="apple-touch-icon" href="/icons/apple-touch-icon-192x192.png" />
+      <link rel="manifest" href={absUrl("/manifest.json")} />
+      <link rel="icon" type="image/svg+xml" href={absUrl("/icons/favicon.svg")} />
+      <link rel="icon" type="image/png" href={absUrl("/icons/favicon.png")} />
+      <link rel="apple-touch-icon" href={absUrl("/icons/apple-touch-icon-192x192.png")} />
       {/* OG Metadata */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={title} />
