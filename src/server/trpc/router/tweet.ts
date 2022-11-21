@@ -50,8 +50,8 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const like = await ctx.prisma.tweetLike.findUnique({
+    .query(({ ctx, input }) => {
+      return ctx.prisma.tweetLike.findUnique({
         where: {
           userId_tweetId: {
             tweetId: input.tweetId,
@@ -59,7 +59,6 @@ export const tweet = router({
           },
         },
       });
-      return like;
     }),
   like: protectedProcedure
     .input(
@@ -97,22 +96,13 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const tweet = await ctx.prisma.tweet.findUnique({
-        where: { id: input.tweetId },
-        select: {
-          retweets: {
-            where: {
-              authorId: ctx.session.user.id,
-            },
-          },
+    .query(({ ctx, input }) => {
+      return ctx.prisma.tweet.findFirst({
+        where: {
+          authorId: ctx.session.user.id,
+          retweetedToTweetId: input.tweetId,
         },
       });
-      if (tweet && tweet.retweets[0]) {
-        return tweet.retweets[0];
-      } else {
-        return null;
-      }
     }),
   retweet: protectedProcedure
     .input(

@@ -1,10 +1,10 @@
 import { Client } from "@planetscale/database";
 //import { fetch } from "undici";
-
+/*
 export const config = {
   runtime: "experimental-edge",
 };
-
+*/
 const client = new Client({
   //fetch,
   url: process.env.DATABASE_URL,

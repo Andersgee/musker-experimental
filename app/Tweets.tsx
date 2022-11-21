@@ -7,8 +7,6 @@ import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { TweetActions } from "src/components/TweetActions";
-import { formatCreatedAt } from "src/utils/date";
 import { IconHeart } from "src/icons/Heart";
 import { IconRewteet } from "src/icons/Retweet";
 import { IconReply } from "src/icons/Reply";
@@ -17,6 +15,8 @@ import { hashidFromNumber } from "src/utils/hashids";
 
 import { Tweets as TweetsExplore } from "./explore/Tweets";
 import { useDialogContext } from "src/contexts/Dialog";
+import { Tweet } from "src/components/Tweet";
+import { useMemo } from "react";
 
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
@@ -37,42 +37,20 @@ export function Tweets({ className = "" }: Props) {
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
-    if (userExists && isVisible && hasNextPage) {
+    if (isVisible && hasNextPage !== false) {
       fetchNextPage();
     }
   });
-  const { setShowSignIn } = useDialogContext();
 
-  const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
+  //const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
   const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!userExists) {
-    return (
-      <>
-        <div className="mb-12 flex flex-col items-center gap-2 text-center">
-          <IconMusker className="h-auto w-full" />
-
-          <h3>You are not signed in</h3>
-          <p>showing you explore feed instead of your personal feed</p>
-          <Button className="block w-32" onClick={() => setShowSignIn(true)}>
-            sign in
-          </Button>
-        </div>
-        <DividerFull />
-        <TweetsExplore />
-      </>
-    );
+    return <FallbackNoUser />;
   }
 
   if (userExists && tweets && tweets.length < 1) {
-    return (
-      <div className="text-center">
-        <IconMusker className="w-full" />
-        <h3>Go follow some people to make this feed peronal.</h3>
-        <p>(Until then you will just see the general explore feed here)</p>
-        <TweetsExplore />
-      </div>
-    );
+    return <FallbackNoTweets />;
   }
 
   return (
@@ -83,7 +61,7 @@ export function Tweets({ className = "" }: Props) {
             {tweet.retweetedToTweet ? (
               <ReTweet retweeterHandle={tweet.author.handle?.text} tweet={tweet.retweetedToTweet} />
             ) : (
-              <Tweet tweet={tweet} />
+              <FullTweet tweet={tweet} />
             )}
             <DividerFull />
           </div>
@@ -91,11 +69,10 @@ export function Tweets({ className = "" }: Props) {
       })}
       <div className="mt-4 flex justify-center">
         <div ref={ref}>
-          <Button onClick={() => fetchNextPage()} disabled={buttonIsDisabled}>
+          <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
             {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
           </Button>
         </div>
-        {/*<div>{query.isFetching && !query.isFetchingNextPage ? "looking for changes..." : null}</div>*/}
       </div>
       <div></div>
       {!hasNextPage && <EndOfFeed />}
@@ -103,24 +80,7 @@ export function Tweets({ className = "" }: Props) {
   );
 }
 
-function EndOfFeed() {
-  return (
-    <div className="mb-4">
-      <div className="">
-        <IconMusker className="w-full" />
-        <h3 className="text-center">
-          You have seen all tweets from the people you follow. <br />
-          Go follow some people.
-        </h3>
-      </div>
-      <div className="flex w-full justify-center">
-        <ButtonLink href="/explore">explore</ButtonLink>
-      </div>
-    </div>
-  );
-}
-
-function Tweet({ tweet }: { tweet: Tweet }) {
+function FullTweet({ tweet }: { tweet: Tweet }) {
   return (
     <div className="mt-2">
       {tweet.repliedToTweet && (
@@ -168,34 +128,16 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <div className="ml-1">liked</div>
         </div>
       )}
-      <article className="flex">
-        <div className="">
-          <a href={`/${tweet.author.handle?.text}`} className="w-12">
-            <img
-              className="h-8 w-8 rounded-full shadow-imageborder"
-              src={tweet.author.image || ""}
-              alt={tweet.author.handle?.text}
-            />
-          </a>
-        </div>
-        <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
-            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              <h3 className="text-base font-normal">
-                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
-              </h3>
-              <p>{tweet.text}</p>
-            </div>
-          </Link>
-          <TweetActions
-            tweetId={tweet.id}
-            authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.likes}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-          />
-        </div>
-      </article>
+      <Tweet
+        tweetId={tweet.id}
+        createdAt={tweet.createdAt}
+        handle={tweet.author.handle?.text || ""}
+        image={tweet.author.image || ""}
+        likes={tweet._count.likes}
+        replies={tweet._count.replies}
+        retweets={tweet._count.retweets}
+        text={tweet.text}
+      />
     </div>
   );
 }
@@ -215,34 +157,66 @@ function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterH
         <div className="ml-1">retweeted</div>
       </div>
 
-      <article className="flex">
-        <div className="">
-          <a href={`/${tweet.author.handle?.text}`} className="w-12">
-            <img
-              className="h-8 w-8 rounded-full shadow-imageborder"
-              src={tweet.author.image || ""}
-              alt={tweet.author.handle?.text}
-            />
-          </a>
-        </div>
-        <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
-            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              <h3 className="text-base font-normal">
-                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
-              </h3>
-              <p>{tweet.text}</p>
-            </div>
-          </Link>
-          <TweetActions
-            tweetId={tweet.id}
-            authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.likes}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-          />
-        </div>
-      </article>
+      <Tweet
+        tweetId={tweet.id}
+        createdAt={tweet.createdAt}
+        handle={tweet.author.handle?.text || ""}
+        image={tweet.author.image || ""}
+        likes={tweet._count.likes}
+        replies={tweet._count.replies}
+        retweets={tweet._count.retweets}
+        text={tweet.text}
+      />
+    </div>
+  );
+}
+
+///////////////////////////////
+
+function EndOfFeed() {
+  return (
+    <div className="mb-4">
+      <div className="">
+        <IconMusker className="w-full" />
+        <h3 className="text-center">
+          You have seen all tweets from the people you follow. <br />
+          Go follow some people.
+        </h3>
+      </div>
+      <div className="flex w-full justify-center">
+        <ButtonLink href="/explore">explore</ButtonLink>
+      </div>
+    </div>
+  );
+}
+
+function FallbackNoUser() {
+  const { setShowSignIn } = useDialogContext();
+
+  return (
+    <>
+      <div className="mb-12 flex flex-col items-center gap-2 text-center">
+        <IconMusker className="h-auto w-full" />
+
+        <h3>You are not signed in</h3>
+        <p>showing you explore feed instead of your personal feed</p>
+        <Button className="block w-32" onClick={() => setShowSignIn(true)}>
+          sign in
+        </Button>
+      </div>
+      <DividerFull />
+      <TweetsExplore />
+    </>
+  );
+}
+
+function FallbackNoTweets() {
+  return (
+    <div className="text-center">
+      <IconMusker className="w-full" />
+      <h3>Go follow some people to make this feed peronal.</h3>
+      <p>(Until then you will just see the general explore feed here)</p>
+      <TweetsExplore />
     </div>
   );
 }
