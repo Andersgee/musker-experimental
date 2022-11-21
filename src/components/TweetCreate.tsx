@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDialogContext } from "src/contexts/Dialog";
 import { DividerFull } from "src/ui/Divider";
 import { trpc } from "src/utils/trpc";
+import { UserHandleChoose } from "./UserHandleChoose";
 
 type Props = {
   className?: string;
@@ -22,9 +23,15 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
   });
   const { setShowSignIn } = useDialogContext();
   const [showInfoText, setShowInfoText] = useState(false);
+  const [showHandlePicker, setShowHandlePicker] = useState(false);
   const [text, setText] = useState("");
 
   const handleClick = async () => {
+    if (!myHandle) {
+      setShowHandlePicker(true);
+      return;
+    }
+
     if (!userExists) {
       setShowSignIn(true);
       setShowInfoText(true);
@@ -39,7 +46,7 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
       <div className={`mt-2 flex w-full justify-between ${className}`}>
         {session?.user ? (
           <div className="">
-            <Link href={`/${myHandle}`} className="flex w-12 items-center justify-center">
+            <Link href={`/${myHandle || ""}`} className="flex w-12 items-center justify-center">
               <img
                 className="h-8 w-8 rounded-full shadow-imageborder"
                 src={session.user?.image || undefined}
@@ -73,9 +80,10 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
               >
                 Tweet
               </button>
-              {showInfoText && !userExists && (
+              {!userExists && showInfoText && (
                 <div className="rounded-full font-bold text-orange-500">need to sign in first</div>
               )}
+              {!myHandle && showHandlePicker && <UserHandleChoose />}
             </div>
           </div>
         </div>
