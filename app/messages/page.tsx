@@ -5,7 +5,7 @@ export default function Page() {
     <div className="">
       <div>messages</div>
       <div>TODO</div>
-      <IconMusker className="w-full" />
+      <IconMusker className="h-auto w-full" />
     </div>
   );
 }

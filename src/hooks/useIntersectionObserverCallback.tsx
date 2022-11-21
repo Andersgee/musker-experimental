@@ -1,19 +1,18 @@
 import { useCallback } from "react";
 
 /**
- * Wrapper for ```new IntersectionObserver(callback, options)```
+ * Wrapper for `new IntersectionObserver(callback, options)`
  *
  * [MDN Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
  *
- * note to self:
- * This is the simplest I could make it... options are static (can not be changed after init)
+ * note: this is the simplest I could make it. options are static (not part of dependency array of callback)
  *
  * ### Example
  *
  * ```ts
  * const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
  *   if (!!entry?.isIntersecting) {
- *     fetchNextPage();
+ *     //do something
  *   }
  * });
  * ```

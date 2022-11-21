@@ -1,23 +1,18 @@
 "use client";
 
+import { trpc } from "src/utils/trpc";
 import { DividerFull } from "src/ui/Divider";
-import { trpc, type RouterOutput } from "src/utils/trpc";
-import Link from "next/link";
 import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { IconRewteet } from "src/icons/Retweet";
-import { IconReply } from "src/icons/Reply";
 import { useSession } from "next-auth/react";
-import { hashidFromNumber } from "src/utils/hashids";
-
 import { Tweets as TweetsExplore } from "./explore/Tweets";
 import { useDialogContext } from "src/contexts/Dialog";
-import { Likes, Retweets, TweetBody } from "src/components/Tweet";
+import { Likes, Retweets, TweetBody, RepliedTo, RetweetedBy } from "src/components/Tweet";
 import { useMemo } from "react";
 
-type Tweet = RouterOutput["home"]["tweets"]["items"][number];
+//type Tweet = RouterOutput["home"]["tweets"]["items"][number];
 
 type Props = {
   className?: string;
@@ -54,92 +49,48 @@ export function Tweets({ className = "" }: Props) {
     <div className={className}>
       {tweets?.map((tweet) => {
         return (
-          <div key={tweet.id}>
+          <div key={tweet.id} className="mt-2">
             {tweet.retweetedToTweet ? (
-              <ReTweet retweeterHandle={tweet.author.handle?.text} tweet={tweet.retweetedToTweet} />
+              <>
+                <RetweetedBy handle={tweet.author.handle?.text} />
+                <TweetBody
+                  tweetId={tweet.retweetedToTweet.id}
+                  createdAt={tweet.retweetedToTweet.createdAt}
+                  handle={tweet.retweetedToTweet.author.handle?.text || ""}
+                  image={tweet.retweetedToTweet.author.image || ""}
+                  likes={tweet.retweetedToTweet._count.likes}
+                  replies={tweet.retweetedToTweet._count.replies}
+                  retweets={tweet.retweetedToTweet._count.retweets}
+                  text={tweet.retweetedToTweet.text}
+                />
+              </>
             ) : (
-              <FullTweet tweet={tweet} />
+              <>
+                <RepliedTo tweet={tweet} repliedToTweet={tweet.repliedToTweet} />
+                <Retweets retweets={tweet.retweets} />
+                <Likes likes={tweet.likes} />
+                <TweetBody
+                  tweetId={tweet.id}
+                  createdAt={tweet.createdAt}
+                  handle={tweet.author.handle?.text || ""}
+                  image={tweet.author.image || ""}
+                  likes={tweet._count.likes}
+                  replies={tweet._count.replies}
+                  retweets={tweet._count.retweets}
+                  text={tweet.text}
+                />
+              </>
             )}
             <DividerFull />
           </div>
         );
       })}
-      <div className="mt-4 flex justify-center">
-        <div ref={ref}>
-          <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-            {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-          </Button>
-        </div>
+      <div ref={ref} className="mt-4 flex justify-center">
+        <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+        </Button>
       </div>
-      <div></div>
-      {!hasNextPage && <EndOfFeed />}
-    </div>
-  );
-}
-
-function FullTweet({ tweet }: { tweet: Tweet }) {
-  return (
-    <div className="mt-2">
-      {tweet.repliedToTweet && (
-        <div className="flex font-paragraph text-sm">
-          <div className="flex w-10 justify-end">
-            <IconReply className="mr-2 w-4" />
-          </div>
-          <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
-            {tweet.author.handle?.text}{" "}
-          </Link>
-          <div className="ml-1">
-            replied to{" "}
-            <Link
-              href={`/${tweet.repliedToTweet.author.handle?.text}/${hashidFromNumber(tweet.repliedToTweet.id)}`}
-              className="hover:underline"
-            >
-              tweet by {tweet.repliedToTweet.author.handle?.text}
-            </Link>
-          </div>
-        </div>
-      )}
-      <Retweets retweets={tweet.retweets} />
-      <Likes likes={tweet.likes} />
-      <TweetBody
-        tweetId={tweet.id}
-        createdAt={tweet.createdAt}
-        handle={tweet.author.handle?.text || ""}
-        image={tweet.author.image || ""}
-        likes={tweet._count.likes}
-        replies={tweet._count.replies}
-        retweets={tweet._count.retweets}
-        text={tweet.text}
-      />
-    </div>
-  );
-}
-
-type RetweetedTweet = NonNullable<Tweet["retweetedToTweet"]>;
-
-function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterHandle?: string }) {
-  return (
-    <div className="mt-2">
-      <div className="flex font-paragraph text-sm">
-        <div className="flex w-10 justify-end">
-          <IconRewteet className="mr-2 w-4" />
-        </div>
-        <Link href={`/${retweeterHandle}`} className="hover:underline">
-          {retweeterHandle}
-        </Link>
-        <div className="ml-1">retweeted</div>
-      </div>
-
-      <TweetBody
-        tweetId={tweet.id}
-        createdAt={tweet.createdAt}
-        handle={tweet.author.handle?.text || ""}
-        image={tweet.author.image || ""}
-        likes={tweet._count.likes}
-        replies={tweet._count.replies}
-        retweets={tweet._count.retweets}
-        text={tweet.text}
-      />
+      {tweets && !hasNextPage && <EndOfFeed />}
     </div>
   );
 }
@@ -150,7 +101,7 @@ function EndOfFeed() {
   return (
     <div className="mb-4">
       <div className="">
-        <IconMusker className="w-full" />
+        <IconMusker className="h-auto w-full" />
         <h3 className="text-center">
           You have seen all tweets from the people you follow. <br />
           Go follow some people.
@@ -186,7 +137,7 @@ function FallbackNoUser() {
 function FallbackNoTweets() {
   return (
     <div className="text-center">
-      <IconMusker className="w-full" />
+      <IconMusker className="h-auto w-full" />
       <h3>Go follow some people to make this feed peronal.</h3>
       <p>(Until then you will just see the general explore feed here)</p>
       <TweetsExplore />

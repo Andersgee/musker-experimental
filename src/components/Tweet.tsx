@@ -205,3 +205,68 @@ export function Retweets({ retweets, className = "" }: RetweetsProps) {
     </div>
   );
 }
+
+type RepliedToProps = {
+  tweet: {
+    author: {
+      handle: {
+        text: string;
+      } | null;
+    };
+  };
+  repliedToTweet?: {
+    author: {
+      handle: {
+        text: string;
+      } | null;
+    };
+    id: number;
+    authorId: string;
+  } | null;
+  className?: string;
+};
+
+export function RepliedTo({ tweet, repliedToTweet, className = "" }: RepliedToProps) {
+  if (!repliedToTweet) {
+    return null;
+  }
+
+  return (
+    <div className={`flex font-paragraph text-sm ${className}`}>
+      <div className="flex w-10 justify-end">
+        <IconReply className="mr-2 w-4" />
+      </div>
+      <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
+        {tweet.author.handle?.text}
+      </Link>
+      <div className="ml-1">
+        replied to
+        <Link
+          href={`/${repliedToTweet.author.handle?.text}/${hashidFromNumber(repliedToTweet.id)}`}
+          className="mx-1 hover:underline"
+        >
+          tweet by {repliedToTweet.author.handle?.text}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+type RetweetedByProps = {
+  handle?: string;
+  className?: string;
+};
+
+export function RetweetedBy({ handle, className = "" }: RetweetedByProps) {
+  return (
+    <div className={`flex font-paragraph text-sm ${className}`}>
+      <div className="flex w-10 justify-end">
+        <IconRewteet className="mr-2 w-4" />
+      </div>
+      <Link href={`/${handle}`} className="hover:underline">
+        {handle}
+      </Link>
+      <div className="ml-1">retweeted</div>
+    </div>
+  );
+}

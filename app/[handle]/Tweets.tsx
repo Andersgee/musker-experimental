@@ -1,18 +1,11 @@
 "use client";
 
+import { trpc } from "src/utils/trpc";
 import { DividerFull } from "src/ui/Divider";
-import { trpc, type RouterOutput } from "src/utils/trpc";
-import Link from "next/link";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { IconHeart } from "src/icons/Heart";
-import { IconRewteet } from "src/icons/Retweet";
-import { IconReply } from "src/icons/Reply";
-import { hashidFromNumber } from "src/utils/hashids";
 import { useMemo } from "react";
-import { Likes, TweetBody } from "src/components/Tweet";
-
-type Tweet = RouterOutput["profile"]["tweets"]["items"][number];
+import { Likes, RetweetedBy, TweetBody } from "src/components/Tweet";
 
 type Props = {
   className?: string;
@@ -20,13 +13,12 @@ type Props = {
 };
 
 export function Tweets({ userId, className = "" }: Props) {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
-    trpc.profile.tweetsWithoutReplies.useInfiniteQuery(
-      { userId },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      },
-    );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.tweetsWithoutReplies.useInfiniteQuery(
+    { userId },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
   const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
@@ -36,19 +28,39 @@ export function Tweets({ userId, className = "" }: Props) {
     }
   });
 
-  if (!isLoading && (!tweets || tweets?.length < 1)) {
-    return null;
-  }
-
   return (
     <div className={className}>
       {tweets?.map((tweet) => {
         return (
-          <div key={tweet.id}>
+          <div key={tweet.id} className="">
             {tweet.retweetedToTweet ? (
-              <ReTweet retweeterHandle={tweet.author.handle?.text} tweet={tweet.retweetedToTweet} />
+              <>
+                <RetweetedBy handle={tweet.author.handle?.text} />
+                <TweetBody
+                  tweetId={tweet.retweetedToTweet.id}
+                  createdAt={tweet.retweetedToTweet.createdAt}
+                  handle={tweet.retweetedToTweet.author.handle?.text || ""}
+                  image={tweet.retweetedToTweet.author.image || ""}
+                  likes={tweet.retweetedToTweet._count.likes}
+                  replies={tweet.retweetedToTweet._count.replies}
+                  retweets={tweet.retweetedToTweet._count.retweets}
+                  text={tweet.retweetedToTweet.text}
+                />
+              </>
             ) : (
-              <Tweet tweet={tweet} />
+              <>
+                <Likes likes={tweet.likes} />
+                <TweetBody
+                  tweetId={tweet.id}
+                  createdAt={tweet.createdAt}
+                  handle={tweet.author.handle?.text || ""}
+                  image={tweet.author.image || ""}
+                  likes={tweet._count.likes}
+                  replies={tweet._count.replies}
+                  retweets={tweet._count.retweets}
+                  text={tweet.text}
+                />
+              </>
             )}
 
             <DividerFull />
@@ -60,73 +72,6 @@ export function Tweets({ userId, className = "" }: Props) {
           {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
         </Button>
       </div>
-    </div>
-  );
-}
-
-function Tweet({ tweet }: { tweet: Tweet }) {
-  return (
-    <div className="mt-2">
-      <Likes likes={tweet.likes} />
-      {tweet.repliedToTweet && (
-        <div className="flex font-paragraph text-sm">
-          <div className="flex w-10 justify-end">
-            <IconReply className="mr-2 w-4" />
-          </div>
-          <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
-            {tweet.author.handle?.text}
-          </Link>
-          <div className="ml-1">
-            replied to{" "}
-            <Link
-              href={`/${tweet.repliedToTweet.author.handle?.text}/${hashidFromNumber(tweet.repliedToTweet?.id)}`}
-              className="hover:underline"
-            >
-              tweet by {tweet.repliedToTweet.author.handle?.text}
-            </Link>
-          </div>
-        </div>
-      )}
-
-      <TweetBody
-        tweetId={tweet.id}
-        createdAt={tweet.createdAt}
-        handle={tweet.author.handle?.text || ""}
-        image={tweet.author.image || ""}
-        likes={tweet._count.likes}
-        replies={tweet._count.replies}
-        retweets={tweet._count.retweets}
-        text={tweet.text}
-      />
-    </div>
-  );
-}
-
-type RetweetedTweet = NonNullable<Tweet["retweetedToTweet"]>;
-
-function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterHandle?: string }) {
-  return (
-    <div className="mt-2">
-      <div className="flex font-paragraph text-sm">
-        <div className="flex w-10 justify-end">
-          <IconRewteet className="mr-2 w-4" />
-        </div>
-        <Link href={`/${retweeterHandle}`} className="hover:underline">
-          {retweeterHandle}
-        </Link>
-        <div className="ml-1">retweeted</div>
-      </div>
-
-      <TweetBody
-        tweetId={tweet.id}
-        createdAt={tweet.createdAt}
-        handle={tweet.author.handle?.text || ""}
-        image={tweet.author.image || ""}
-        likes={tweet._count.likes}
-        replies={tweet._count.replies}
-        retweets={tweet._count.retweets}
-        text={tweet.text}
-      />
     </div>
   );
 }
