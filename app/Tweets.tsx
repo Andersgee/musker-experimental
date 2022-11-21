@@ -15,7 +15,7 @@ import { hashidFromNumber } from "src/utils/hashids";
 
 import { Tweets as TweetsExplore } from "./explore/Tweets";
 import { useDialogContext } from "src/contexts/Dialog";
-import { Tweet } from "src/components/Tweet";
+import { Likes, TweetBody } from "src/components/Tweet";
 import { useMemo } from "react";
 
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
@@ -34,6 +34,7 @@ export function Tweets({ className = "" }: Props) {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
+  const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
@@ -41,9 +42,6 @@ export function Tweets({ className = "" }: Props) {
       fetchNextPage();
     }
   });
-
-  //const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
-  const tweets = data?.pages.map((page) => page.items).flat();
 
   if (!userExists) {
     return <FallbackNoUser />;
@@ -115,20 +113,8 @@ function FullTweet({ tweet }: { tweet: Tweet }) {
           <div className="ml-1">retweeted</div>
         </div>
       )}
-      {tweet.likes.length > 0 && (
-        <div className="flex font-paragraph text-sm">
-          <div className="flex w-10 justify-end">
-            <IconHeart className="mr-2 w-4" />
-          </div>
-          {tweet.likes.map((tweetLike) => (
-            <Link key={tweetLike.userId} href={`/${tweetLike.user.handle?.text}`} className="hover:underline">
-              {tweetLike.user.handle?.text}
-            </Link>
-          ))}
-          <div className="ml-1">liked</div>
-        </div>
-      )}
-      <Tweet
+      <Likes likes={tweet.likes} />
+      <TweetBody
         tweetId={tweet.id}
         createdAt={tweet.createdAt}
         handle={tweet.author.handle?.text || ""}
@@ -157,7 +143,7 @@ function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterH
         <div className="ml-1">retweeted</div>
       </div>
 
-      <Tweet
+      <TweetBody
         tweetId={tweet.id}
         createdAt={tweet.createdAt}
         handle={tweet.author.handle?.text || ""}

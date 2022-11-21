@@ -5,10 +5,10 @@ import { trpc, type RouterOutput } from "src/utils/trpc";
 import Link from "next/link";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { TweetActions } from "src/components/TweetActions";
-import { formatCreatedAt } from "src/utils/date";
 import { IconRewteet } from "src/icons/Retweet";
 import { IconReply } from "src/icons/Reply";
+import { TweetBody } from "src/components/Tweet";
+import { useMemo } from "react";
 import { hashidFromNumber } from "src/utils/hashids";
 
 type Tweet = RouterOutput["explore"]["tweets"]["items"][number];
@@ -24,6 +24,7 @@ export function Tweets({ className = "" }: Props) {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
+  const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
@@ -33,11 +34,6 @@ export function Tweets({ className = "" }: Props) {
   });
 
   const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
-  const tweets = data?.pages.map((page) => page.items).flat();
-
-  if (!isLoading && (!tweets || tweets?.length < 1)) {
-    return null;
-  }
 
   return (
     <div className={className}>
@@ -78,7 +74,7 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           <div className="ml-1">
             replied to{" "}
             <Link
-              href={`/${tweet.repliedToTweet.author.handle?.text}/${tweet.repliedToTweet?.id}`}
+              href={`/${tweet.repliedToTweet.author.handle?.text}/${hashidFromNumber(tweet.repliedToTweet?.id)}`}
               className="hover:underline"
             >
               tweet by {tweet.repliedToTweet.author.handle?.text}
@@ -86,34 +82,17 @@ function Tweet({ tweet }: { tweet: Tweet }) {
           </div>
         </div>
       )}
-      <article className="flex">
-        <div className="">
-          <a href={`/${tweet.author.handle?.text}`} className="w-12">
-            <img
-              className="h-8 w-8 rounded-full shadow-imageborder"
-              src={tweet.author.image || ""}
-              alt={tweet.author.handle?.text}
-            />
-          </a>
-        </div>
-        <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
-            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              <h3 className="text-base font-normal">
-                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
-              </h3>
-              <p>{tweet.text}</p>
-            </div>
-          </Link>
-          <TweetActions
-            tweetId={tweet.id}
-            authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.likes}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-          />
-        </div>
-      </article>
+
+      <TweetBody
+        tweetId={tweet.id}
+        createdAt={tweet.createdAt}
+        handle={tweet.author.handle?.text || ""}
+        image={tweet.author.image || ""}
+        likes={tweet._count.likes}
+        replies={tweet._count.replies}
+        retweets={tweet._count.retweets}
+        text={tweet.text}
+      />
     </div>
   );
 }
@@ -133,34 +112,16 @@ function ReTweet({ tweet, retweeterHandle }: { tweet: RetweetedTweet; retweeterH
         <div className="ml-1">retweeted</div>
       </div>
 
-      <article className="flex">
-        <div className="">
-          <a href={`/${tweet.author.handle?.text}`} className="w-12">
-            <img
-              className="h-8 w-8 rounded-full shadow-imageborder"
-              src={tweet.author.image || ""}
-              alt={tweet.author.handle?.text}
-            />
-          </a>
-        </div>
-        <div className="flex-1 py-2 pl-2 ">
-          <Link href={`/${tweet.author.handle?.text}/${hashidFromNumber(tweet.id)}`}>
-            <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              <h3 className="text-base font-normal">
-                {tweet.author.handle?.text} - {formatCreatedAt(tweet.createdAt)}
-              </h3>
-              <p>{tweet.text}</p>
-            </div>
-          </Link>
-          <TweetActions
-            tweetId={tweet.id}
-            authorHandle={tweet.author.handle?.text || ""}
-            likes={tweet._count.likes}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-          />
-        </div>
-      </article>
+      <TweetBody
+        tweetId={tweet.id}
+        createdAt={tweet.createdAt}
+        handle={tweet.author.handle?.text || ""}
+        image={tweet.author.image || ""}
+        likes={tweet._count.likes}
+        replies={tweet._count.replies}
+        retweets={tweet._count.retweets}
+        text={tweet.text}
+      />
     </div>
   );
 }

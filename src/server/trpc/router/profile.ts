@@ -253,6 +253,9 @@ export const profile = router({
       const userId = input.userId;
 
       const items = await ctx.prisma.tweetLike.findMany({
+        where: {
+          userId: userId,
+        },
         orderBy: { createdAt: "desc" },
         cursor: input.cursor
           ? {
@@ -263,9 +266,6 @@ export const profile = router({
             }
           : undefined,
         take: limit + 1, //get one extra (use it for cursor to next query)
-        where: {
-          userId: userId,
-        },
         include: {
           tweet: {
             include: {

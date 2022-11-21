@@ -5,6 +5,7 @@ import { trpc } from "src/utils/trpc";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { UserRow } from "../UserRow";
+import { useMemo } from "react";
 
 type Props = {
   className?: string;
@@ -18,6 +19,7 @@ export function Users({ userId, className = "" }: Props) {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
+  const follows = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
 
   const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
@@ -26,16 +28,9 @@ export function Users({ userId, className = "" }: Props) {
     }
   });
 
-  const buttonIsDisabled = !hasNextPage || isFetchingNextPage;
-  const follows = data?.pages.map((page) => page.items).flat();
-
-  if (!follows || follows?.length < 1) {
-    return null;
-  }
-
   return (
     <div className={className}>
-      {follows.map((follow) => {
+      {follows?.map((follow) => {
         return (
           <div key={follow.userId}>
             <UserRow userId={follow.userId} image={follow.user.image || ""} handle={follow.user.handle?.text || ""} />
@@ -43,15 +38,11 @@ export function Users({ userId, className = "" }: Props) {
           </div>
         );
       })}
-      <div className="mt-4 flex justify-center">
-        <div ref={ref}>
-          <Button onClick={() => fetchNextPage()} disabled={buttonIsDisabled}>
-            {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-          </Button>
-        </div>
+      <div ref={ref} className="mt-4 flex justify-center">
+        <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+        </Button>
       </div>
-      <div></div>
-      {!hasNextPage && <div>nothing more to see</div>}
     </div>
   );
 }

@@ -23,7 +23,17 @@ type Props = {
   retweets: number;
 };
 
-export function Tweet({ tweetId, handle, image, text, createdAt, likes, replies, retweets, className = "" }: Props) {
+export function TweetBody({
+  tweetId,
+  handle,
+  image,
+  text,
+  createdAt,
+  likes,
+  replies,
+  retweets,
+  className = "",
+}: Props) {
   return (
     <article className={`flex ${className}`}>
       <div className="">
@@ -130,6 +140,39 @@ export function Actions({ tweetId, authorHandle, likes, replies, retweets, class
         <IconHeart className={`mr-2 h-6 w-6 ${existingLike ? "text-pink-600" : "group-hover:text-pink-300"}`} />
         {likeCount}
       </button>
+    </div>
+  );
+}
+
+type LikesProps = {
+  likes?: {
+    user: {
+      handle: {
+        text: string;
+      } | null;
+    };
+    userId: string;
+  }[];
+
+  className?: string;
+};
+
+export function Likes({ likes, className = "" }: LikesProps) {
+  if (!likes || likes.length < 1) {
+    return null;
+  }
+
+  return (
+    <div className="flex font-paragraph text-sm">
+      <div className="flex w-10 justify-end">
+        <IconHeart className="mr-2 w-4" />
+      </div>
+      {likes.map((like) => (
+        <Link key={like.userId} href={`/${like.user.handle?.text}`} className="mr-1 hover:underline">
+          {like.user.handle?.text}
+        </Link>
+      ))}
+      <div>liked</div>
     </div>
   );
 }
