@@ -1,13 +1,11 @@
 "use client";
 
 import { DividerFull } from "src/ui/Divider";
-import { trpc, type RouterOutput } from "src/utils/trpc";
+import { trpc } from "src/utils/trpc";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { TweetBody } from "src/components/Tweet";
 import { useMemo } from "react";
-
-type Tweet = RouterOutput["replies"]["tweets"]["items"][number];
 
 type Props = {
   tweetId: number;
@@ -45,7 +43,6 @@ export function Tweets({ tweetId, className = "" }: Props) {
               retweets={tweet._count.retweets}
               text={tweet.text}
             />
-
             <DividerFull />
           </div>
         );

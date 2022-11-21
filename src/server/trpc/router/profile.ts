@@ -42,6 +42,7 @@ export const profile = router({
           },
           repliedToTweet: {
             select: {
+              authorId: true,
               id: true,
               author: {
                 select: {
