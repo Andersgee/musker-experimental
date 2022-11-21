@@ -8,7 +8,7 @@ export const config = {
 
 //const a = getBaseUrl();
 
-export default function handler(req: NextRequest) {
+export default async function handler(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
     const id = searchParams.get("id");

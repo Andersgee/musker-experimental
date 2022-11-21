@@ -34,6 +34,7 @@ export default function handler(req: NextRequest) {
             alignItems: "center",
           }}
         >
+          {/* eslint-disable-next-line jsx-a11y/alt-text*/}
           <img
             width="256"
             height="256"
@@ -50,8 +51,7 @@ export default function handler(req: NextRequest) {
         height: 630,
       },
     );
-  } catch (e: any) {
-    console.log(`${e.message}`);
+  } catch {
     return new Response(`Failed to generate the image`, {
       status: 500,
     });
