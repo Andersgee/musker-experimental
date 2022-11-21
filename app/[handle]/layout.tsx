@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { FollowButton } from "src/components/FollowButton";
 import { IconDate } from "src/icons/Date";
-import { prisma } from "src/server/db/client";
 import { ImgUser } from "src/ui/ImgUser";
 import { format } from "date-fns";
 import { ProfileNav } from "./ProfileNav";
-
-type Params = Record<string, string | string[]>;
+import { getUserByHandleWithFollowCount } from "src/utils/prisma";
+import type { Params } from "src/utils/param";
 
 type Props = {
   children: React.ReactNode;
@@ -14,38 +13,15 @@ type Props = {
 };
 
 export default async function Layout({ children, params }: Props) {
-  const handle = params?.handle;
-  if (typeof handle !== "string") {
-    return <div>missing handle</div>;
+  const handle = params?.handle as string;
+  const user = await getUserByHandleWithFollowCount(handle);
+
+  if (!user) {
+    return null;
   }
 
-  const userHandle = await prisma.userHandle.findUnique({
-    where: { text: handle },
-    select: {
-      user: {
-        select: {
-          id: true,
-          image: true,
-          createdAt: true,
-          bio: true,
-          _count: {
-            select: {
-              sentFollows: true,
-              recievedFollows: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!userHandle) {
-    return <div>this user does not exist</div>;
-  }
-
-  const user = userHandle.user;
-  const recievedFollowsCount = userHandle.user._count.recievedFollows;
-  const sentFollowsCount = userHandle.user._count.sentFollows;
+  const recievedFollowsCount = user._count.recievedFollows;
+  const sentFollowsCount = user._count.sentFollows;
 
   return (
     <div>

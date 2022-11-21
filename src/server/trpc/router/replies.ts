@@ -22,9 +22,7 @@ export const replies = router({
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-          author: {
-            include: { handle: true },
-          },
+          author: true,
         },
       });
 

@@ -145,9 +145,7 @@ export function Actions({ tweetId, authorHandle, likes, replies, retweets, class
 type LikesProps = {
   likes?: {
     user: {
-      handle: {
-        text: string;
-      } | null;
+      handle: string | null;
     };
     userId: string;
   }[];
@@ -165,8 +163,8 @@ export function Likes({ likes, className = "" }: LikesProps) {
         <IconHeart className="mr-2 w-4" />
       </div>
       {likes.map((like) => (
-        <Link key={like.userId} href={`/${like.user.handle?.text}`} className="mr-1 hover:underline">
-          {like.user.handle?.text}
+        <Link key={like.userId} href={`/${like.user.handle || ""}`} className="mr-1 hover:underline">
+          {like.user.handle}
         </Link>
       ))}
       <div>liked</div>
@@ -177,9 +175,7 @@ export function Likes({ likes, className = "" }: LikesProps) {
 type RetweetsProps = {
   retweets?: {
     author: {
-      handle: {
-        text: string;
-      } | null;
+      handle: string | null;
     };
     authorId: string;
   }[];
@@ -197,8 +193,8 @@ export function Retweets({ retweets, className = "" }: RetweetsProps) {
         <IconRewteet className="mr-2 w-4" />
       </div>
       {retweets.map((retweet) => (
-        <Link key={retweet.authorId} href={`/${retweet.author.handle?.text}`} className="mr-1 hover:underline">
-          {retweet.author.handle?.text}
+        <Link key={retweet.authorId} href={`/${retweet.author.handle || ""}`} className="mr-1 hover:underline">
+          {retweet.author.handle}
         </Link>
       ))}
       <div>retweeted</div>
@@ -209,16 +205,12 @@ export function Retweets({ retweets, className = "" }: RetweetsProps) {
 type RepliedToProps = {
   tweet: {
     author: {
-      handle: {
-        text: string;
-      } | null;
+      handle?: string | null;
     };
   };
   repliedToTweet?: {
     author: {
-      handle: {
-        text: string;
-      } | null;
+      handle: string | null;
     };
     id: number;
     authorId: string;
@@ -236,16 +228,16 @@ export function RepliedTo({ tweet, repliedToTweet, className = "" }: RepliedToPr
       <div className="flex w-10 justify-end">
         <IconReply className="mr-2 w-4" />
       </div>
-      <Link href={`/${tweet.author.handle?.text}`} className="hover:underline">
-        {tweet.author.handle?.text}
+      <Link href={`/${tweet.author.handle || ""}`} className="hover:underline">
+        {tweet.author.handle}
       </Link>
       <div className="ml-1">
         replied to
         <Link
-          href={`/${repliedToTweet.author.handle?.text}/${hashidFromNumber(repliedToTweet.id)}`}
+          href={`/${repliedToTweet.author.handle || ""}/${hashidFromNumber(repliedToTweet.id)}`}
           className="mx-1 hover:underline"
         >
-          tweet by {repliedToTweet.author.handle?.text}
+          tweet by {repliedToTweet.author.handle}
         </Link>
       </div>
     </div>
@@ -253,7 +245,7 @@ export function RepliedTo({ tweet, repliedToTweet, className = "" }: RepliedToPr
 }
 
 type RetweetedByProps = {
-  handle?: string;
+  handle?: string | null;
   className?: string;
 };
 

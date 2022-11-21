@@ -25,19 +25,13 @@ export const profile = router({
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-          author: {
-            include: { handle: true },
-          },
+          author: true,
           retweetedToTweet: {
             include: {
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
-              author: {
-                include: {
-                  handle: true,
-                },
-              },
+              author: true,
             },
           },
           repliedToTweet: {
@@ -46,11 +40,7 @@ export const profile = router({
               id: true,
               author: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -63,11 +53,7 @@ export const profile = router({
               userId: true,
               user: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -105,19 +91,13 @@ export const profile = router({
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-          author: {
-            include: { handle: true },
-          },
+          author: true,
           retweetedToTweet: {
             include: {
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
-              author: {
-                include: {
-                  handle: true,
-                },
-              },
+              author: true,
             },
           },
           repliedToTweet: {
@@ -125,11 +105,7 @@ export const profile = router({
               id: true,
               author: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -142,11 +118,7 @@ export const profile = router({
               userId: true,
               user: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -185,19 +157,13 @@ export const profile = router({
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-          author: {
-            include: { handle: true },
-          },
+          author: true,
           retweetedToTweet: {
             include: {
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
-              author: {
-                include: {
-                  handle: true,
-                },
-              },
+              author: true,
             },
           },
           repliedToTweet: {
@@ -205,11 +171,7 @@ export const profile = router({
               id: true,
               author: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -222,11 +184,7 @@ export const profile = router({
               userId: true,
               user: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -273,11 +231,7 @@ export const profile = router({
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
-              author: {
-                include: {
-                  handle: true,
-                },
-              },
+              author: true,
             },
           },
         },

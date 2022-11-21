@@ -1,7 +1,6 @@
-import { prisma } from "src/server/db/client";
 import { Tweets } from "./Tweets";
-
-type Params = Record<string, string | string[]>;
+import type { Params } from "src/utils/param";
+import { getUserByHandle } from "src/utils/prisma";
 
 type Props = {
   params?: Params;
@@ -9,17 +8,10 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const handle = params?.handle as string;
-
-  if (typeof handle !== "string") {
+  const user = await getUserByHandle(handle);
+  if (!user) {
     return null;
   }
 
-  const userHandle = await prisma.userHandle.findUnique({
-    where: { text: handle },
-  });
-  if (!userHandle?.userId) {
-    return null;
-  }
-
-  return <Tweets userId={userHandle.userId} />;
+  return <Tweets userId={user.id} />;
 }

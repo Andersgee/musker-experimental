@@ -11,7 +11,6 @@ const N_RETWEETS_PER_USER = 50;
 
 type Users = Prisma.UserCreateManyInput[];
 type UserBios = Prisma.UserBioCreateManyInput[];
-type UserHandles = Prisma.UserHandleCreateManyInput[];
 type Tweets = Prisma.TweetCreateManyInput[];
 type TweetLikes = Prisma.TweetLikeCreateManyInput[];
 type Follows = Prisma.FollowCreateManyInput[];
@@ -41,14 +40,16 @@ async function createBios() {
 async function createHandles() {
   const users = await prisma.user.findMany();
   const names = uniqueWords(users.length);
-  const handles: UserHandles = [];
-  users.forEach((user, i) => {
-    handles.push({
-      userId: user.id,
-      text: names[i]!,
+  users.forEach(async (user, i) => {
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        handle: names[i],
+      },
     });
   });
-  return await prisma.userHandle.createMany({ data: handles });
 }
 
 async function createTweets() {

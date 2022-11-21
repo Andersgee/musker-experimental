@@ -10,10 +10,13 @@ export const handleRouter = router({
       }),
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.userHandle.create({
+      //create is same as update
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
         data: {
-          userId: ctx.session.user.id,
-          text: input.text,
+          handle: input.text,
         },
       });
     }),
@@ -24,17 +27,23 @@ export const handleRouter = router({
       }),
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.userHandle.update({
-        where: { userId: ctx.session.user.id },
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
         data: {
-          text: input.text,
+          handle: input.text,
         },
       });
     }),
-  getMy: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.userHandle.findUnique({
-      where: { userId: ctx.session.user.id },
+  getMy: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUnique({
+      where: { id: ctx.session.user.id },
+      select: {
+        handle: true,
+      },
     });
+    return user?.handle;
   }),
   getByText: protectedProcedure
     .input(
@@ -42,11 +51,15 @@ export const handleRouter = router({
         text: z.string(),
       }),
     )
-    .query(({ input, ctx }) => {
-      return ctx.prisma.userHandle.findUnique({
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
         where: {
-          text: input.text,
+          handle: input.text,
+        },
+        select: {
+          handle: true,
         },
       });
+      return user?.handle;
     }),
 });

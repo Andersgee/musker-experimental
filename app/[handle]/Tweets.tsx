@@ -35,11 +35,11 @@ export function Tweets({ userId, className = "" }: Props) {
           <div key={tweet.id} className="">
             {tweet.retweetedToTweet ? (
               <>
-                <RetweetedBy handle={tweet.author.handle?.text} />
+                <RetweetedBy handle={tweet.author.handle} />
                 <TweetBody
                   tweetId={tweet.retweetedToTweet.id}
                   createdAt={tweet.retweetedToTweet.createdAt}
-                  handle={tweet.retweetedToTweet.author.handle?.text || ""}
+                  handle={tweet.retweetedToTweet.author.handle || ""}
                   image={tweet.retweetedToTweet.author.image || ""}
                   likes={tweet.retweetedToTweet._count.likes}
                   replies={tweet.retweetedToTweet._count.replies}
@@ -53,7 +53,7 @@ export function Tweets({ userId, className = "" }: Props) {
                 <TweetBody
                   tweetId={tweet.id}
                   createdAt={tweet.createdAt}
-                  handle={tweet.author.handle?.text || ""}
+                  handle={tweet.author.handle || ""}
                   image={tweet.author.image || ""}
                   likes={tweet._count.likes}
                   replies={tweet._count.replies}

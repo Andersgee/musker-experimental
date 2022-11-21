@@ -30,11 +30,7 @@ export const follows = router({
           follower: {
             select: {
               image: true,
-              handle: {
-                select: {
-                  text: true,
-                },
-              },
+              handle: true,
             },
           },
         },
@@ -75,11 +71,7 @@ export const follows = router({
           user: {
             select: {
               image: true,
-              handle: {
-                select: {
-                  text: true,
-                },
-              },
+              handle: true,
             },
           },
         },

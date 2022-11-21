@@ -31,6 +31,9 @@ export function Users({ userId, className = "" }: Props) {
       fetchNextPage();
     }
   });
+  if (!userExists) {
+    return null;
+  }
 
   return (
     <div className={className}>
@@ -38,7 +41,7 @@ export function Users({ userId, className = "" }: Props) {
         {follows?.map((user) => {
           return (
             <li key={user.id}>
-              <UserRow userId={user.id} image={user.image || ""} handle={user.handle?.text || ""} />
+              <UserRow userId={user.id} image={user.image || ""} handle={user.handle || ""} />
               <DividerFull />
             </li>
           );

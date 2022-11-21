@@ -37,7 +37,7 @@ export function Users({ userId, className = "" }: Props) {
               <UserRow
                 userId={follow.followerId}
                 image={follow.follower.image || ""}
-                handle={follow.follower.handle?.text || ""}
+                handle={follow.follower.handle || ""}
               />
               <DividerFull />
             </li>

@@ -33,7 +33,7 @@ export function Users({ userId, className = "" }: Props) {
       {follows?.map((follow) => {
         return (
           <div key={follow.userId}>
-            <UserRow userId={follow.userId} image={follow.user.image || ""} handle={follow.user.handle?.text || ""} />
+            <UserRow userId={follow.userId} image={follow.user.image || ""} handle={follow.user.handle || ""} />
             <DividerFull />
           </div>
         );

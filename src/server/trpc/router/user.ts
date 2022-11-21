@@ -35,19 +35,15 @@ export const userRouter = router({
     });
   }),
   myHandle: protectedProcedure.query(async ({ ctx }) => {
-    const res = await ctx.prisma.user.findUnique({
+    const user = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,
       },
       select: {
-        handle: {
-          select: {
-            text: true,
-          },
-        },
+        handle: true,
       },
     });
-    return res?.handle?.text;
+    return user?.handle;
   }),
 
   hmm: protectedProcedure.query(({ ctx }) => {

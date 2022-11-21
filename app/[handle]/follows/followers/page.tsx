@@ -1,24 +1,17 @@
-import { prisma } from "src/server/db/client";
+import type { Params } from "src/utils/param";
+import { getUserByHandle } from "src/utils/prisma";
 import { Users } from "./Users";
-
-type Params = Record<string, string | string[]>;
 
 type Props = {
   params?: Params;
 };
 
 export default async function Page({ params }: Props) {
-  const handle = params?.handle;
-  if (typeof handle !== "string") {
-    return <div>missing handle</div>;
-  }
+  const handle = params?.handle as string;
+  const user = await getUserByHandle(handle);
 
-  const userHandle = await prisma.userHandle.findUnique({
-    where: { text: handle },
-  });
-  if (!userHandle?.userId) {
+  if (!user) {
     return null;
   }
-
-  return <Users userId={userHandle.userId} />;
+  return <Users userId={user.id} />;
 }

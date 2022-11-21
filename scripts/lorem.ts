@@ -19,7 +19,7 @@ export function randUniqueInts(N: number, len: number) {
   return Array.from(nums);
 }
 
-export function randomText(maxLen = 1000) {
+export function randomText(maxLen = 280) {
   const r = Math.random();
   if (r < 0.33) {
     return lorem.generateWords(randInt(10) + 1).slice(0, maxLen);

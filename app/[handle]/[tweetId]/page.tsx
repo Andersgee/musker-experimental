@@ -4,9 +4,8 @@ import { prisma } from "src/server/db/client";
 import { TweetRSC } from "./TweetRSC";
 import { Tweets } from "./Tweets";
 import { numberFromHashidParam } from "src/utils/hashids";
+import type { Params } from "src/utils/param";
 //import { redirect } from "next/navigation";
-
-type Params = Record<string, string | string[]>;
 
 export type Tweet = NonNullable<inferAsyncReturnType<typeof getTweet>>;
 
@@ -22,11 +21,7 @@ export async function getTweet(id: number | null | undefined) {
       author: {
         select: {
           image: true,
-          handle: {
-            select: {
-              text: true,
-            },
-          },
+          handle: true,
         },
       },
       _count: {

@@ -37,9 +37,7 @@ export function Tweets({ userId, userHandle, className = "" }: Props) {
         //this page lists only tweets that this user liked, so display only this user as liker
         const likes = [
           {
-            user: {
-              handle: { text: userHandle },
-            },
+            user: { handle: userHandle },
             userId: tweetLike.userId,
           },
         ];
@@ -50,7 +48,7 @@ export function Tweets({ userId, userHandle, className = "" }: Props) {
             <TweetBody
               tweetId={tweetLike.tweet.id}
               createdAt={tweetLike.tweet.createdAt}
-              handle={tweetLike.tweet.author.handle?.text || ""}
+              handle={tweetLike.tweet.author.handle || ""}
               image={tweetLike.tweet.author.image || ""}
               likes={tweetLike.tweet._count.likes}
               replies={tweetLike.tweet._count.replies}

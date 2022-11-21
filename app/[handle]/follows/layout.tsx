@@ -1,6 +1,5 @@
+import type { Params } from "src/utils/param";
 import { Nav } from "./Nav";
-
-type Params = Record<string, string | string[]>;
 
 type Props = {
   children: React.ReactNode;
@@ -8,10 +7,7 @@ type Props = {
 };
 
 export default async function Layout({ children, params }: Props) {
-  const handle = params?.handle;
-  if (typeof handle !== "string") {
-    return <div>missing handle</div>;
-  }
+  const handle = params?.handle as string;
 
   return (
     <>

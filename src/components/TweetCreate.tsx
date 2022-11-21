@@ -48,7 +48,7 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
               <img
                 className="h-8 w-8 rounded-full shadow-imageborder"
                 src={session.user?.image || undefined}
-                alt={myHandle}
+                alt={myHandle || undefined}
               />
             </Link>
           </div>

@@ -56,7 +56,7 @@ model User {
 
   //app
   createdAt        DateTime          @default(now())
-  handle           UserHandle?
+  handle           String?           @unique
   bio              UserBio?
   sentMessages     Message[]         @relation("sentMessages")
   receivedMessages Message[]         @relation("receivedMessages")
@@ -72,7 +72,7 @@ model Tweet {
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  text      String   @db.VarChar(1000)
+  text      String   @db.VarChar(280)
 
   likes TweetLike[]
 
@@ -95,18 +95,11 @@ model TweetLike {
   @@id([userId, tweetId])
 }
 
-model UserHandle {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @unique
-  text   String @unique
-}
-
 model UserBio {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-  text   String @db.VarChar(1000)
+  text   String @db.VarChar(280)
 }
 
 // app
@@ -134,7 +127,7 @@ model Message {
   receiver   User              @relation(name: "receivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
   reactions  MessageReaction[]
-  text       String            @db.VarChar(10000)
+  text       String            @db.VarChar(280)
 }
 
 model MessageReaction {

@@ -61,9 +61,7 @@ export const home = router({
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
-          author: {
-            include: { handle: true },
-          },
+          author: true,
           likes: {
             where: {
               userId: { in: followedIds },
@@ -72,11 +70,7 @@ export const home = router({
               userId: true,
               user: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -89,11 +83,7 @@ export const home = router({
               authorId: true,
               author: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -104,11 +94,7 @@ export const home = router({
               authorId: true,
               author: {
                 select: {
-                  handle: {
-                    select: {
-                      text: true,
-                    },
-                  },
+                  handle: true,
                 },
               },
             },
@@ -118,11 +104,7 @@ export const home = router({
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
-              author: {
-                include: {
-                  handle: true,
-                },
-              },
+              author: true,
             },
           },
         },

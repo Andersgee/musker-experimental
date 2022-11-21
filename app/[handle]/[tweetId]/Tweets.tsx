@@ -36,7 +36,7 @@ export function Tweets({ tweetId, className = "" }: Props) {
             <TweetBody
               tweetId={tweet.id}
               createdAt={tweet.createdAt}
-              handle={tweet.author.handle?.text || ""}
+              handle={tweet.author.handle || ""}
               image={tweet.author.image || ""}
               likes={tweet._count.likes}
               replies={tweet._count.replies}

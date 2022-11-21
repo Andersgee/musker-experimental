@@ -1,6 +1,6 @@
 import type { Params } from "src/utils/param";
-import { prisma } from "src/server/db/client";
 import { absUrl, SEO } from "src/components/SEO";
+import { getUserByHandle } from "src/utils/prisma";
 
 type Props = {
   params?: Params;
@@ -8,21 +8,12 @@ type Props = {
 
 export default async function Head({ params }: Props) {
   const handle = params?.handle as string;
-  const userHandle = await prisma.userHandle.findUnique({
-    where: { text: handle },
-    select: {
-      user: {
-        select: {
-          image: true,
-        },
-      },
-    },
-  });
-  if (!userHandle) {
+  const user = await getUserByHandle(handle);
+  if (!user) {
     return <></>;
   }
 
-  const image = absUrl(userHandle.user.image || undefined); //for seedusers
+  const image = absUrl(user.image || undefined); //needed only for seedusers which uses relative urls
 
   return (
     <SEO
