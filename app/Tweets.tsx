@@ -7,7 +7,6 @@ import { IconMusker } from "src/icons/Musker";
 import { ButtonLink } from "src/ui/ButtonLink";
 import { Button } from "src/ui/Button";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { IconHeart } from "src/icons/Heart";
 import { IconRewteet } from "src/icons/Retweet";
 import { IconReply } from "src/icons/Reply";
 import { useSession } from "next-auth/react";
@@ -15,7 +14,7 @@ import { hashidFromNumber } from "src/utils/hashids";
 
 import { Tweets as TweetsExplore } from "./explore/Tweets";
 import { useDialogContext } from "src/contexts/Dialog";
-import { Likes, TweetBody } from "src/components/Tweet";
+import { Likes, Retweets, TweetBody } from "src/components/Tweet";
 import { useMemo } from "react";
 
 type Tweet = RouterOutput["home"]["tweets"]["items"][number];
@@ -100,19 +99,7 @@ function FullTweet({ tweet }: { tweet: Tweet }) {
           </div>
         </div>
       )}
-      {tweet.retweets.length > 0 && (
-        <div className="flex font-paragraph text-sm">
-          <div className="flex w-10 justify-end">
-            <IconRewteet className="mr-2 w-4" />
-          </div>
-          {tweet.retweets.map((retweet) => (
-            <Link key={retweet.authorId} href={`/${retweet.author.handle?.text}`} className="hover:underline">
-              {retweet.author.handle?.text}
-            </Link>
-          ))}
-          <div className="ml-1">retweeted</div>
-        </div>
-      )}
+      <Retweets retweets={tweet.retweets} />
       <Likes likes={tweet.likes} />
       <TweetBody
         tweetId={tweet.id}

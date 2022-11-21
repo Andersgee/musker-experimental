@@ -151,7 +151,6 @@ type LikesProps = {
     };
     userId: string;
   }[];
-
   className?: string;
 };
 
@@ -171,6 +170,38 @@ export function Likes({ likes, className = "" }: LikesProps) {
         </Link>
       ))}
       <div>liked</div>
+    </div>
+  );
+}
+
+type RetweetsProps = {
+  retweets?: {
+    author: {
+      handle: {
+        text: string;
+      } | null;
+    };
+    authorId: string;
+  }[];
+  className?: string;
+};
+
+export function Retweets({ retweets, className = "" }: RetweetsProps) {
+  if (!retweets || retweets.length < 1) {
+    return null;
+  }
+
+  return (
+    <div className={`flex font-paragraph text-sm ${className}`}>
+      <div className="flex w-10 justify-end">
+        <IconRewteet className="mr-2 w-4" />
+      </div>
+      {retweets.map((retweet) => (
+        <Link key={retweet.authorId} href={`/${retweet.author.handle?.text}`} className="mr-1 hover:underline">
+          {retweet.author.handle?.text}
+        </Link>
+      ))}
+      <div>retweeted</div>
     </div>
   );
 }
