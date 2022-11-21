@@ -131,9 +131,7 @@ export function Actions({ tweetId, authorHandle, likes, replies, retweets, class
         <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
       </Link>
       <button className="group flex w-20" title="Retweet" onClick={handleRetweetClick}>
-        <IconRewteet
-          className={`mr-2 h-6 w-6 ${existingRetweet ? "text-emerald-600" : "group-hover:text-emerald-300"}`}
-        />
+        <IconRewteet className={`mr-2 h-6 w-6 ${existingRetweet ? "text-green-600" : "group-hover:text-green-300"}`} />
         {retweetCount}
       </button>
       <button className="group flex w-20" title="Like" onClick={handleLikeClick}>
@@ -163,7 +161,7 @@ export function Likes({ likes, className = "" }: LikesProps) {
   }
 
   return (
-    <div className="flex font-paragraph text-sm">
+    <div className={`flex font-paragraph text-sm ${className}`}>
       <div className="flex w-10 justify-end">
         <IconHeart className="mr-2 w-4" />
       </div>
