@@ -23,12 +23,14 @@ export function UserHandleChoose({ className = "" }: Props) {
     onSuccess: () => {
       utils.handle.getMy.invalidate();
       utils.handle.getByText.invalidate();
+      utils.user.myHandle.invalidate();
     },
   });
   const { mutateAsync: createHandle } = trpc.handle.create.useMutation({
     onSuccess: () => {
       utils.handle.getMy.invalidate();
       utils.handle.getByText.invalidate();
+      utils.user.myHandle.invalidate();
     },
   });
 

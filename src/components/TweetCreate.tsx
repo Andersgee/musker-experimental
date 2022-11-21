@@ -27,14 +27,12 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
   const [text, setText] = useState("");
 
   const handleClick = async () => {
-    if (!myHandle) {
-      setShowHandlePicker(true);
-      return;
-    }
-
     if (!userExists) {
       setShowSignIn(true);
       setShowInfoText(true);
+    } else if (!myHandle) {
+      setShowHandlePicker(true);
+      return;
     } else {
       await onClick(text);
       setText("");
