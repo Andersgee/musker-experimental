@@ -101,37 +101,58 @@ export const follows = router({
       }),
     )
     .query(async ({ ctx, input }) => {
+      const userId = input.userId;
       const limit = 10;
 
-      const items = await ctx.prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
+      const myUser = await ctx.prisma.user.findUnique({
         where: {
-          //is following userId
+          id: ctx.session.user.id,
+        },
+        select: {
           sentFollows: {
-            some: {
-              userId: input.userId,
-            },
-          },
-          //is followed by me
-          recievedFollows: {
-            some: {
-              followerId: ctx.session.user.id,
+            select: {
+              userId: true,
             },
           },
         },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
+      });
+      const myFollowedIds = myUser?.sentFollows.map((follow) => follow.userId) || [];
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
         select: {
-          id: true,
-          image: true,
-          handle: true,
+          recievedFollows: {
+            where: {
+              followerId: {
+                in: myFollowedIds,
+              },
+            },
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor
+              ? {
+                  userId_followerId: {
+                    userId: userId,
+                    followerId: input.cursor,
+                  },
+                }
+              : undefined,
+            include: {
+              follower: true,
+            },
+          },
         },
       });
 
+      const items = user?.recievedFollows || [];
+
       let nextCursor: string | undefined = undefined;
+
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
-        nextCursor = nextItem?.id;
+        nextCursor = nextItem?.followerId;
       }
       return { items, nextCursor };
     }),

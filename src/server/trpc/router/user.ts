@@ -10,7 +10,12 @@ export const userRouter = router({
     )
     .query(async ({ input, ctx }) => {
       const follow = await ctx.prisma.follow.findUnique({
-        where: { userId_followerId: { followerId: ctx.session.user.id, userId: input.userId } },
+        where: {
+          userId_followerId: {
+            followerId: ctx.session.user.id,
+            userId: input.userId,
+          },
+        },
       });
       if (follow) return true;
       return false;

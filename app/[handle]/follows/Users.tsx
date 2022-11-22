@@ -38,10 +38,14 @@ export function Users({ userId, className = "" }: Props) {
   return (
     <div className={className}>
       <ul>
-        {follows?.map((user) => {
+        {follows?.map((follow) => {
           return (
-            <li key={user.id}>
-              <UserRow userId={user.id} image={user.image || ""} handle={user.handle || ""} />
+            <li key={follow.followerId}>
+              <UserRow
+                userId={follow.followerId}
+                image={follow.follower.image || ""}
+                handle={follow.follower.handle || ""}
+              />
               <DividerFull />
             </li>
           );
