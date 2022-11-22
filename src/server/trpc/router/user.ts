@@ -45,13 +45,4 @@ export const userRouter = router({
     });
     return user?.handle;
   }),
-
-  hmm: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.updateMany({
-      where: {
-        id: "somdId",
-      },
-      data: {},
-    });
-  }),
 });

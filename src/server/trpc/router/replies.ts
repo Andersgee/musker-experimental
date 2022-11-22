@@ -13,6 +13,27 @@ export const replies = router({
     .query(async ({ ctx, input }) => {
       const limit = 10;
 
+      const tweetWithReplies = await ctx.prisma.tweet.findUnique({
+        where: {
+          id: input.tweetId,
+        },
+        select: {
+          replies: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
+            include: {
+              author: true,
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+            },
+          },
+        },
+      });
+      const items = tweetWithReplies?.replies || [];
+
+      /*
       const items = await ctx.prisma.tweet.findMany({
         orderBy: { createdAt: "desc" },
         where: { repliedToTweetId: input.tweetId },
@@ -25,6 +46,7 @@ export const replies = router({
           author: true,
         },
       });
+      */
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {

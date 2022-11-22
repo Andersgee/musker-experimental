@@ -112,7 +112,9 @@ export function SEO({
       {/* adress bar color, same as bgcolor looks good. */}
       <meta name="theme-color" content="#FAFAFA" />
       {/* manifest and icons */}
-      <link rel="manifest" href={absUrl("/manifest.json")} />
+      {/*<link rel="manifest" href={absUrl("/manifest.json")} />*/}
+      <link rel="manifest" href="/manifest.json" />
+
       <link rel="icon" type="image/svg+xml" href={absUrl("/icons/favicon.svg")} />
       <link rel="icon" type="image/png" href={absUrl("/icons/favicon.png")} />
       <link rel="apple-touch-icon" href={absUrl("/icons/apple-touch-icon-192x192.png")} />
