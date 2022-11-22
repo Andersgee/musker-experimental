@@ -49,7 +49,6 @@ export function Tweets({ userId, className = "" }: Props) {
               </>
             ) : (
               <>
-                <Likes likes={tweet.likes} />
                 <TweetBody
                   tweetId={tweet.id}
                   createdAt={tweet.createdAt}

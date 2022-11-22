@@ -49,7 +49,6 @@ export function Tweets({ userId, className = "" }: Props) {
               </>
             ) : (
               <>
-                <Likes likes={tweet.likes} />
                 <RepliedTo tweet={tweet} repliedToTweet={tweet.repliedToTweet} />
                 <TweetBody
                   tweetId={tweet.id}

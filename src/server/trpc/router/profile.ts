@@ -14,52 +14,45 @@ export const profile = router({
       const limit = 30;
       const userId = input.userId;
 
-      const items = await ctx.prisma.tweet.findMany({
-        orderBy: { createdAt: "desc" },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1,
+      const userWithTweets = await ctx.prisma.user.findUnique({
         where: {
-          authorId: userId, //tweets,retweets and replies are all just regular tweets
+          id: userId,
         },
-        include: {
-          _count: {
-            select: { replies: true, retweets: true, likes: true },
-          },
-          author: true,
-          retweetedToTweet: {
+        select: {
+          tweets: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
             include: {
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
               author: true,
-            },
-          },
-          repliedToTweet: {
-            select: {
-              authorId: true,
-              id: true,
-              author: {
-                select: {
-                  handle: true,
+              retweetedToTweet: {
+                include: {
+                  _count: {
+                    select: { replies: true, retweets: true, likes: true },
+                  },
+                  author: true,
                 },
               },
-            },
-          },
-          likes: {
-            where: {
-              userId: userId,
-            },
-            select: {
-              userId: true,
-              user: {
+              repliedToTweet: {
                 select: {
-                  handle: true,
+                  authorId: true,
+                  id: true,
+                  author: {
+                    select: {
+                      handle: true,
+                    },
+                  },
                 },
               },
             },
           },
         },
       });
+
+      const items = userWithTweets?.tweets || [];
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
@@ -79,52 +72,48 @@ export const profile = router({
       const limit = 30;
       const userId = input.userId;
 
-      const items = await ctx.prisma.tweet.findMany({
-        orderBy: { createdAt: "desc" },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1,
+      const userWithTweets = await ctx.prisma.user.findUnique({
         where: {
-          authorId: userId, //tweets,retweets and replies are all just regular tweets
-          repliedToTweetId: null, //only include if is not reply
+          id: userId,
         },
-        include: {
-          _count: {
-            select: { replies: true, retweets: true, likes: true },
-          },
-          author: true,
-          retweetedToTweet: {
+        select: {
+          tweets: {
+            where: {
+              repliedToTweetId: null,
+            },
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
             include: {
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
               author: true,
-            },
-          },
-          repliedToTweet: {
-            select: {
-              id: true,
-              author: {
-                select: {
-                  handle: true,
+              retweetedToTweet: {
+                include: {
+                  _count: {
+                    select: { replies: true, retweets: true, likes: true },
+                  },
+                  author: true,
                 },
               },
-            },
-          },
-          likes: {
-            where: {
-              userId: userId,
-            },
-            select: {
-              userId: true,
-              user: {
+              repliedToTweet: {
                 select: {
-                  handle: true,
+                  authorId: true,
+                  id: true,
+                  author: {
+                    select: {
+                      handle: true,
+                    },
+                  },
                 },
               },
             },
           },
         },
       });
+
+      const items = userWithTweets?.tweets || [];
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
@@ -133,73 +122,6 @@ export const profile = router({
       }
       return { items, nextCursor };
     }),
-  //twitter does not have the option to only see replies from a user as far as I can see?
-  replies: publicProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-        cursor: z.number().nullish(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const limit = 30;
-      const userId = input.userId;
-
-      const items = await ctx.prisma.tweet.findMany({
-        orderBy: { createdAt: "desc" },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
-        where: {
-          authorId: userId, //tweets,retweets and replies are all just regular tweets
-          repliedToTweetId: { not: null }, //require tweet to be reply
-        },
-        include: {
-          _count: {
-            select: { replies: true, retweets: true, likes: true },
-          },
-          author: true,
-          retweetedToTweet: {
-            include: {
-              _count: {
-                select: { replies: true, retweets: true, likes: true },
-              },
-              author: true,
-            },
-          },
-          repliedToTweet: {
-            select: {
-              id: true,
-              author: {
-                select: {
-                  handle: true,
-                },
-              },
-            },
-          },
-          likes: {
-            where: {
-              userId: userId,
-            },
-            select: {
-              userId: true,
-              user: {
-                select: {
-                  handle: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      let nextCursor: number | undefined = undefined;
-      if (items.length > limit) {
-        const nextItem = items.pop(); //dont return the one extra
-        nextCursor = nextItem?.id;
-      }
-      return { items, nextCursor };
-    }),
-
   likes: publicProcedure
     .input(
       z.object({
@@ -211,31 +133,36 @@ export const profile = router({
       const limit = 30;
       const userId = input.userId;
 
-      const items = await ctx.prisma.tweetLike.findMany({
+      const userWithLikes = await ctx.prisma.user.findUnique({
         where: {
-          userId: userId,
+          id: userId,
         },
-        orderBy: { createdAt: "desc" },
-        cursor: input.cursor
-          ? {
-              userId_tweetId: {
-                userId: userId,
-                tweetId: input.cursor,
-              },
-            }
-          : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
-        include: {
-          tweet: {
+        select: {
+          tweetLikes: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor
+              ? {
+                  userId_tweetId: {
+                    userId: userId,
+                    tweetId: input.cursor,
+                  },
+                }
+              : undefined,
             include: {
-              _count: {
-                select: { replies: true, retweets: true, likes: true },
+              tweet: {
+                include: {
+                  _count: {
+                    select: { replies: true, retweets: true, likes: true },
+                  },
+                  author: true,
+                },
               },
-              author: true,
             },
           },
         },
       });
+      const items = userWithLikes?.tweetLikes || [];
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
