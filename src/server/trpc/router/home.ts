@@ -48,6 +48,8 @@ export const home = router({
               },
             },
             //tweets that are liked by followed users
+            // ignore this for now, "some" is super expensive?
+            /*
             {
               likes: {
                 some: {
@@ -55,6 +57,7 @@ export const home = router({
                 },
               },
             },
+            */
           ],
         },
         include: {

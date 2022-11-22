@@ -1,13 +1,24 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+//generator client {
+//  provider = "prisma-client-js"
+//}
+//
+//datasource db {
+//  provider = "mysql"
+//  url      = env("DATABASE_URL")
+//}
+
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 // Necessary for Next auth
@@ -77,11 +88,11 @@ model Tweet {
   likes TweetLike[]
 
   replies          Tweet[] @relation("reply")
-  repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id])
+  repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   repliedToTweetId Int?
 
   retweets           Tweet[] @relation("retweet")
-  retweetedToTweet   Tweet?  @relation("retweet", fields: [retweetedToTweetId], references: [id])
+  retweetedToTweet   Tweet?  @relation("retweet", fields: [retweetedToTweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   retweetedToTweetId Int?
 }
 
