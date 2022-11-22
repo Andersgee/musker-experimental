@@ -11,34 +11,39 @@ export const follows = router({
       }),
     )
     .query(async ({ ctx, input }) => {
+      const userId = input.userId;
       const limit = 10;
 
-      const items = await ctx.prisma.follow.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { userId: input.userId },
-        cursor: input.cursor
-          ? {
-              userId_followerId: {
-                userId: input.userId,
-                followerId: input.cursor,
-              },
-            }
-          : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
         select: {
-          followerId: true,
-          follower: {
-            select: {
-              image: true,
-              handle: true,
+          recievedFollows: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor
+              ? {
+                  userId_followerId: {
+                    userId: userId,
+                    followerId: input.cursor,
+                  },
+                }
+              : undefined,
+            include: {
+              follower: true,
             },
           },
         },
       });
 
+      const items = user?.recievedFollows || [];
+
       let nextCursor: string | undefined = undefined;
+
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
+
         nextCursor = nextItem?.followerId;
       }
       return { items, nextCursor };
@@ -52,30 +57,33 @@ export const follows = router({
       }),
     )
     .query(async ({ ctx, input }) => {
+      const userId = input.userId;
       const limit = 10;
 
-      const items = await ctx.prisma.follow.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { followerId: input.userId },
-        cursor: input.cursor
-          ? {
-              userId_followerId: {
-                userId: input.cursor,
-                followerId: input.userId,
-              },
-            }
-          : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
         select: {
-          userId: true,
-          user: {
-            select: {
-              image: true,
-              handle: true,
+          sentFollows: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor
+              ? {
+                  userId_followerId: {
+                    userId: input.cursor,
+                    followerId: userId,
+                  },
+                }
+              : undefined,
+            include: {
+              user: true,
             },
           },
         },
       });
+
+      const items = user?.sentFollows || [];
 
       let nextCursor: string | undefined = undefined;
       if (items.length > limit) {
