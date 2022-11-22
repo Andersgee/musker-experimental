@@ -33,21 +33,6 @@ export const replies = router({
       });
       const items = tweetWithReplies?.replies || [];
 
-      /*
-      const items = await ctx.prisma.tweet.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { repliedToTweetId: input.tweetId },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: limit + 1, //get one extra (use it for cursor to next query)
-        include: {
-          _count: {
-            select: { replies: true, retweets: true, likes: true },
-          },
-          author: true,
-        },
-      });
-      */
-
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
         const nextItem = items.pop(); //dont return the one extra
