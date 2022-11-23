@@ -1,81 +1,34 @@
 # Musker
 
-A twitter clone.
+A Twitter clone built with experimental nextjs 13 features.
 
-## Experimental stuff caveats
+```sh
+yarn install
+#yarn prisma generate
+yarn prisma db push
+yarn tsnode scripts/seed-db.ts
+yarn build
+yarn start
+```
 
-https://beta.nextjs.org/docs/api-reference/file-conventions/head
-Currently, the Head export does not re-render
-on client-side transitions, only on initial render.
-To work around this for `<title>`, you can use a
-client component with useEffect that updates document.title.
-This will be fixed soon in a future release.
+###### friendly reminder so self:
 
-## TODO
+- goal **is not** some sort of feature complete twitter clone.
+- goal **is** get comfortable with latest/experimental/beta nextjs stuff
 
-**friendly reminder so self**
-**goal is not** feature complete twitter copy.
-**goal is** get comfortable with latest/experimental nextjs stuff (app dir, server components etc)
+###### cool things used
 
-### features
+- app dir
+- vercel/og image generation for any tweet/profile url (with tailwind and svg)
+- nested layouts,
+- server components (more or less everywhere except for infinite scroll components)
+- trpc v10
+- planetscale database querys in edge functions
 
-- [x] tweet
-- [x] reply
-- [x] like
-- [x] retweet
-- [ ] quote tweet
-- [ ] mention
+###### todo / find out / wait for stable
 
-#### Where are things shown?
-
-see [different types of tweets](https://help.twitter.com/en/using-twitter/types-of-tweets):
-
-###### tweets
-
-- [ ] profile page of sender
-- [ ] home of sender
-- [ ] home of followers
-
-###### replies
-
-- [ ] profile of sender
-- [ ] notifications of recipient
-- [ ] recipients home if the recipient is following the sender
-- [ ] home of anyone following both recipient and sender
-
-###### mentions
-
-- [ ] same as replies
-- [ ] but without a parent tweet
-
-###### rewtweet
-
-- [ ] same as tweets
-- [ ] but also notifications of original tweet author
-
-###### quote tweet
-
-- [ ] same as retweet but with text
-
-##### likes
-
-- [ ] notifications of tweet author
-- [ ] home of followers (maybe)
-
-#### home
-
-tweets from this user
-tweets from followed users
-likes from followed users
-retweets from followed users
-quotetweets from followed users
-replies from followed users if also following the repliedto user
-mentions from followed users if also following the mentioned user
-
-#### notifications
-
-replies on this users tweets
-likes on this users tweets
-mentions of this user
-retweets of this users tweets
-quotetweets of this users tweets
+- `<title>` does not update on client navigation
+- `head.tsx` datafetching... how to configure, revalidate etc
+- having comments in head.tsx breaks build unless the comment is on its own line?
+- how to test `@planetscale/database` driver (http protocol) on a local mysql server?
+- is there a way to pass data from a layout.tsx to a page.tsx?
