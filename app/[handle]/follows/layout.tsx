@@ -10,9 +10,9 @@ export default async function Layout({ children, params }: Props) {
   const handle = params?.handle as string;
 
   return (
-    <>
+    <div>
       <Nav handle={handle} />
       {children}
-    </>
+    </div>
   );
 }

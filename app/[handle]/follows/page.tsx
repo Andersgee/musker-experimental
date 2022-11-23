@@ -1,4 +1,5 @@
-import { getUserByHandle } from "src/utils/prisma";
+import { db } from "src/utils/kysely";
+//import { getUserByHandle } from "src/utils/prisma";
 import { Users } from "./Users";
 
 export const preferredRegion = "home";
@@ -12,7 +13,12 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const handle = params?.handle as string;
-  const user = await getUserByHandle(handle);
+
+  const user = await db.connection().execute((db) => {
+    return db.selectFrom("User").where("User.handle", "=", handle).selectAll().executeTakeFirst();
+  });
+
+  //const user = await getUserByHandle(handle);
   if (!user) {
     return null;
   }
