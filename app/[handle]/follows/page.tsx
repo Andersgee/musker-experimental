@@ -1,6 +1,9 @@
 import { getUserByHandle } from "src/utils/prisma";
 import { Users } from "./Users";
 
+export const preferredRegion = "home";
+export const revalidate = 60;
+
 type Params = Record<string, string | string[]>;
 
 type Props = {

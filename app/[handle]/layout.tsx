@@ -7,6 +7,9 @@ import { ProfileNav } from "./ProfileNav";
 import { getUserByHandleWithFollowCount } from "src/utils/prisma";
 import type { Params } from "src/utils/param";
 
+export const preferredRegion = "home";
+export const revalidate = 60;
+
 type Props = {
   children: React.ReactNode;
   params?: Params;
@@ -17,7 +20,7 @@ export default async function Layout({ children, params }: Props) {
   const user = await getUserByHandleWithFollowCount(handle);
 
   if (!user) {
-    return null;
+    return <div>{children}</div>;
   }
 
   const recievedFollowsCount = user._count.recievedFollows;

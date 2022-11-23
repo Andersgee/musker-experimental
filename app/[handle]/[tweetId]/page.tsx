@@ -7,6 +7,9 @@ import { numberFromHashidParam } from "src/utils/hashids";
 import type { Params } from "src/utils/param";
 //import { redirect } from "next/navigation";
 
+export const preferredRegion = "home";
+export const revalidate = 60;
+
 export type Tweet = NonNullable<inferAsyncReturnType<typeof getTweet>>;
 
 export async function getTweet(id: number | null | undefined) {
@@ -39,7 +42,7 @@ type Props = {
 export default async function Page({ params }: Props) {
   const pageTweetId = numberFromHashidParam(params?.tweetId);
   if (!pageTweetId) {
-    return <div>nothing to see here</div>;
+    return <div>no tweet here</div>;
     //https://beta.nextjs.org/docs/api-reference/redirect
     //redirect("/");
     //so that does not actually redirect?
@@ -65,8 +68,6 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
-      <div>{JSON.stringify(params)}</div>
-      <div>pageTweetId: {pageTweetId}</div>
       {tweets.reverse().map((t) => (
         <TweetRSC key={t.id} tweet={t} />
       ))}
