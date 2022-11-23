@@ -1,24 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import type { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
-import { Client } from "@planetscale/database";
-import type { User } from "@prisma/client";
 import { absUrl } from "src/components/SEO";
 import { ENCODED_SVG_MUSKER_DARK } from "src/icons/urlencoded";
+import { db } from "src/utils/kysely";
 
 export const config = {
   runtime: "experimental-edge",
   regions: "iad1",
 };
 
-type QueryData = Omit<User, "createdAt"> & { createdAt: string };
-
-const db = new Client({
-  url: process.env.DATABASE_URL,
-});
-
 /**
- * return an image from url such as `/api/og/tweet?hashId=abcdef`
+ * return an image from url such as `/api/og/profile?handle=anders`
  */
 export default async function handler(req: NextRequest) {
   try {
@@ -27,14 +20,11 @@ export default async function handler(req: NextRequest) {
       throw "bad handle";
     }
 
-    //important note: is this even safe?
-    const queryString = `SELECT * FROM User WHERE handle = '${handle}';`;
+    const data = await db.connection().execute((db) => {
+      return db.selectFrom("User").where("User.handle", "=", handle).selectAll().executeTakeFirst();
+    });
 
-    const conn = db.connection();
-    const { rows } = await conn.execute(queryString);
-    const data = rows[0] as QueryData;
-
-    if (!data.image || !data.handle) {
+    if (!data || !data.image || !data.handle) {
       throw "bad data";
     }
 
